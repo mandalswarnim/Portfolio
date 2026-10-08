@@ -1,7 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 import { useRef } from "react";
+import portrait from "@/public/swarnim.jpg";
 
 /**
  * Home hero photo: gentle scroll parallax, grayscale that lifts to colour on
@@ -16,12 +18,16 @@ export default function HeroPortrait() {
   return (
     <motion.div ref={ref} style={{ y }} className="relative max-w-sm mx-auto lg:ml-auto group">
       <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-surface border border-divider">
-        <motion.img
-          src="/swarnim.jpg"
-          alt="Swarnim Mandal"
-          style={{ y: imgY }}
-          className="w-full h-[112%] -mt-[6%] object-cover grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0"
-        />
+        <motion.div style={{ y: imgY }} className="relative w-full h-[112%] -mt-[6%]">
+          <Image
+            src={portrait}
+            alt="Swarnim Mandal"
+            fill
+            preload
+            sizes="(min-width: 640px) 384px, 100vw"
+            className="object-cover grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0"
+          />
+        </motion.div>
       </div>
 
       <motion.div

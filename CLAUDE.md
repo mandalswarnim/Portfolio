@@ -63,7 +63,3 @@ Colours are defined as direct hex values in `tailwind.config.js` (not CSS variab
 Fonts loaded via `next/font/google` in `app/layout.tsx`:
 - `--font-playfair` → `font-serif` (headings)
 - `--font-inter` → `font-sans` (body, default)
-
-## Known Gaps (planned next patch)
-
-- **Hero photo** served from `public/swarnim.jpg` as a plain `<img>` with `grayscale` CSS filter — no `next/image` optimisation applied yet.
