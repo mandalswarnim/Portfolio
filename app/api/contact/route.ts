@@ -12,6 +12,8 @@ import { CONTACT_EMAIL } from "@/lib/site";
 
 const LIMITS = { name: 100, email: 200, subject: 200, message: 5000 };
 const MIN_FILL_MS = 3000; // bots submit instantly
+const MAX_FILL_MS = 24 * 60 * 60 * 1000; // older than a day = forged timestamp
+const RATE_LIMIT = { max: 5, windowMs: 60 * 60 * 1000 }; // per IP
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_DETAILS = 10;
 const MAX_DETAIL_LEN = 200;
@@ -31,6 +33,43 @@ const escapeHtml = (s: string) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
   );
 
+// Best-effort limiter: state lives per function instance, so it caps bursts
+// rather than giving a global guarantee. Pair with a Vercel Firewall rule for that.
+const hits = new Map<string, number[]>();
+
+function rateLimited(ip: string) {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT.windowMs);
+  if (recent.length >= RATE_LIMIT.max) {
+    hits.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) {
+    for (const [key, times] of hits) {
+      if (now - times[times.length - 1] >= RATE_LIMIT.windowMs) hits.delete(key);
+    }
+  }
+  return false;
+}
+
+const clientIp = (req: Request) =>
+  req.headers.get("x-real-ip") ??
+  req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+  "unknown";
+
+// Browsers always send Origin on POST; reject cross-site form posts.
+function sameOrigin(req: Request) {
+  const origin = req.headers.get("origin");
+  if (!origin) return false;
+  try {
+    return new URL(origin).host === req.headers.get("host");
+  } catch {
+    return false;
+  }
+}
+
 async function sendEmail(body: Record<string, unknown>) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -44,6 +83,16 @@ async function sendEmail(body: Record<string, unknown>) {
 }
 
 export async function POST(req: Request) {
+  if (!sameOrigin(req)) {
+    return NextResponse.json({ error: "Invalid request." }, { status: 403 });
+  }
+  if (rateLimited(clientIp(req))) {
+    return NextResponse.json(
+      { error: `Too many messages — please try again later or email ${CONTACT_EMAIL}.` },
+      { status: 429 },
+    );
+  }
+
   let data: Partial<Payload>;
   try {
     data = await req.json();
@@ -51,8 +100,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  // Spam traps: pretend success so bots don't retry.
-  if (data.website || (data.startedAt && Date.now() - data.startedAt < MIN_FILL_MS)) {
+  // Spam traps: pretend success so bots don't retry. The form always sends
+  // startedAt, so a missing or implausible one means a scripted request.
+  const age = Date.now() - Number(data.startedAt);
+  if (data.website || !(age >= MIN_FILL_MS && age <= MAX_FILL_MS)) {
     return NextResponse.json({ ok: true });
   }
 
@@ -111,7 +162,9 @@ ${details.map(([k, v]) => `<p><strong>${escapeHtml(k)}:</strong> ${escapeHtml(v)
     );
   }
 
-  // Acknowledgement is best-effort; the owner already has the message.
+  // Acknowledgement is best-effort; the owner already has the message. It goes
+  // to an address the visitor typed, so it carries no visitor-supplied text —
+  // otherwise the form could relay arbitrary content from this domain.
   if (from) {
     after(() =>
       sendEmail({
@@ -119,7 +172,7 @@ ${details.map(([k, v]) => `<p><strong>${escapeHtml(k)}:</strong> ${escapeHtml(v)
         to: [fields.email],
         reply_to: CONTACT_EMAIL,
         subject: "Thanks for getting in touch",
-        text: `Hi ${fields.name},\n\nThanks for your message — I've received it and will reply within 24 hours.\n\nFor reference, you wrote:\n\n> ${fields.message.replace(/\n/g, "\n> ")}\n\n— Swarnim Mandal\nhttps://swarnimmandal.me`,
+        text: `Hi,\n\nThanks for your message through swarnimmandal.me — I've received it and will reply within 24 hours.\n\nIf you didn't send this, you can ignore this email.\n\n— Swarnim Mandal\nhttps://swarnimmandal.me`,
       }).catch((err) => console.error("[contact] acknowledgement failed", err)),
     );
   }
