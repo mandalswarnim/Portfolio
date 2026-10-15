@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import BookingButton from "@/components/BookingButton";
 import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
-import CallDemo from "@/components/aireception/CallDemo";
 import EnquiryForm from "@/components/aireception/EnquiryForm";
-import { CONTACT_EMAIL, RECEPTIONIST_PRICING, SAMPLE_CALL_AUDIO, SITE_URL } from "@/lib/site";
+import LoopVideo from "@/components/aireception/LoopVideo";
+import TryMe from "@/components/aireception/TryMe";
+import PlanButton from "@/components/aireception/PlanButton";
+import {
+  CONTACT_EMAIL,
+  RECEPTIONIST_SETUP_FEE,
+  RECEPTIONIST_TIERS,
+  SAMPLE_CALL_AUDIO,
+  SITE_URL,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "AI Receptionist — 24/7 Call Answering & Booking Capture",
@@ -22,50 +29,45 @@ export const metadata: Metadata = {
   },
 };
 
-const ENQUIRY_HREF = "#enquire";
 const EMAIL_HREF =
   `mailto:${CONTACT_EMAIL}?subject=AI%20Receptionist%20enquiry&body=Hi%20Swarnim%2C%20I%27d%20like%20to%20add%20the%20AI%20Receptionist%20to%20my%20business.`;
 
-const problems = [
+const scenes = [
   {
-    stat: "After hours",
+    video: "after-hours",
+    label: "After hours",
     title: "Calls land when you're closed",
     description:
       "Evenings, weekends and lunch breaks are when many customers finally get round to calling — and reach voicemail.",
   },
   {
-    stat: "Busy hands",
-    title: "You can't always pick up",
+    video: "dental",
+    label: "Mid-appointment",
+    title: "You can't put down what you're doing",
     description:
-      "With a patient in the chair or a job on site, the phone rings out. Most callers won't leave a message.",
+      "With a patient in the chair or a client in front of you, the phone rings out. Most callers won't leave a message.",
   },
   {
-    stat: "Next in line",
+    video: "trades",
+    label: "On the job",
+    title: "Your hands are full",
+    description:
+      "Up a ladder or under a sink, picking up isn't an option — and calling back an hour later is often too late.",
+  },
+  {
+    video: "salon",
+    label: "Fully booked",
     title: "They call someone else",
     description:
       "A caller who doesn't get through usually tries the next business on the list rather than waiting for a callback.",
   },
 ];
 
-const solutions = [
-  {
-    title: "Answers instantly",
-    description:
-      "When you can't pick up, your line forwards to the AI, which answers straight away — no voicemail, day or night.",
-    icon: "M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z",
-  },
-  {
-    title: "Captures every detail",
-    description:
-      "Name, company, phone, email, what they need and how urgent it is — captured through natural conversation, then read back to confirm.",
-    icon: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
-  },
-  {
-    title: "Sends structured info",
-    description:
-      "A clean, organised email lands in your inbox the moment the call ends — ready to confirm, with no data entry needed.",
-    icon: "M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75",
-  },
+const facts = [
+  "Answers 24/7",
+  "Keeps your existing number",
+  "Summary email after every call",
+  `£${RECEPTIONIST_SETUP_FEE} setup, then pay per minute`,
 ];
 
 const steps = [
@@ -128,33 +130,6 @@ const features = [
   },
 ];
 
-const pricingItems = [
-  {
-    label: "Setup",
-    note: "one-off",
-    from: RECEPTIONIST_PRICING.setupFrom,
-    unit: "",
-    includes: [
-      "Phone number and call forwarding configured",
-      "Greeting and questions tailored to your business",
-      "Summary emails sent to your inbox",
-      "Test calls together before go-live",
-    ],
-  },
-  {
-    label: "Running",
-    note: "monthly",
-    from: RECEPTIONIST_PRICING.monthlyFrom,
-    unit: "/mo",
-    includes: [
-      "Hosting, monitoring and updates",
-      "Changes to your script when your business changes",
-      "Direct support from me — no ticket queue",
-      "Cancel any time; your call records are exported to you",
-    ],
-  },
-];
-
 const dataPoints = [
   {
     title: "Callers know it's an AI",
@@ -188,8 +163,24 @@ const faqs = [
     a: "Not directly. It takes the caller's details and what they need, then emails you a structured summary so you can confirm the booking yourself.",
   },
   {
+    q: "Will callers know they're talking to an AI?",
+    a: "Yes. It introduces itself as a virtual assistant at the start of every call, and if a caller asks directly it never claims to be human.",
+  },
+  {
     q: "What does it cost to run?",
-    a: "A one-off setup fee plus a monthly fee. Telephony and AI usage scale with call volume, so you'll get a clear estimate based on your numbers before anything is set up.",
+    a: `A one-off £${RECEPTIONIST_SETUP_FEE} setup fee, then a per-minute rate for the calls your receptionist answers. The rate depends on the tier you choose (Agathos, Arete, Aristeia or Axiom), which sets the voice, how conversational the agent is and how natural it sounds.`,
+  },
+  {
+    q: "Is there a contract?",
+    a: "No long-term contract. You pay for the minutes you use, can change tier or cancel any time, and your call records are exported to you when you leave.",
+  },
+  {
+    q: "Can the receptionist use my own voice?",
+    a: "Yes, on the Axiom tier. The lower tiers use a standard or premium voice, chosen to suit your business.",
+  },
+  {
+    q: "Can I get alerts somewhere other than email?",
+    a: "Yes. As well as the summary email, call summaries can be posted to a Slack channel so the whole team sees them.",
   },
   {
     q: "How long does setup take?",
@@ -199,18 +190,6 @@ const faqs = [
     q: "What happens if the AI can't help?",
     a: "It never pretends to. It takes a message with the caller's details and urgency so you can follow up personally.",
   },
-];
-
-const stats = [
-  { label: "Calls Today", value: "47", change: "+12%" },
-  { label: "Bookings Captured", value: "23", change: "+8%" },
-  { label: "Avg Response", value: "0.3s", change: "-45%" },
-];
-
-const recentCalls = [
-  { name: "Sarah Johnson", time: "2 min ago", status: "Booking sent" },
-  { name: "Mike Chen", time: "15 min ago", status: "Details captured" },
-  { name: "Emily Davis", time: "1 hr ago", status: "Booking sent" },
 ];
 
 function Icon({ path }: { path: string }) {
@@ -238,6 +217,12 @@ const jsonLd = [
     provider: { "@type": "Person", name: "Swarnim Mandal", url: SITE_URL },
     description:
       "An AI receptionist that answers unanswered business calls, captures caller details and emails a structured summary.",
+    offers: {
+      "@type": "Offer",
+      name: "Setup",
+      price: RECEPTIONIST_SETUP_FEE,
+      priceCurrency: "GBP",
+    },
   },
   {
     "@context": "https://schema.org",
@@ -258,230 +243,181 @@ export default function AiReceptionistPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="py-24 md:py-28 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center">
+      <section className="relative isolate overflow-hidden bg-foreground">
+        <div className="absolute inset-0 -z-10">
+          <LoopVideo name="hero" priority />
+          <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/65 to-foreground/20" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-foreground/70 to-transparent" />
+        </div>
+        <div className="max-w-6xl mx-auto px-6 min-h-[calc(100svh-5rem)] max-h-[860px] flex flex-col justify-center py-24">
+          <div className="max-w-3xl">
             <FadeIn>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface border border-divider text-primary text-sm font-medium mb-8">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-background/10 border border-background/20 backdrop-blur text-background text-sm font-medium mb-8">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-nominal opacity-70" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-status-nominal" />
                 </span>
-                AI-Powered Receptionist · A product by Swarnim Mandal
+                AI Receptionist · for small businesses
               </span>
             </FadeIn>
 
             <TextReveal
               delay={0.1}
-              lines={[
-                "Never miss a call.",
-                <span key="b" className="text-primary">Never lose a booking.</span>,
-              ]}
-              className="font-serif text-5xl md:text-6xl xl:text-7xl font-bold text-foreground leading-[1.08] mb-6"
+              lines={["Never miss a call.", "Never lose a booking."]}
+              className="font-serif text-5xl md:text-6xl xl:text-7xl font-bold text-background leading-[1.08] mb-6"
             />
 
             <FadeIn delay={0.2}>
-              <p className="text-lg text-muted leading-relaxed mb-10 max-w-2xl mx-auto">
-                An AI receptionist that answers every call 24/7, captures
-                customer details through natural conversation, and sends booking
-                requests straight to your inbox — so you can focus on running
-                your business.
+              <p className="text-lg text-background/80 leading-relaxed mb-10 max-w-xl">
+                When you can&apos;t pick up, an AI receptionist answers your calls day or night. It takes each
+                caller&apos;s details through natural conversation and emails you a clean summary the moment
+                they hang up.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="flex flex-wrap gap-4 justify-center">
-                <Link
-                  href={ENQUIRY_HREF}
-                  className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
-                >
-                  Get a quote
-                </Link>
-                <BookingButton source="ai-receptionist-hero" label="Book a demo call" />
+              <div className="flex flex-wrap gap-3">
                 <a
-                  href={EMAIL_HREF}
-                  className="inline-flex items-center border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full hover:border-foreground/40 transition-colors"
+                  href="#try"
+                  className="inline-flex items-center gap-2 bg-background text-foreground text-sm font-medium px-6 py-3 rounded-full hover:bg-background/85 transition-colors"
                 >
-                  Email me directly
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-status-nominal text-white">
+                    <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.36 11.36 0 003.57.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
+                    </svg>
+                  </span>
+                  Try me — call it now
                 </a>
+                <a
+                  href="#plans"
+                  className="inline-flex items-center border border-background/30 text-background text-sm font-medium px-6 py-3 rounded-full hover:border-background/70 transition-colors"
+                >
+                  See plans
+                </a>
+                <BookingButton source="ai-receptionist-hero" label="Book a demo call" />
               </div>
             </FadeIn>
           </div>
-
-          {/* Dashboard mockup */}
-          <FadeIn delay={0.4}>
-            <div className="mt-20 max-w-4xl mx-auto">
-              <div className="rounded-2xl border border-divider bg-background shadow-sm overflow-hidden">
-                <div className="flex items-center gap-2 px-5 py-3 border-b border-divider bg-surface">
-                  <div className="flex gap-1.5">
-                    <span className="w-3 h-3 rounded-full bg-status-critical/60" />
-                    <span className="w-3 h-3 rounded-full bg-status-warning/60" />
-                    <span className="w-3 h-3 rounded-full bg-status-nominal/60" />
-                  </div>
-                  <div className="flex-1 flex justify-center">
-                    <span className="px-4 py-1 rounded-md bg-background border border-divider text-xs text-subtle font-mono">
-                      dashboard · ai-receptionist
-                    </span>
-                  </div>
-                  <span className="text-[10px] uppercase tracking-wider text-subtle">
-                    Illustrative data
-                  </span>
-                </div>
-                <div className="p-6 md:p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    {stats.map((stat) => (
-                      <div
-                        key={stat.label}
-                        className="rounded-xl border border-divider p-4"
-                      >
-                        <p className="text-sm text-subtle">{stat.label}</p>
-                        <div className="flex items-end gap-2 mt-1">
-                          <p className="text-2xl font-semibold text-foreground">
-                            {stat.value}
-                          </p>
-                          <span className="text-xs font-medium text-status-nominal">
-                            {stat.change}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="rounded-xl border border-divider overflow-hidden">
-                    <div className="px-4 py-3 bg-surface border-b border-divider">
-                      <p className="text-sm font-medium text-foreground">
-                        Recent Calls
-                      </p>
-                    </div>
-                    {recentCalls.map((call) => (
-                      <div
-                        key={call.name}
-                        className="flex items-center justify-between px-4 py-3 border-b border-divider last:border-0"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="w-8 h-8 rounded-full bg-surface border border-divider flex items-center justify-center text-sm font-medium text-primary">
-                            {call.name[0]}
-                          </span>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {call.name}
-                            </p>
-                            <p className="text-xs text-subtle">{call.time}</p>
-                          </div>
-                        </div>
-                        <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-status-nominal/10 text-status-nominal">
-                          {call.status}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
         </div>
       </section>
 
-      {/* ── Problem ──────────────────────────────────────── */}
+      {/* ── Fact strip ───────────────────────────────────── */}
+      <section className="border-b border-divider bg-surface">
+        <ul className="max-w-6xl mx-auto px-6 py-5 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
+          {facts.map((fact) => (
+            <li key={fact} className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <span className="text-status-nominal" aria-hidden>✓</span>
+              {fact}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ── Scenes ───────────────────────────────────────── */}
       <section className="py-24 border-b border-divider">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
             <p className="text-sm font-medium text-status-critical uppercase tracking-widest mb-3">
-              The Problem
+              The problem
             </p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-16">
-              Every missed call costs you money
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 max-w-2xl">
+              Answer every call, even when you can&apos;t
             </h2>
+            <p className="text-muted text-lg max-w-2xl mb-14">
+              The phone rings at the worst moments. Every unanswered call is a customer deciding whether to try you
+              again or ring the next business on the list.
+            </p>
           </FadeIn>
 
-          <StaggerContainer className="grid md:grid-cols-3 gap-6">
-            {problems.map((problem) => (
-              <StaggerItem key={problem.title}>
-                <div className="h-full rounded-2xl border border-divider bg-surface p-8">
-                  <p className="font-serif text-4xl font-bold text-status-critical mb-2">
-                    {problem.stat}
-                  </p>
-                  <h3 className="font-medium text-foreground mb-2">
-                    {problem.title}
-                  </h3>
-                  <p className="text-sm text-muted leading-relaxed">
-                    {problem.description}
-                  </p>
-                </div>
+          <StaggerContainer className="grid sm:grid-cols-2 gap-6">
+            {scenes.map((scene) => (
+              <StaggerItem key={scene.video}>
+                <article className="group h-full overflow-hidden rounded-2xl border border-divider bg-surface">
+                  <div className="relative aspect-[16/9] overflow-hidden bg-foreground">
+                    <LoopVideo
+                      name={scene.video}
+                      className="transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                    <span className="absolute left-4 top-4 rounded-full bg-foreground/60 backdrop-blur px-3 py-1 text-xs font-medium text-background">
+                      {scene.label}
+                    </span>
+                  </div>
+                  <div className="p-7">
+                    <h3 className="font-serif text-xl font-bold text-foreground mb-2">{scene.title}</h3>
+                    <p className="text-sm text-muted leading-relaxed">{scene.description}</p>
+                  </div>
+                </article>
               </StaggerItem>
             ))}
           </StaggerContainer>
         </div>
       </section>
 
-      {/* ── Solution ─────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider bg-surface">
+      {/* ── Try me ───────────────────────────────────────── */}
+      <section id="try" className="py-24 border-b border-divider bg-surface scroll-mt-20">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              The Solution
-            </p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-              AI that handles it all for you
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-16">
-              From the first ring to the booking confirmation — completely
-              automated, beautifully simple.
-            </p>
+            <div className="max-w-2xl mb-14">
+              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Try me</p>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
+                Don&apos;t take our word for it. Call it.
+              </h2>
+              <p className="text-muted text-lg">
+                Pick a business, or type in your own name, then press call. You play the customer. Watch the details
+                fill in on the right, and see the email the business gets when you hang up.
+              </p>
+            </div>
           </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-3 gap-6">
-            {solutions.map((item) => (
-              <StaggerItem key={item.title}>
-                <div className="h-full rounded-2xl border border-divider bg-background p-8">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
-                    <Icon path={item.icon} />
-                  </div>
-                  <h3 className="font-medium text-foreground mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-muted leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <FadeIn delay={0.1}>
+            <TryMe />
+          </FadeIn>
+          {SAMPLE_CALL_AUDIO && (
+            <div className="mt-14 max-w-xl rounded-2xl border border-divider bg-background p-5">
+              <p className="text-sm font-medium text-foreground mb-3">Listen to a recorded test call</p>
+              <audio controls preload="none" src={SAMPLE_CALL_AUDIO} className="w-full" />
+            </div>
+          )}
         </div>
       </section>
 
       {/* ── How It Works ─────────────────────────────────── */}
       <section className="py-24 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              How It Works
-            </p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-              Three steps. Zero effort.
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-16">
-              Set it up once, and your AI receptionist handles the rest —
-              automatically.
-            </p>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-3 gap-10">
-            {steps.map((step) => (
-              <StaggerItem key={step.step}>
-                <div>
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary text-white font-serif text-xl font-bold mb-5">
-                    {step.step}
+        <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center">
+          <div>
+            <FadeIn>
+              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
+                How it works
+              </p>
+              <h2 className="font-serif text-4xl font-bold text-foreground mb-12">
+                Three steps. Nothing for you to do.
+              </h2>
+            </FadeIn>
+            <StaggerContainer className="space-y-9">
+              {steps.map((step) => (
+                <StaggerItem key={step.step}>
+                  <div className="flex gap-5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary font-serif text-lg font-bold text-white">
+                      {step.step}
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground mb-1">{step.title}</h3>
+                      <p className="text-sm text-muted leading-relaxed">{step.description}</p>
+                    </div>
                   </div>
-                  <h3 className="font-medium text-foreground mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-muted leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+          <FadeIn delay={0.15}>
+            <figure className="overflow-hidden rounded-2xl border border-divider bg-surface">
+              <div className="aspect-[4/3] bg-foreground">
+                <LoopVideo name="followup" />
+              </div>
+              <figcaption className="px-6 py-4 text-sm text-muted">
+                The summary is waiting whenever you&apos;re ready, with who called, what they need and how urgent it is.
+              </figcaption>
+            </figure>
+          </FadeIn>
         </div>
       </section>
 
@@ -521,34 +457,6 @@ export default function AiReceptionistPage() {
         </div>
       </section>
 
-      {/* ── Example call ─────────────────────────────────── */}
-      <section className="py-24 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              Example Call
-            </p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-              See it in action
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-10">
-              An example conversation and the summary email it produces.
-            </p>
-            {SAMPLE_CALL_AUDIO && (
-              <div className="mb-12 max-w-xl rounded-2xl border border-divider bg-surface p-5">
-                <p className="text-sm font-medium text-foreground mb-3">
-                  Listen to a recorded test call
-                </p>
-                <audio controls preload="none" src={SAMPLE_CALL_AUDIO} className="w-full" />
-              </div>
-            )}
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <CallDemo />
-          </FadeIn>
-        </div>
-      </section>
-
       {/* ── Your callers' data ───────────────────────────── */}
       <section className="py-24 border-b border-divider bg-surface">
         <div className="max-w-6xl mx-auto px-6">
@@ -579,51 +487,153 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Pricing ──────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider">
+      <section id="plans" className="py-24 border-b border-divider scroll-mt-20">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
             <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
               Pricing
             </p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-              Simple, transparent pricing
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Pay for the calls you take. Nothing else.
             </h2>
-            <p className="text-muted text-lg max-w-2xl mb-16">
-              A one-off setup and a monthly fee. Call costs depend on your
-              volume, so every quote is based on your numbers.
+            <p className="text-muted text-lg max-w-2xl mb-10">
+              A one-off setup fee, then a per-minute rate for the calls your receptionist answers. Quiet month,
+              smaller bill. Choose a tier by how the agent sounds and how much it can talk about.
             </p>
           </FadeIn>
 
-          <StaggerContainer className="grid md:grid-cols-2 gap-6 max-w-4xl">
-            {pricingItems.map((item) => (
-              <StaggerItem key={item.label}>
-                <div className="h-full rounded-2xl border border-divider bg-surface p-8">
-                  <p className="text-xs text-subtle uppercase tracking-wider mb-2">
-                    {item.label} · {item.note}
+          <FadeIn delay={0.05}>
+            <div className="mb-12 grid gap-4 rounded-2xl border border-divider bg-surface p-6 md:grid-cols-[auto_1fr] md:items-center md:gap-10 md:p-8">
+              <div>
+                <p className="text-xs uppercase tracking-widest text-subtle mb-1">Setup · one-off</p>
+                <p className="font-serif text-5xl font-bold text-foreground">£{RECEPTIONIST_SETUP_FEE}</p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3 text-sm">
+                {[
+                  ["Voice", "From a clear standard voice up to a custom voice of your own."],
+                  ["Conversation", "From guided questions up to free-flowing, tailored conversation."],
+                  ["Human touch", "How natural the agent sounds: tone, pacing and warmth."],
+                ].map(([title, body]) => (
+                  <div key={title}>
+                    <p className="font-medium text-foreground mb-1">{title}</p>
+                    <p className="text-muted leading-relaxed">{body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+
+          <StaggerContainer className="grid md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
+            {RECEPTIONIST_TIERS.map((tier, i) => (
+              <StaggerItem key={tier.name}>
+                <div
+                  className={`relative flex h-full flex-col rounded-2xl border p-7 ${
+                    tier.featured
+                      ? "border-foreground bg-foreground text-background shadow-xl"
+                      : "border-divider bg-surface"
+                  }`}
+                >
+                  {tier.featured && (
+                    <span className="absolute -top-3 left-7 rounded-full bg-primary px-3 py-1 text-xs font-medium text-white">
+                      Recommended
+                    </span>
+                  )}
+                  <p className={`text-xs uppercase tracking-widest mb-3 ${tier.featured ? "text-background/60" : "text-subtle"}`}>
+                    Tier {["I", "II", "III", "IV"][i]}
                   </p>
-                  <p className="font-serif text-3xl font-bold text-foreground mb-6">
-                    {item.from === null ? (
-                      "Quote on request"
+                  <h3 className="font-serif text-3xl font-bold leading-none">{tier.name}</h3>
+                  <p className={`text-sm italic mt-1 mb-4 ${tier.featured ? "text-background/60" : "text-subtle"}`}>
+                    {tier.meaning}
+                  </p>
+                  <p className={`text-sm leading-relaxed mb-6 min-h-[2.5rem] ${tier.featured ? "text-background/80" : "text-muted"}`}>
+                    {tier.tagline}
+                  </p>
+
+                  <p className="font-serif text-3xl font-bold mb-6">
+                    {tier.perMinute === null ? (
+                      <span className="text-2xl">Rate on request</span>
                     ) : (
                       <>
-                        <span className="text-base font-sans font-normal text-muted">from </span>
-                        £{item.from.toLocaleString("en-GB")}
-                        <span className="text-base font-sans font-normal text-muted">{item.unit}</span>
+                        £{tier.perMinute.toFixed(2)}
+                        <span className={`text-base font-sans font-normal ${tier.featured ? "text-background/70" : "text-muted"}`}>
+                          {" "}/ min
+                        </span>
                       </>
                     )}
                   </p>
-                  <ul className="space-y-3">
-                    {item.includes.map((line) => (
-                      <li key={line} className="flex gap-3 text-sm text-muted leading-relaxed">
-                        <span className="text-primary">✓</span>
-                        {line}
-                      </li>
+
+                  <dl className="space-y-4 mb-6">
+                    {([
+                      ["Voice", tier.voice],
+                      ["Conversation", tier.conversation],
+                      ["Human touch", tier.human],
+                    ] as const).map(([label, rating]) => (
+                      <div key={label}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <dt className={`text-xs uppercase tracking-wider ${tier.featured ? "text-background/60" : "text-subtle"}`}>
+                            {label}
+                          </dt>
+                          <span className="flex gap-1" aria-label={`${rating.level} of 4`}>
+                            {[1, 2, 3, 4].map((n) => (
+                              <span
+                                key={n}
+                                className={`h-1.5 w-5 rounded-full ${
+                                  n <= rating.level
+                                    ? tier.featured ? "bg-background" : "bg-primary"
+                                    : tier.featured ? "bg-background/20" : "bg-divider"
+                                }`}
+                              />
+                            ))}
+                          </span>
+                        </div>
+                        <dd className={`text-sm ${tier.featured ? "text-background/85" : "text-foreground"}`}>
+                          {rating.label}
+                        </dd>
+                      </div>
                     ))}
-                  </ul>
+                  </dl>
+
+                  {tier.features.length > 0 && (
+                    <ul className={`space-y-2.5 mb-6 pt-5 border-t ${tier.featured ? "border-background/15" : "border-divider"}`}>
+                      {tier.features.map((line) => (
+                        <li
+                          key={line}
+                          className={`flex gap-3 text-sm leading-relaxed ${tier.featured ? "text-background/85" : "text-muted"}`}
+                        >
+                          <span className={tier.featured ? "text-status-nominal" : "text-primary"}>✓</span>
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className="mt-auto space-y-3">
+                    <PlanButton
+                      plan={tier.name}
+                      className={`w-full rounded-full px-6 py-3 text-sm font-medium transition-colors ${
+                        tier.featured
+                          ? "bg-background text-foreground hover:bg-background/85"
+                          : "bg-foreground text-background hover:bg-foreground/80"
+                      }`}
+                    >
+                      {tier.perMinute === null ? `Get ${tier.name} pricing` : `Choose ${tier.name}`}
+                    </PlanButton>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`${tier.name} AI Receptionist — per-minute rate`)}`}
+                      className={`block text-center text-xs underline-offset-4 hover:underline ${tier.featured ? "text-background/60" : "text-subtle"}`}
+                    >
+                      or email me about {tier.name}
+                    </a>
+                  </div>
                 </div>
               </StaggerItem>
             ))}
           </StaggerContainer>
+
+          <p className="mt-8 text-sm text-subtle max-w-3xl">
+            Billed per minute of answered calls, plus the one-off £{RECEPTIONIST_SETUP_FEE} setup. No long-term
+            contract. You can change tier or cancel any time.
+          </p>
         </div>
       </section>
 

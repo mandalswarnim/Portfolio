@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import { submitEnquiry } from "@/lib/contact-client";
+import { RECEPTIONIST_TIERS } from "@/lib/site";
+import { PLAN_EVENT } from "./PlanButton";
 
 const INDUSTRIES = [
   "Healthcare / dental",
@@ -23,6 +25,7 @@ const EMPTY = {
   phone: "",
   industry: "",
   missedCalls: "",
+  plan: "",
   notes: "",
   website: "",
 };
@@ -34,6 +37,12 @@ export default function EnquiryForm() {
   const startedAt = useRef(0);
   useEffect(() => {
     startedAt.current = Date.now();
+    const onPlan = (e: Event) => {
+      const plan = (e as CustomEvent<string>).detail;
+      setForm((prev) => ({ ...prev, plan }));
+    };
+    window.addEventListener(PLAN_EVENT, onPlan);
+    return () => window.removeEventListener(PLAN_EVENT, onPlan);
   }, []);
 
   const handleChange = (
@@ -57,6 +66,7 @@ export default function EnquiryForm() {
           Phone: form.phone,
           Industry: form.industry,
           "Missed calls per week": form.missedCalls,
+          Plan: form.plan || "Not sure yet",
         },
       });
       setStatus("success");
@@ -136,6 +146,14 @@ export default function EnquiryForm() {
             {MISSED_CALLS.map((m) => <option key={m}>{m}</option>)}
           </select>
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="rx-plan" className={labelClass}>Plan you&apos;re interested in</label>
+        <select id="rx-plan" name="plan" value={form.plan} onChange={handleChange} className={inputClass}>
+          <option value="">Not sure yet, help me choose</option>
+          {RECEPTIONIST_TIERS.map((t) => <option key={t.name}>{t.name}</option>)}
+        </select>
       </div>
 
       <div>
