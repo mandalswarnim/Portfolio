@@ -1,19 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import {
   BUSINESSES,
   URGENCY_LABEL,
   greeting,
+  greetingVoice,
   respond,
   suggestions,
   summary,
+  voiceBusiness,
   type Captured,
   type Step,
   type Urgency,
 } from "./script";
+import { ALL_CLIPS, clipUrl, type Clip } from "./voice";
 
 type Phase = "idle" | "ringing" | "live" | "ended";
 type Message = { role: "ai" | "caller"; text: string };
@@ -34,19 +37,29 @@ const FIELDS: { key: keyof Captured; label: string }[] = [
   { key: "urgency", label: "Urgency" },
 ];
 
-const noopSubscribe = () => () => {};
-
 const formatTime = (s: number) =>
   `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
-function pickVoice(): SpeechSynthesisVoice | undefined {
-  const voices = window.speechSynthesis.getVoices();
-  return (
-    voices.find((v) => v.lang === "en-GB" && /female|serena|kate|libby|sonia|martha|google uk english female/i.test(v.name)) ??
-    voices.find((v) => v.lang === "en-GB") ??
-    voices.find((v) => v.lang.startsWith("en"))
-  );
+/**
+ * Start (and immediately pause) a muted clip inside the click gesture, which
+ * Safari/iOS require before they allow later, timer-driven play() calls.
+ */
+function unlockAudio(existing: HTMLAudioElement | null, src: string) {
+  const audio = existing ?? new Audio();
+  audio.src = src;
+  audio.muted = true;
+  audio
+    .play()
+    .then(() => audio.pause())
+    .catch(() => {})
+    .finally(() => {
+      audio.muted = false;
+    });
+  return audio;
 }
+
+/** Pause between sentence clips, so a multi-clip reply flows like natural speech. */
+const CLIP_GAP_MS = 140;
 
 export default function TryMe() {
   const [bizId, setBizId] = useState(BUSINESSES[0].id);
@@ -59,14 +72,10 @@ export default function TryMe() {
   const [input, setInput] = useState("");
   const [seconds, setSeconds] = useState(0);
   const [voiceOn, setVoiceOn] = useState(true);
-  const canSpeak = useSyncExternalStore(
-    noopSubscribe,
-    () => "speechSynthesis" in window,
-    () => false,
-  );
 
   const biz = BUSINESSES.find((b) => b.id === bizId) ?? BUSINESSES[0];
   const company = customName.trim() || biz.defaultName;
+  const bizVoice = voiceBusiness(biz, company);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
@@ -75,11 +84,25 @@ export default function TryMe() {
     voiceOnRef.current = voiceOn;
   }, [voiceOn]);
 
+  // One audio element plays every clip; `playback` identifies the reply being
+  // spoken so a stopped reply's queued clips are dropped.
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playback = useRef<{ done?: (spoken: boolean) => void } | null>(null);
+
+  /** Stop speaking. With `finish`, still run the reply's completion callback. */
+  const stopVoice = useCallback((finish = false) => {
+    const current = playback.current;
+    playback.current = null;
+    audioRef.current?.pause();
+    if (finish) current?.done?.(true);
+  }, []);
+
   useEffect(() => {
     const pending = timers.current;
     return () => {
       pending.forEach(clearTimeout);
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      playback.current = null;
+      audioRef.current?.pause();
     };
   }, []);
 
@@ -97,25 +120,47 @@ export default function TryMe() {
     timers.current.push(window.setTimeout(fn, ms));
   };
 
-  const speak = useCallback((text: string) => {
-    if (!voiceOnRef.current || !("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance(text);
-    const voice = pickVoice();
-    if (voice) u.voice = voice;
-    u.lang = voice?.lang ?? "en-GB";
-    u.rate = 1.04;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(u);
-  }, []);
+  /** Play a reply's clips back to back; `done(spoken)` runs once they finish. */
+  const speak = useCallback(
+    (clips: Clip[], done?: (spoken: boolean) => void) => {
+      const audio = audioRef.current;
+      playback.current = null;
+      if (!voiceOnRef.current || !audio || clips.length === 0) {
+        done?.(false);
+        return;
+      }
+      const token = { done };
+      playback.current = token;
+      let i = 0;
+      const next = () => {
+        if (playback.current !== token) return;
+        if (i >= clips.length) {
+          playback.current = null;
+          done?.(true);
+          return;
+        }
+        audio.src = clipUrl(clips[i++]);
+        audio.onended = () => timers.current.push(window.setTimeout(next, CLIP_GAP_MS));
+        audio.onerror = next;
+        audio.play().catch(() => {
+          // Autoplay refused — carry on silently with the transcript.
+          if (playback.current !== token) return;
+          playback.current = null;
+          done?.(false);
+        });
+      };
+      next();
+    },
+    [],
+  );
 
   const aiSay = useCallback(
-    (text: string, then?: () => void) => {
+    (text: string, clips: Clip[], then?: (spoken: boolean) => void) => {
       setTyping(true);
       later(() => {
         setTyping(false);
         setMessages((m) => [...m, { role: "ai", text }]);
-        speak(text);
-        then?.();
+        speak(clips, then);
       }, 700 + Math.min(text.length * 6, 900));
     },
     [speak],
@@ -129,21 +174,22 @@ export default function TryMe() {
     setStep("name");
     setSeconds(0);
     setPhase("ringing");
-    // Unlock speech synthesis inside the click gesture (Safari/iOS).
-    if (voiceOn && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+    const greetClips = greetingVoice(bizVoice);
+    if (voiceOn) {
+      audioRef.current = unlockAudio(audioRef.current, clipUrl(greetClips[0]));
+      // Warm the cache so replies start without a network gap (~0.9 MB in all).
+      ALL_CLIPS.forEach((c) => fetch(clipUrl(c)).catch(() => {}));
     }
     later(() => {
       setPhase("live");
-      aiSay(greeting(company));
+      aiSay(greeting(company), greetClips);
     }, 2200);
   };
 
   const hangUp = (completed: boolean) => {
     timers.current.forEach(clearTimeout);
     setTyping(false);
-    if (!completed && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    if (!completed) stopVoice();
     setPhase("ended");
     if (completed) track("demo_completed", { business: bizId });
   };
@@ -153,14 +199,19 @@ export default function TryMe() {
     if (!text || typing || phase !== "live" || step === "closing") return;
     setInput("");
     setMessages((m) => [...m, { role: "caller", text }]);
-    const turn = respond(step, text, captured, company);
+    const turn = respond(step, text, captured, company, bizVoice);
     if (turn.update) setCaptured((c) => ({ ...c, ...turn.update }));
     setStep(turn.next);
-    aiSay(turn.reply, turn.next === "closing" ? () => later(() => hangUp(true), 3800) : undefined);
+    aiSay(
+      turn.reply,
+      turn.voice,
+      // Hang up once the goodbye has been spoken, or after a reading pause when muted.
+      turn.next === "closing" ? (spoken) => later(() => hangUp(true), spoken ? 900 : 3800) : undefined,
+    );
   };
 
   const reset = () => {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    stopVoice();
     setPhase("idle");
     setMessages([]);
     setCaptured({});
@@ -234,15 +285,13 @@ export default function TryMe() {
                       <PhoneIcon className="relative w-8 h-8" />
                     </button>
                     <p className="mt-4 text-sm font-medium text-foreground">Try me</p>
-                    {canSpeak && (
-                      <button
-                        type="button"
-                        onClick={() => setVoiceOn((v) => !v)}
-                        className="mt-3 text-xs text-subtle hover:text-foreground"
-                      >
-                        Voice {voiceOn ? "on" : "off"} — tap to {voiceOn ? "mute" : "unmute"}
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => setVoiceOn((v) => !v)}
+                      className="mt-3 text-xs text-subtle hover:text-foreground"
+                    >
+                      Voice {voiceOn ? "on" : "off"} — tap to {voiceOn ? "mute" : "unmute"}
+                    </button>
                   </div>
                 </motion.div>
               )}
@@ -294,19 +343,17 @@ export default function TryMe() {
                         {phase === "live" ? `AI receptionist · ${formatTime(seconds)}` : `Call ended · ${formatTime(seconds)}`}
                       </p>
                     </div>
-                    {canSpeak && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (voiceOn) window.speechSynthesis.cancel();
-                          setVoiceOn((v) => !v);
-                        }}
-                        className="rounded-full border border-divider p-2 text-muted hover:text-foreground"
-                        aria-label={voiceOn ? "Mute voice" : "Unmute voice"}
-                      >
-                        {voiceOn ? <SpeakerIcon className="w-4 h-4" /> : <MuteIcon className="w-4 h-4" />}
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (voiceOn) stopVoice(true);
+                        setVoiceOn((v) => !v);
+                      }}
+                      className="rounded-full border border-divider p-2 text-muted hover:text-foreground"
+                      aria-label={voiceOn ? "Mute voice" : "Unmute voice"}
+                    >
+                      {voiceOn ? <SpeakerIcon className="w-4 h-4" /> : <MuteIcon className="w-4 h-4" />}
+                    </button>
                   </div>
 
                   <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3" aria-live="polite">
