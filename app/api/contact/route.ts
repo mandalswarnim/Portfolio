@@ -99,6 +99,9 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
+  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
 
   // Spam traps: pretend success so bots don't retry. The form always sends
   // startedAt, so a missing or implausible one means a scripted request.
