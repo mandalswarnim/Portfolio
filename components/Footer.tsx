@@ -1,6 +1,13 @@
 import Link from "next/link";
 import AthenaMark from "@/components/AthenaMark";
 import FadeIn from "@/components/animations/FadeIn";
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
+
+const connectLinks = [
+  { name: "Email", href: `mailto:${CONTACT_EMAIL}` },
+  { name: "GitHub", href: GITHUB_URL },
+  { name: "LinkedIn", href: LINKEDIN_URL },
+];
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -57,34 +64,17 @@ export default function Footer() {
               Connect
             </h4>
             <ul className="space-y-3">
-              <li>
-                <a
-                  href="mailto:mswarnim1@gmail.com"
-                  className="text-sm text-muted hover:text-foreground transition-colors"
-                >
-                  Email
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/mandalswarnim"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted hover:text-foreground transition-colors"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.linkedin.com/in/swarnim-mandal-678976259/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted hover:text-foreground transition-colors"
-                >
-                  LinkedIn
-                </a>
-              </li>
+              {connectLinks.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    {...(item.href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
+                    className="text-sm text-muted hover:text-foreground transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

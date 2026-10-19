@@ -6,6 +6,7 @@ import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
 import TextReveal from "@/components/animations/TextReveal";
 import HeroPortrait from "@/components/HeroPortrait";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 const expertise = [
   {
@@ -294,10 +295,10 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <a
-                  href="mailto:mswarnim1@gmail.com"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/85 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none"
                 >
-                  mswarnim1@gmail.com
+                  {CONTACT_EMAIL}
                 </a>
                 <Link
                   href="/about"

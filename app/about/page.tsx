@@ -4,7 +4,7 @@ import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
-import { CV_PATH } from "@/lib/site";
+import { CONTACT_EMAIL, CV_PATH, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About — Swarnim Mandal",
@@ -134,9 +134,9 @@ export default function About() {
                 {[
                   { label: "Location", value: "London, United Kingdom" },
                   { label: "Education", value: "MSc Software Engineering, UWL — Distinction" },
-                  { label: "Email", value: "mswarnim1@gmail.com", href: "mailto:mswarnim1@gmail.com" },
-                  { label: "GitHub", value: "mandalswarnim", href: "https://github.com/mandalswarnim" },
-                  { label: "LinkedIn", value: "swarnim-mandal", href: "https://www.linkedin.com/in/swarnim-mandal-678976259/" },
+                  { label: "Email", value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+                  { label: "GitHub", value: "mandalswarnim", href: GITHUB_URL },
+                  { label: "LinkedIn", value: "swarnim-mandal", href: LINKEDIN_URL },
                   ...(CV_PATH ? [{ label: "CV", value: "Download PDF", href: CV_PATH }] : []),
                 ].map((item) => (
                   <div key={item.label} className="flex justify-between items-start gap-4 border-b border-divider pb-5 last:border-0 last:pb-0">

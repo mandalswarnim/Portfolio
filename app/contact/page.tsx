@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { track } from "@vercel/analytics";
+import BookingButton from "@/components/BookingButton";
+import Honeypot from "@/components/Honeypot";
 import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
-import { BOOKING_URL, CONTACT_EMAIL } from "@/lib/site";
-import { submitEnquiry } from "@/lib/contact-client";
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
+import { inputClass, labelClass, useEnquiryForm } from "@/lib/contact-client";
 
 const contactLinks = [
   {
@@ -26,45 +26,21 @@ const contactLinks = [
   {
     label: "GitHub",
     value: "github.com/mandalswarnim",
-    href: "https://github.com/mandalswarnim",
+    href: GITHUB_URL,
   },
   {
     label: "LinkedIn",
     value: "linkedin.com/in/swarnim-mandal",
-    href: "https://www.linkedin.com/in/swarnim-mandal-678976259/",
+    href: LINKEDIN_URL,
   },
 ];
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const [error, setError] = useState("");
-  const startedAt = useRef(0);
-  useEffect(() => {
-    startedAt.current = Date.now();
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sending");
-    setError("");
-    try {
-      await submitEnquiry({ ...form, startedAt: startedAt.current });
-      setStatus("success");
-      track("contact_submitted", { source: "contact" });
-      setForm({ name: "", email: "", subject: "", message: "", website: "" });
-    } catch (err) {
-      setStatus("error");
-      setError((err as Error).message);
-    }
-  };
-
-  const inputClass =
-    "w-full bg-background border border-divider rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-subtle focus:outline-none focus:border-primary/50 transition-colors";
+  const { form, status, error, handleChange, handleSubmit } = useEnquiryForm(
+    { name: "", email: "", subject: "", message: "", website: "" },
+    "contact",
+    ({ name, email, subject, message }) => ({ name, email, subject, message }),
+  );
 
   return (
     <div className="min-h-screen">
@@ -84,17 +60,11 @@ export default function Contact() {
               Open to full-time roles, freelance projects, and research collaborations.
               I typically respond within 24 hours.
             </p>
-            {BOOKING_URL && (
-              <a
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track("booking_clicked", { source: "contact" })}
-                className="mt-8 inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
-              >
-                Book a 20-minute call <span className="text-xs">↗</span>
-              </a>
-            )}
+            <BookingButton
+              source="contact"
+              label="Book a 20-minute call"
+              className="mt-8 inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
+            />
           </FadeIn>
         </div>
       </section>
@@ -130,22 +100,10 @@ export default function Contact() {
             {/* Right: form */}
             <FadeIn delay={0.1}>
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Honeypot — hidden from people, filled in by bots */}
-                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-                  <label htmlFor="website">Website</label>
-                  <input
-                    type="text"
-                    id="website"
-                    name="website"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={form.website}
-                    onChange={handleChange}
-                  />
-                </div>
+                <Honeypot id="website" value={form.website} onChange={handleChange} />
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="name" className="block text-xs font-medium text-subtle uppercase tracking-wider mb-2">
+                    <label htmlFor="name" className={labelClass}>
                       Name
                     </label>
                     <input
@@ -161,7 +119,7 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-xs font-medium text-subtle uppercase tracking-wider mb-2">
+                    <label htmlFor="email" className={labelClass}>
                       Email
                     </label>
                     <input
@@ -178,7 +136,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-xs font-medium text-subtle uppercase tracking-wider mb-2">
+                  <label htmlFor="subject" className={labelClass}>
                     Subject
                   </label>
                   <input
@@ -195,7 +153,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-xs font-medium text-subtle uppercase tracking-wider mb-2">
+                  <label htmlFor="message" className={labelClass}>
                     Message
                   </label>
                   <textarea

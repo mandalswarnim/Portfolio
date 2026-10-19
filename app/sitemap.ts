@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 import { BLOG_ENABLED, getAllPosts } from '@/lib/blog';
+import { SITE_URL } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = BLOG_ENABLED ? getAllPosts() : [];
-  const baseUrl = 'https://swarnimmandal.me';
+  const baseUrl = SITE_URL;
 
   const blogUrls = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,

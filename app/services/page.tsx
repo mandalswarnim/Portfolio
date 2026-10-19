@@ -5,6 +5,7 @@ import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
+import { GITHUB_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Work — Swarnim Mandal",
@@ -194,7 +195,7 @@ export default function Services() {
           <FadeIn delay={0.3}>
             <div className="mt-8">
               <a
-                href="https://github.com/mandalswarnim"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-divider text-foreground text-sm font-medium px-5 py-2.5 rounded-full hover:border-foreground/40 transition-colors"

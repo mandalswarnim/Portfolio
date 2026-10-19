@@ -16,6 +16,3 @@ export interface Asset {
   } | null;
   data_source?: 'C-MAPSS' | 'UAV-Synth';
 }
-
-export const rulToStatus = (r: number): Asset['status'] =>
-  r < 35 ? 'CRITICAL' : r < 65 ? 'WARNING' : 'NOMINAL';

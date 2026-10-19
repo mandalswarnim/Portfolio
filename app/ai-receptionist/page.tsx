@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: "AI Receptionist — Never miss a call, never lose a booking",
     description:
       "A production-ready AI receptionist that answers calls 24/7 and turns them into booking requests in your inbox. Integrate it into your business.",
-    url: "https://swarnimmandal.me/ai-receptionist",
+    url: `${SITE_URL}/ai-receptionist`,
     type: "website",
   },
 };

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { track } from "@vercel/analytics";
-import { submitEnquiry } from "@/lib/contact-client";
+import { useEffect } from "react";
+import Honeypot from "@/components/Honeypot";
+import { inputClass, labelClass, useEnquiryForm } from "@/lib/contact-client";
 import { RECEPTIONIST_TIERS } from "@/lib/site";
 import { PLAN_EVENT } from "./PlanButton";
 
@@ -31,56 +31,31 @@ const EMPTY = {
 };
 
 export default function EnquiryForm() {
-  const [form, setForm] = useState(EMPTY);
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const [error, setError] = useState("");
-  const startedAt = useRef(0);
+  const { form, setForm, status, error, handleChange, handleSubmit } = useEnquiryForm(
+    EMPTY,
+    "ai-receptionist",
+    (f) => ({
+      name: f.name,
+      email: f.email,
+      subject: `AI Receptionist enquiry — ${f.business}`,
+      message: f.notes || "(no additional notes)",
+      details: {
+        Business: f.business,
+        Phone: f.phone,
+        Industry: f.industry,
+        "Missed calls per week": f.missedCalls,
+        Plan: f.plan || "Not sure yet",
+      },
+    }),
+  );
   useEffect(() => {
-    startedAt.current = Date.now();
     const onPlan = (e: Event) => {
       const plan = (e as CustomEvent<string>).detail;
       setForm((prev) => ({ ...prev, plan }));
     };
     window.addEventListener(PLAN_EVENT, onPlan);
     return () => window.removeEventListener(PLAN_EVENT, onPlan);
-  }, []);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sending");
-    setError("");
-    try {
-      await submitEnquiry({
-        name: form.name,
-        email: form.email,
-        subject: `AI Receptionist enquiry — ${form.business}`,
-        message: form.notes || "(no additional notes)",
-        website: form.website,
-        startedAt: startedAt.current,
-        details: {
-          Business: form.business,
-          Phone: form.phone,
-          Industry: form.industry,
-          "Missed calls per week": form.missedCalls,
-          Plan: form.plan || "Not sure yet",
-        },
-      });
-      setStatus("success");
-      track("contact_submitted", { source: "ai-receptionist" });
-      setForm(EMPTY);
-    } catch (err) {
-      setStatus("error");
-      setError((err as Error).message);
-    }
-  };
-
-  const inputClass =
-    "w-full bg-background border border-divider rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-subtle focus:outline-none focus:border-primary/50 transition-colors";
-  const labelClass = "block text-xs font-medium text-subtle uppercase tracking-wider mb-2";
+  }, [setForm]);
 
   if (status === "success") {
     return (
@@ -95,19 +70,7 @@ export default function EnquiryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="relative space-y-5">
-      {/* Honeypot — hidden from people, filled in by bots */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="rx-website">Website</label>
-        <input
-          type="text"
-          id="rx-website"
-          name="website"
-          tabIndex={-1}
-          autoComplete="off"
-          value={form.website}
-          onChange={handleChange}
-        />
-      </div>
+      <Honeypot id="rx-website" value={form.website} onChange={handleChange} />
 
       <div className="grid sm:grid-cols-2 gap-5">
         <div>

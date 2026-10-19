@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "Swarnim Mandal — Software Engineer & ML Researcher",
     description:
       "Full-stack developer and machine learning engineer based in London, UK.",
-    url: "https://swarnimmandal.me",
+    url: SITE_URL,
     siteName: "Swarnim Mandal",
     locale: "en_GB",
     type: "website",
