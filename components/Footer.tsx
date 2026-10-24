@@ -1,10 +1,10 @@
 import Link from "next/link";
 import AthenaMark from "@/components/AthenaMark";
 import FadeIn from "@/components/animations/FadeIn";
-import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
+import { GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 
 const connectLinks = [
-  { name: "Email", href: `mailto:${CONTACT_EMAIL}` },
+  { name: "Email", href: "/contact" },
   { name: "GitHub", href: GITHUB_URL },
   { name: "LinkedIn", href: LINKEDIN_URL },
 ];
@@ -21,7 +21,7 @@ export default function Footer() {
               <AthenaMark height={44} />
             </div>
             <p className="text-sm text-muted leading-relaxed max-w-[200px]">
-              Software engineer and ML researcher based in London.
+              AI / software engineer based in London.
             </p>
           </div>
 
@@ -33,7 +33,8 @@ export default function Footer() {
               {[
                 { name: "Home", href: "/" },
                 { name: "About", href: "/about" },
-                { name: "Work", href: "/services" },
+                { name: "Work", href: "/work" },
+                { name: "Services", href: "/services" },
               ].map((item) => (
                 <li key={item.name}>
                   <Link
@@ -52,10 +53,10 @@ export default function Footer() {
               Expertise
             </h4>
             <ul className="space-y-3 text-sm text-muted">
-              <li>Full-Stack Development</li>
+              <li>AI Applications</li>
+              <li>Backend & APIs</li>
               <li>Machine Learning</li>
-              <li>Data Analysis</li>
-              <li>Mobile Development</li>
+              <li>Full-Stack Development</li>
             </ul>
           </div>
 

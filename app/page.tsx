@@ -6,23 +6,28 @@ import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
 import TextReveal from "@/components/animations/TextReveal";
 import HeroPortrait from "@/components/HeroPortrait";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, CV_DOWNLOAD_NAME, CV_PATH } from "@/lib/site";
 
 const expertise = [
   {
     num: "01",
-    title: "Full-Stack Development",
-    desc: "Building responsive, cross-device web applications using React, Django, and Node.js — from API design to CI/CD deployment.",
+    title: "AI Applications & Voice Agents",
+    desc: "Real-time voice agents and LLM features built on OpenAI, Deepgram, ElevenLabs and Twilio — with structured outputs validated against strict JSON Schemas.",
   },
   {
     num: "02",
-    title: "Machine Learning & AI",
-    desc: "Developing neural networks for audio classification, music generation, and predictive modelling using TensorFlow, PyTorch, and Keras.",
+    title: "Backend & APIs",
+    desc: "TypeScript and Python services with Node.js, Express, FastAPI and Django REST Framework, backed by PostgreSQL and Prisma, tested with Vitest and shipped through CI/CD.",
   },
   {
     num: "03",
-    title: "Data Analysis",
-    desc: "Extracting business insight from complex datasets through statistical analysis, predictive models, and automated data pipelines.",
+    title: "Machine Learning",
+    desc: "PyTorch models for prediction and fault diagnosis, evaluated on held-out data to avoid leakage and explained with Integrated Gradients and attention maps.",
+  },
+  {
+    num: "04",
+    title: "Full-Stack Web Apps",
+    desc: "React and Next.js front ends styled with Tailwind CSS, from interactive dashboards to the product pages that put AI in front of people.",
   },
 ];
 
@@ -30,6 +35,7 @@ type Project = {
   category: string;
   title: string;
   desc: string;
+  result?: string; // one-line measured outcome
   tech: string[];
   link?: string;
   demo?: string;
@@ -40,6 +46,7 @@ const projects: Project[] = [
     category: "Conversational AI",
     title: "AI Receptionist",
     desc: "A production-ready AI receptionist that answers business calls 24/7, captures booking details through natural conversation, and emails structured leads to the owner. Built on Twilio voice + OpenAI — available to integrate into your business.",
+    result: "Live demo on this site, 100+ automated tests, now being demonstrated to prospective UK pub customers.",
     tech: ["TypeScript", "OpenAI", "Twilio"],
     link: "https://github.com/mandalswarnim/ai-receptionist",
     demo: "/ai-receptionist",
@@ -56,6 +63,7 @@ const projects: Project[] = [
     category: "Deep Learning",
     title: "UAV Predictive Maintenance Digital Twin",
     desc: "LSTM, Transformer, and 1D-CNN models forecasting Remaining Useful Life on NASA C-MAPSS turbofans and a synthetic UAV fleet — with an interactive 3D dashboard and explainable-AI diagnostics.",
+    result: "Transformer reached 14.12 RMSE on held-out NASA C-MAPSS engines and 97.4% fault-classification accuracy on the UAV fleet.",
     tech: ["PyTorch", "Next.js", "Three.js"],
     link: "https://github.com/mandalswarnim/uav-pdm-dashboard",
     demo: "/uav",
@@ -70,7 +78,8 @@ const projects: Project[] = [
   {
     category: "Deep Learning",
     title: "Music Genre Classification",
-    desc: "CNN model classifying audio into 10 genres using MFCC features, achieving 79% accuracy on the GTZAN dataset with custom preprocessing.",
+    desc: "CNN model classifying audio into 10 genres using MFCC features from the GTZAN dataset, with custom preprocessing.",
+    result: "79% accuracy across 10 genres on GTZAN.",
     tech: ["Python", "PyTorch", "Librosa"],
   },
 ];
@@ -80,7 +89,7 @@ const testimonials = [
     content:
       "Swarnim is an exceptional professional who brings genuine passion and dedication to everything he undertakes. His commitment to excellence and ability to inspire and uplift his team members makes him an invaluable asset to any project.",
     name: "Adrian Mihail",
-    role: "Professional Colleague",
+    role: "Reception Manager, The Oriental Club",
   },
   {
     content:
@@ -109,22 +118,27 @@ export default function Home() {
 
               <TextReveal
                 delay={0.1}
-                lines={["Building software", "that thinks ahead."]}
-                className="font-serif text-5xl md:text-6xl xl:text-7xl font-bold text-foreground leading-[1.08] mb-7"
+                lines={["I build AI products", "that run in production."]}
+                className="font-serif text-5xl md:text-6xl xl:text-7xl font-bold text-foreground leading-[1.08] mb-6"
               />
 
               <FadeIn delay={0.2}>
+                <p className="text-xl text-foreground leading-snug mb-5">
+                  Voice agents, predictive models, full-stack apps.
+                </p>
                 <p className="text-lg text-muted leading-relaxed mb-10 max-w-[480px]">
-                  MSc Software Engineering, University of West London.
-                  Full-stack developer and machine learning engineer with
-                  production experience across web, mobile, and AI systems.
+                  AI / software engineer with an MSc in Software Engineering
+                  (Distinction) from the University of West London, and a year
+                  of commercial React and Django work for a US healthcare
+                  client. Lately: a real-time AI phone receptionist and a
+                  deep-learning predictive-maintenance system for UAV fleets.
                 </p>
               </FadeIn>
 
               <FadeIn delay={0.3}>
                 <div className="flex flex-wrap gap-4">
                   <Link
-                    href="/services"
+                    href="/work"
                     className="group inline-flex items-center gap-2 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/85 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none"
                   >
                     View my work
@@ -136,6 +150,16 @@ export default function Home() {
                   >
                     Get in touch
                   </Link>
+                  {CV_PATH && (
+                    <a
+                      href={CV_PATH}
+                      download={CV_DOWNLOAD_NAME}
+                      className="inline-flex items-center gap-2 border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:border-foreground/40 hover:bg-surface hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                      Download CV
+                      <span aria-hidden>↓</span>
+                    </a>
+                  )}
                 </div>
               </FadeIn>
             </div>
@@ -181,7 +205,7 @@ export default function Home() {
                 Selected Work
               </h2>
               <Link
-                href="/services"
+                href="/work"
                 className="group inline-flex items-center gap-1 text-sm text-primary hover:underline underline-offset-4"
               >
                 All projects
@@ -200,9 +224,14 @@ export default function Home() {
                   <h3 className="font-medium text-foreground leading-snug mb-3">
                     {project.title}
                   </h3>
-                  <p className="text-sm text-muted leading-relaxed mb-6 flex-1">
+                  <p className={`text-sm text-muted leading-relaxed flex-1 ${project.result ? "mb-4" : "mb-6"}`}>
                     {project.desc}
                   </p>
+                  {project.result && (
+                    <p className="text-sm text-foreground leading-relaxed mb-6">
+                      <span className="font-medium text-primary">Result:</span> {project.result}
+                    </p>
+                  )}
                   <div className="flex flex-wrap gap-1.5 mb-5">
                     {project.tech.map((t) => (
                       <span
@@ -291,7 +320,7 @@ export default function Home() {
                 Have a project<br />in mind?
               </h2>
               <p className="text-muted text-lg mb-10">
-                Open to full-time roles, freelance projects, and research collaborations.
+                Open to junior and graduate software, backend and AI engineering roles — and to businesses that want an AI receptionist.
               </p>
               <div className="flex flex-wrap gap-4">
                 <a

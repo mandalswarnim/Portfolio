@@ -19,7 +19,7 @@ export default function NotFound() {
             Back to home
           </Link>
           <Link
-            href="/services"
+            href="/work"
             className="inline-flex items-center border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full hover:border-foreground/40 transition-colors"
           >
             See my work

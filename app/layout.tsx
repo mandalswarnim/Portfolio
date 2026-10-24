@@ -22,16 +22,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Swarnim Mandal — Software Engineer & ML Researcher",
+  title: "Swarnim Mandal — AI / Software Engineer",
   description:
-    "MSc Software Engineering, University of West London. Full-stack developer and machine learning engineer based in London, UK.",
+    "AI / software engineer in London building AI products that run in production: voice agents, predictive models and full-stack apps. MSc Software Engineering (Distinction), University of West London.",
   keywords:
     "Swarnim Mandal, Software Engineer, Full-Stack Developer, Machine Learning, AI, Data Analysis, Python, React, Django, TensorFlow, London",
   authors: [{ name: "Swarnim Mandal" }],
   openGraph: {
-    title: "Swarnim Mandal — Software Engineer & ML Researcher",
+    title: "Swarnim Mandal — AI / Software Engineer",
     description:
-      "Full-stack developer and machine learning engineer based in London, UK.",
+      "I build AI products that run in production: voice agents, predictive models and full-stack apps. London, UK.",
     url: SITE_URL,
     siteName: "Swarnim Mandal",
     locale: "en_GB",
@@ -45,7 +45,7 @@ const personJsonLd = {
   name: "Swarnim Mandal",
   url: SITE_URL,
   email: `mailto:${CONTACT_EMAIL}`,
-  jobTitle: "Software Engineer",
+  jobTitle: "AI / Software Engineer",
   address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
   alumniOf: { "@type": "CollegeOrUniversity", name: "University of West London" },
   sameAs: [GITHUB_URL, LINKEDIN_URL],

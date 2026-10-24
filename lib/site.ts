@@ -6,8 +6,10 @@ export const SITE_URL = "https://swarnimmandal.me";
 export const GITHUB_URL = "https://github.com/mandalswarnim";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/swarnim-mandal-678976259/";
 
-// Path of a CV in public/ (e.g. "/Swarnim_Mandal_CV.pdf"). Download links are hidden until set.
-export const CV_PATH: string | null = null;
+// Path of a CV in public/ (URL-encoded). Download links are hidden until set.
+export const CV_PATH: string | null = "/Swarnim%20CV.pdf";
+// Filename the browser saves the CV as.
+export const CV_DOWNLOAD_NAME = "Swarnim CV.pdf";
 
 // Cal.com / Calendly link. Booking buttons are hidden until this is set.
 export const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL || null;

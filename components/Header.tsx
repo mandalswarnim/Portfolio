@@ -9,7 +9,8 @@ import ScrollProgress from "@/components/ScrollProgress";
 
 const navItems = [
   { name: "About", href: "/about" },
-  { name: "Work", href: "/services" },
+  { name: "Work", href: "/work" },
+  { name: "Services", href: "/services" },
   { name: "Contact", href: "/contact" },
 ];
 

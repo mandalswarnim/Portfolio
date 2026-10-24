@@ -4,25 +4,30 @@ import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
-import { CONTACT_EMAIL, CV_PATH, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
+import { CONTACT_EMAIL, CV_DOWNLOAD_NAME, CV_PATH, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About — Swarnim Mandal",
   description:
-    "MSc Software Engineering graduate of the University of West London. Full-stack developer and machine learning engineer based in London.",
+    "AI / software engineer in London. MSc Software Engineering (Distinction), University of West London. Builds voice agents, predictive models and full-stack apps.",
 };
 
 const skills = [
-  { category: "Languages", items: ["Python", "C#", "C", "Java", "Dart"] },
+  { category: "Languages", items: ["Python", "TypeScript", "JavaScript", "SQL"] },
   {
-    category: "Frameworks & Libraries",
-    items: ["React", "Django", "Node.js", "Flutter", "TensorFlow", "Keras", "PyTorch", "Selenium", "Beautiful Soup"],
+    category: "Backend & APIs",
+    items: ["Node.js", "Express", "FastAPI", "Django REST Framework", "REST API design", "WebSockets", "Webhooks", "Zod"],
   },
+  { category: "Databases", items: ["PostgreSQL", "Prisma ORM", "MySQL", "MongoDB"] },
   {
-    category: "Tools & Platforms",
-    items: ["Git", "GitHub", "Figma", "VS Code", "Talend", "Jira"],
+    category: "AI & Machine Learning",
+    items: ["OpenAI API", "Deepgram", "ElevenLabs", "Twilio ConversationRelay", "PyTorch", "scikit-learn", "pandas", "NumPy", "TensorFlow / Keras", "Hugging Face", "Captum"],
   },
-  { category: "Databases", items: ["MySQL", "MongoDB"] },
+  { category: "Frontend", items: ["React", "Next.js", "Tailwind CSS", "Three.js"] },
+  {
+    category: "Testing & Delivery",
+    items: ["Git", "GitHub Actions (CI/CD)", "Vitest", "ESLint", "Strict TypeScript", "Docker", "Vercel", "Jira"],
+  },
 ];
 
 const timeline = [
@@ -34,19 +39,31 @@ const timeline = [
     type: "education",
     points: [
       "Completed with Distinction.",
-      "Advanced software development practices and cutting-edge engineering methods.",
-      "Coursework spanning distributed systems, AI, and modern software architecture.",
+      "Dissertation: deep-learning predictive maintenance for military UAV fleets (LSTM, 1D-CNN, Transformer) — the basis of ARES PdM.",
     ],
   },
   {
     period: "Feb 2025 — Present",
-    role: "Receptionist",
-    org: "Oriental Club",
+    role: "Receptionist, Front of House",
+    org: "The Oriental Club",
     location: "London, UK",
     type: "work",
     points: [
-      "Engaged with high-profile members including diplomats and business leaders, strengthening stakeholder communication.",
-      "Prepared daily management reports and assisted in revenue forecasting using data-driven insights.",
+      "Wrote four standard operating procedures that the front-of-house team has adopted.",
+      "Use Salesforce, SevenRooms and Cloudbeds daily at a London private members’ club.",
+      "Produce daily reconciliation reports and weekly bedroom-revenue forecasts for management.",
+      "Engage with high-profile members including diplomats and business leaders, strengthening stakeholder communication.",
+    ],
+  },
+  {
+    period: "Feb 2025 — Present",
+    role: "Business Development Manager (part-time)",
+    org: "Elite Professionals Team Ltd",
+    location: "London, UK",
+    type: "work",
+    points: [
+      "Won staffing contracts with hospitality clients including InterContinental London – The O2 and London Marriott Hotel Marble Arch.",
+      "Agree each client’s staffing requirements and supply trained staff to meet them.",
     ],
   },
   {
@@ -56,21 +73,18 @@ const timeline = [
     location: "Pokhara, Nepal",
     type: "work",
     points: [
-      "Built responsive UIs with React & CSS, ensuring cross-device compatibility.",
-      "Developed RESTful APIs and optimised databases using Django for seamless backend integration.",
-      "Deployed applications via CI/CD pipelines, improving scalability and release reliability.",
+      "Built responsive React interfaces backed by Django REST APIs as part of a 15–20 person team delivering outsourced software for a US healthcare client.",
+      "Optimised the database queries behind key pages, contributing to a 12% reduction in their page-load times.",
+      "Shipped production releases through GitHub Actions CI/CD pipelines, and diagnosed and fixed defects across the front end, API and database layers.",
     ],
   },
   {
     period: "Sep 2023 — Dec 2023",
-    role: "UI/UX Designer",
-    org: "Eversoft",
+    role: "UI Designer (Internship)",
+    org: "Eversoft Group",
     location: "Pokhara, Nepal",
     type: "work",
-    points: [
-      "Contributed to a mobile application using Flutter, delivering end-to-end UI/UX solutions.",
-      "Supported Node.js backend development and guided team members on best practices.",
-    ],
+    points: ["Designed user interfaces for projects built with Node.js and Flutter."],
   },
   {
     period: "Sep 2023 — Dec 2023",
@@ -85,13 +99,13 @@ const timeline = [
   },
   {
     period: "Apr 2022 — Jun 2022",
-    role: "Data Analyst",
-    org: "Scretus",
+    role: "Data Analyst (Internship)",
+    org: "Scertus",
     location: "Remote, Bengaluru, India",
     type: "work",
     points: [
-      "Extracted, cleaned, and analysed datasets using automated tools, maintaining data integrity.",
-      "Built predictive models and conducted statistical analysis to surface business performance trends.",
+      "Automated the extraction and cleaning of client datasets in Python (pandas).",
+      "Built scikit-learn predictive models and statistical analyses to benchmark client business performance.",
     ],
   },
   {
@@ -100,7 +114,7 @@ const timeline = [
     org: "Jawaharlal Nehru Technological University Kakinada",
     location: "Kakinada, India",
     type: "education",
-    points: ["CGPA: 7.3/10. Comprehensive coursework across software engineering, algorithms, and emerging technologies."],
+    points: ["First Class (CGPA 7.3/10). Comprehensive coursework across software engineering, algorithms, and emerging technologies."],
   },
 ];
 
@@ -122,9 +136,10 @@ export default function About() {
                   className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6"
                 />
                 <p className="text-lg text-muted leading-relaxed max-w-lg">
-                  Software engineer with a background spanning full-stack
-                  development, machine learning, and data analysis. Recently
-                  completed an MSc at the University of West London.
+                  AI / software engineer in London. I build AI products that
+                  run in production, and the well-tested backend and front-end
+                  work around them. MSc Software Engineering with Distinction
+                  from the University of West London.
                 </p>
               </FadeIn>
             </div>
@@ -142,7 +157,7 @@ export default function About() {
                   <div key={item.label} className="flex justify-between items-start gap-4 border-b border-divider pb-5 last:border-0 last:pb-0">
                     <span className="text-sm text-subtle">{item.label}</span>
                     {item.href ? (
-                      <a href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} download={item.label === "CV" || undefined} rel="noopener noreferrer" className="text-sm text-foreground hover:text-primary transition-colors text-right">
+                      <a href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} download={item.label === "CV" ? CV_DOWNLOAD_NAME : undefined} rel="noopener noreferrer" className="text-sm text-foreground hover:text-primary transition-colors text-right">
                         {item.value}
                       </a>
                     ) : (
@@ -164,22 +179,43 @@ export default function About() {
               <h2 className="font-serif text-3xl font-bold text-foreground mb-8">My story</h2>
               <div className="space-y-5 text-muted text-base leading-relaxed">
                 <p>
-                  I grew up in Pokhara, Nepal, and pursued a Computer Science degree in India before
-                  moving to London in early 2025 to study Software Engineering at the University of
-                  West London. My path has taken me across three countries, four roles, and multiple
-                  domains — from building production web apps to training neural networks that generate music.
+                  I grew up in Pokhara, Nepal, studied Computer Science in India, and moved to London
+                  in early 2025 for an MSc in Software Engineering at the University of West London,
+                  which I finished with a Distinction in July 2026.
                 </p>
                 <p>
-                  At Aankhijhyal Technologies I shipped full-stack applications using React and Django.
-                  At Eversoft I designed mobile interfaces with Flutter. At Scretus I built data pipelines
-                  and predictive models from raw datasets. Each role deepened a different skill but
-                  reinforced the same conviction: the best solutions sit at the intersection of
-                  engineering rigour and clear thinking about the problem.
+                  My first proper engineering job was a year at Aankhijhyal Technologies, in a team of
+                  fifteen to twenty people building React front ends and Django REST APIs for a US
+                  healthcare client. That year taught me that most of the work starts after the first
+                  version ships: tracking down slow queries (we cut load times on key pages by around
+                  12%), fixing bugs that run from the front end through the API to the database, and
+                  getting releases out safely through CI. Before that I designed interfaces as an intern
+                  at Eversoft and cleaned data and built small predictive models at Scertus.
                 </p>
                 <p>
-                  Outside work I explore audio ML — two of my three public projects involve music
-                  (guitar tablature generation and genre classification). I&apos;m interested in how machine
-                  learning can model creativity, not just categorise it.
+                  Since moving to London I&apos;ve built two things I&apos;m proud of, and you can try
+                  both on this site. One is an{" "}
+                  <Link href="/ai-receptionist" className="text-primary hover:underline underline-offset-4">AI phone receptionist</Link>,
+                  a real-time voice agent that answers a business&apos;s missed calls, works out what the
+                  caller needs and emails it to the owner, with more than a hundred automated tests
+                  behind it. The other is{" "}
+                  <Link href="/uav" className="text-primary hover:underline underline-offset-4">ARES PdM</Link>,
+                  my dissertation: deep-learning models that predict when engines and drone components
+                  will fail, with a dashboard that shows which sensors drove each prediction.
+                </p>
+                <p>
+                  Alongside that I work front of house at the Oriental Club, a London private
+                  members&apos; club, and part-time in business development for Elite Professionals
+                  Team, where I&apos;ve won staffing contracts with hotels like the InterContinental at
+                  The O2 and the Marriott at Marble Arch. Neither is an engineering job, but both have
+                  taught me things engineering needs: writing procedures that other people actually
+                  follow, living in tools like Salesforce, SevenRooms and Cloudbeds every day, and
+                  sitting across from a client to work out what they really need.
+                </p>
+                <p>
+                  What I&apos;m after now is a junior or graduate role building software, whether
+                  that&apos;s backend, full-stack or AI applications, where I can keep shipping things
+                  people use.
                 </p>
               </div>
             </FadeIn>
@@ -195,7 +231,7 @@ export default function About() {
               Skills & Technologies
             </h2>
           </FadeIn>
-          <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {skills.map((group) => (
               <StaggerItem key={group.category}>
                 <div>
