@@ -48,6 +48,7 @@ export default function HeroPortrait() {
     let reveal = new Float32Array(0);
     let rowShift = new Int8Array(0);
 
+    let blocked = false; // autoplay refused
     // Lens state, eased toward the pointer target every frame.
     const lens = { x: 0, y: 0, r: 0, tx: 0, ty: 0, tr: 0 };
 
@@ -84,7 +85,7 @@ export default function HeroPortrait() {
 
     const drawAscii = (t: number) => {
       const src: CanvasImageSource | null =
-        video.readyState >= 2 ? video : still.complete && still.naturalWidth ? still : null;
+        video.readyState >= 2 && !blocked ? video : still.complete && still.naturalWidth ? still : null;
       ctx.clearRect(0, 0, W, H);
       if (!src) return;
 
@@ -156,15 +157,20 @@ export default function HeroPortrait() {
       }
     };
 
+    // Touch screens: once the turn finishes, the lens opens from the face to
+    // show the real footage, holds, then closes back to ASCII.
+    let revealAt = -1;
     const updateLens = (t: number) => {
       if (!canHover) {
-        lens.tx = W * (0.5 + 0.26 * Math.sin(t * 0.45));
-        lens.ty = H * (0.4 + 0.2 * Math.sin(t * 0.31 + 1.2));
-        lens.tr = t > 2.2 ? Math.min(W, H) * 0.24 : 0;
+        const phase = revealAt < 0 ? -1 : t - revealAt;
+        lens.tx = W * 0.5;
+        lens.ty = H * 0.38;
+        lens.tr = phase >= 0 && phase < 2.2 ? Math.max(W, H) * 0.8 : 0;
       }
+      const ease = canHover ? 0.12 : 0.06;
       lens.x += (lens.tx - lens.x) * 0.16;
       lens.y += (lens.ty - lens.y) * 0.16;
-      lens.r += (lens.tr - lens.r) * 0.12;
+      lens.r += (lens.tr - lens.r) * ease;
       stage.style.setProperty("--lx", `${lens.x.toFixed(1)}px`);
       stage.style.setProperty("--ly", `${lens.y.toFixed(1)}px`);
       stage.style.setProperty("--lr", `${Math.max(0, lens.r).toFixed(1)}px`);
@@ -187,10 +193,11 @@ export default function HeroPortrait() {
     let raf = 0;
     let visible = true;
     let last = 0;
-    const t0 = performance.now();
+    let t0 = -1; // set when the intro starts; the card stays dark until then
+    const clock = () => (t0 < 0 ? -1 : (performance.now() - t0) / 1000);
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      const t = (now - t0) / 1000;
+      const t = t0 < 0 ? -1 : (now - t0) / 1000;
       updateLens(t);
       if (now - last < 1000 / FPS) return;
       last = now;
@@ -198,11 +205,49 @@ export default function HeroPortrait() {
       drawAscii(t);
     };
 
-    // The clip plays once; after it ends the ASCII keeps animating over the
-    // held last frame. Pausing off-screen resumes from the same point.
-    const playTimer = setTimeout(() => {
-      if (visible && !document.hidden) video.play().catch(() => {});
-    }, PLAY_DELAY);
+    // When autoplay is blocked (e.g. iOS Low Power Mode), show the last
+    // frame, facing the camera, rather than the opening look-away.
+    const showEndFrame = () => {
+      still.src = `${SRC}.jpg`;
+      video.poster = `${SRC}.jpg`;
+      if (video.duration) video.currentTime = video.duration;
+      revealAt = clock() + 1.5; // after the scramble settles
+    };
+    const onEnded = () => {
+      revealAt = clock();
+    };
+    video.addEventListener("ended", onEnded);
+
+    // The intro (scramble-in, then the clip played once and held on its last
+    // frame) starts the first time the card is mostly on screen, so on phones,
+    // where the card sits below the fold, it happens in view. Pausing
+    // off-screen resumes from the same point.
+    let playTimer: ReturnType<typeof setTimeout> | undefined;
+    const intro = () => {
+      t0 = performance.now();
+      revealAt = -1;
+      nextGlitch = 2.5;
+      glitchEnd = 0;
+      rowShift.fill(0);
+      clearTimeout(playTimer);
+      playTimer = setTimeout(() => {
+        if (!visible || document.hidden) return;
+        video.muted = true; // iOS only autoplays when the property is set
+        video.currentTime = 0;
+        video.play().catch(() => {
+          blocked = true;
+          showEndFrame();
+        });
+      }, PLAY_DELAY);
+    };
+    // Touch screens: tap the card to replay the whole sequence.
+    const onTap = () => {
+      if (canHover || t0 < 0 || blocked) return;
+      if (!video.paused && !video.ended) return;
+      intro();
+    };
+    stage.addEventListener("click", onTap);
+
     const start = () => {
       if (raf || !visible || document.hidden) return;
       if (!video.ended && video.currentTime > 0) video.play().catch(() => {});
@@ -214,11 +259,15 @@ export default function HeroPortrait() {
       video.pause();
     };
 
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible) start();
-      else stop();
-    });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) start();
+        else stop();
+        if (t0 < 0 && entry.intersectionRatio >= 0.5) intro();
+      },
+      { threshold: [0, 0.5] },
+    );
     io.observe(stage);
     const ro = new ResizeObserver(resize);
     ro.observe(stage);
@@ -236,6 +285,8 @@ export default function HeroPortrait() {
       document.removeEventListener("visibilitychange", onVisibility);
       stage.removeEventListener("pointermove", onMove);
       stage.removeEventListener("pointerleave", onLeave);
+      stage.removeEventListener("click", onTap);
+      video.removeEventListener("ended", onEnded);
     };
   }, [reduced]);
 
@@ -344,6 +395,9 @@ export default function HeroPortrait() {
               >
                 HOVER TO DECODE
               </div>
+            )}
+            {!reduced && (
+              <div className="absolute right-6 top-5 opacity-80 [@media(hover:hover)]:hidden">TAP TO REPLAY</div>
             )}
 
             <div className="absolute left-6 bottom-5">
