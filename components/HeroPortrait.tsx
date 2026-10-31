@@ -63,7 +63,7 @@ export default function HeroPortrait() {
       cols = Math.max(44, Math.min(84, Math.round(W / 6.5)));
       cellW = W / cols;
       cellH = cellW * 1.55;
-      rows = Math.ceil(H / cellH);
+      rows = H > 0 ? Math.ceil(H / cellH) : 0;
       sample.width = cols;
       sample.height = rows;
       ctx.font = `600 ${cellH * 0.92}px ui-monospace, SFMono-Regular, Menlo, monospace`;
@@ -87,7 +87,7 @@ export default function HeroPortrait() {
       const src: CanvasImageSource | null =
         video.readyState >= 2 && !blocked ? video : still.complete && still.naturalWidth ? still : null;
       ctx.clearRect(0, 0, W, H);
-      if (!src) return;
+      if (!src || !rows) return; // hidden (display: none) copies have no size
 
       // object-fit: cover crop from the source into the cols×rows grid.
       const sw = src instanceof HTMLVideoElement ? src.videoWidth : still.naturalWidth;

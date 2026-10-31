@@ -45,6 +45,8 @@ Rendered markdown is styled with `@tailwindcss/typography` (`prose prose-stone`)
 
 **Animation components** in `components/animations/` (`FadeIn`, `StaggerContainer`, `StaggerItem`, `TextReveal` for line-by-line headings, `PageTransition`, `MotionProvider`) are thin framer-motion wrappers used across all pages. `HeroPortrait` (home hero: Higgsfield-generated turn-to-camera clip `public/hero/portrait.mp4`, played once and held on its last frame (`portrait-start.jpg` = first-frame poster, `portrait.jpg` = last frame / reduced-motion still), drawn live as ASCII on a canvas, with a cursor "decode lens" revealing the video; the intro starts when the card is ≥50% on screen; touch screens get a one-off lens reveal after the turn and tap-to-replay; autoplay-blocked falls back to the last frame; plain still under reduced motion; source reference photos live in the gitignored `reference photos/`) and `ScrollProgress` (bar under the header) live in `components/`. All are `"use client"` components and can be imported into server component pages.
 
+**Homepage colour chapters** — `app/page.tsx` is wrapped in `components/home/Chapters.tsx`: any element with `data-bg="#hex"` is a chapter, and when it crosses the middle of the viewport the page background eases to that colour (sections themselves stay transparent). Hero and featured projects (those with a `screen` field: AI Receptionist, UAV) share a two-column block whose right column holds the sticky `components/home/TravelCard.tsx` on `lg+` — the ASCII `HeroPortrait` for the hero (`data-card={0}`), then each project's real screenshot (`public/home/*.jpg`, captured from the site's own pages) in a browser frame, with two coloured plates rearranging per chapter; below `lg` each chapter shows its media inline. `components/home/ExpertiseRail.tsx` pins on `lg+` and scrolls its cards sideways (native swipe row on smaller screens); `components/home/Reveal.tsx` is the in-view masked heading reveal (observe the heading, not the clipped lines). Headlines use `font-display` (Archivo Black, uppercase).
+
 **Athena mark** (`components/AthenaMark.tsx`) — logo used in Header and Footer. Renders `public/athena.png` (portrait art, 402x572) via `next/image`; `height` drives the size and width follows the intrinsic aspect ratio. Icon assets are derived from the same head crop: `app/icon.png` (favicon) and `app/apple-icon.png` are picked up by Next.js file conventions, and `public/icon-192.png` / `public/icon-512.png` back `app/manifest.ts`. Regenerate all five together if the source art changes.
 
 **UAV dashboard (`/uav`)** — light-theme port of a standalone thesis project (ARES PdM). Five routes (`/uav`, `/uav/armory`, `/uav/mission`, `/uav/diagnostics`, `/uav/lab`) sharing `app/uav/layout.tsx` (mounts `AppBootstrap` + `UavNav` tab row). Components in `components/uav/`, state/fetchers in `lib/uav/` (Zustand store reads baked JSON from `public/uav/data/`). Three.js components are loaded with `dynamic(..., { ssr: false })` from `'use client'` pages, confining their bundle weight to `/uav` routes. Client-side procedural simulation only — there is intentionally no inference backend. `lib/uav/palette.ts` mirrors the Tailwind status colors for canvas/Three.js/chart code; keep the two in sync.
@@ -60,6 +62,8 @@ Colours are defined as direct hex values in `tailwind.config.js` (not CSS variab
 | `surface` | `#F0EBE3` | Cards, alternate sections |
 | `divider` | `#E2D9CE` | Borders, `<hr>`-style lines |
 | `primary` | `#2D5FA3` | Steel blue — SM monogram, links, category labels |
+| `charcoal` | `#1E1E1E` | Homepage dark chapters, dark buttons |
+| `accent` | `#C9F27A` | Lime — homepage primary buttons, testimonials chapter |
 | `muted` | `#6B6259` | Secondary text |
 | `subtle` | `#9B9088` | Tertiary text, labels |
 | `status.nominal` | `#4A7C59` | UAV dashboard — healthy |
@@ -69,3 +73,4 @@ Colours are defined as direct hex values in `tailwind.config.js` (not CSS variab
 Fonts loaded via `next/font/google` in `app/layout.tsx`:
 - `--font-playfair` → `font-serif` (headings)
 - `--font-inter` → `font-sans` (body, default)
+- `--font-archivo` → `font-display` (Archivo Black; homepage headlines, uppercase)

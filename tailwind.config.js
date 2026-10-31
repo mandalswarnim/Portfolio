@@ -13,6 +13,8 @@ module.exports = {
         surface: "#F0EBE3",
         divider: "#E2D9CE",
         primary: "#2D5FA3",
+        charcoal: "#1E1E1E",
+        accent: "#C9F27A",
         muted: "#6B6259",
         subtle: "#9B9088",
         status: {
@@ -24,6 +26,7 @@ module.exports = {
       fontFamily: {
         serif: ["var(--font-playfair)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-archivo)", "Impact", "sans-serif"],
       },
       // Styling for rendered blog markdown (`prose` on app/blog/[slug]/page.tsx),
       // mapped onto the design tokens above.

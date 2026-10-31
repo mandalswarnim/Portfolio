@@ -1,11 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/components/animations/FadeIn";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
 import TextReveal from "@/components/animations/TextReveal";
 import HeroPortrait from "@/components/HeroPortrait";
+import Chapters from "@/components/home/Chapters";
+import ExpertiseRail from "@/components/home/ExpertiseRail";
+import Reveal from "@/components/home/Reveal";
+import TravelCard, { type Screen } from "@/components/home/TravelCard";
 import { CONTACT_EMAIL, CV_DOWNLOAD_NAME, CV_PATH } from "@/lib/site";
 
 const expertise = [
@@ -39,6 +44,7 @@ type Project = {
   tech: string[];
   link?: string;
   demo?: string;
+  screen?: Screen; // featured as a full colour chapter with this screenshot
 };
 
 const projects: Project[] = [
@@ -50,6 +56,7 @@ const projects: Project[] = [
     tech: ["TypeScript", "OpenAI", "Twilio"],
     link: "https://github.com/mandalswarnim/ai-receptionist",
     demo: "/ai-receptionist",
+    screen: { src: "/home/receptionist.jpg", url: "swarnimmandal.me/ai-receptionist", alt: "AI Receptionist landing page" },
   },
   {
     category: "Aerospace Engineering",
@@ -67,6 +74,7 @@ const projects: Project[] = [
     tech: ["PyTorch", "Next.js", "Three.js"],
     link: "https://github.com/mandalswarnim/uav-pdm-dashboard",
     demo: "/uav",
+    screen: { src: "/home/uav.jpg", url: "swarnimmandal.me/uav/mission", alt: "UAV mission dashboard with radar and live telemetry" },
   },
   {
     category: "Deep Learning",
@@ -99,179 +107,194 @@ const testimonials = [
   },
 ];
 
+const CREAM = "#FAF8F4";
+const CHARCOAL = "#1E1E1E";
+const BLUE = "#2D5FA3";
+const LIME = "#C9F27A";
+
+const featured = projects.filter((p) => p.screen);
+const moreWork = projects.filter((p) => !p.screen);
+const featuredBg = [CHARCOAL, BLUE];
+
+const btnAccent =
+  "group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-8px_rgba(201,242,122,0.8)] active:translate-y-0";
+const btnDark =
+  "group inline-flex items-center gap-2 rounded-full bg-charcoal px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-charcoal/85 active:translate-y-0";
+const btnOutlineDark =
+  "inline-flex items-center gap-2 rounded-full border border-charcoal/25 px-6 py-3 text-sm font-semibold text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:border-charcoal active:translate-y-0";
+const btnOutlineLight =
+  "inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white active:translate-y-0";
+const arrow = <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>;
+
+function DemoLink({ href, className, children }: { href: string; className: string; children: React.ReactNode }) {
+  return /^https?:\/\//.test(href) ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      {children}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <Chapters initial={CREAM}>
+      {/* ── Story: hero + featured chapters beside the travelling card ── */}
+      <div className="mx-auto grid max-w-6xl px-6 lg:grid-cols-2 lg:gap-16">
+        <div>
+          {/* Hero */}
+          <section data-bg={CREAM} data-card={0} className="flex min-h-[calc(100vh-80px)] flex-col justify-center py-20">
+            <FadeIn delay={0}>
+              <p className="mb-8 font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                Available for opportunities · London, UK
+              </p>
+            </FadeIn>
 
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="min-h-[calc(100vh-80px)] flex items-center">
-        <div className="max-w-6xl mx-auto px-6 w-full py-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <TextReveal
+              delay={0.1}
+              lines={["I build AI", "products that", "run in", "production."]}
+              className="mb-8 font-display text-[2.6rem] uppercase leading-[0.95] text-charcoal sm:text-5xl xl:text-[3.4rem]"
+            />
 
-            {/* Left: copy */}
-            <div>
-              <FadeIn delay={0}>
-                <p className="text-sm font-medium text-primary uppercase tracking-widest mb-8">
-                  Available for opportunities · London, UK
+            <FadeIn delay={0.2}>
+              <p className="mb-4 text-xl leading-snug text-charcoal">Voice agents, predictive models, full-stack apps.</p>
+              <p className="mb-10 max-w-[480px] text-lg leading-relaxed text-muted">
+                AI / software engineer with an MSc in Software Engineering (Distinction) from the University of West
+                London, and a year of commercial React and Django work for a US healthcare client. Lately: a real-time
+                AI phone receptionist and a deep-learning predictive-maintenance system for UAV fleets.
+              </p>
+            </FadeIn>
+
+            <FadeIn delay={0.3}>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/work" className={btnDark}>
+                  View my work {arrow}
+                </Link>
+                <Link href="/contact" className={btnOutlineDark}>
+                  Get in touch
+                </Link>
+                {CV_PATH && (
+                  <a href={CV_PATH} download={CV_DOWNLOAD_NAME} className={btnOutlineDark}>
+                    Download CV <span aria-hidden>↓</span>
+                  </a>
+                )}
+              </div>
+            </FadeIn>
+
+            <div className="mt-16 lg:hidden">
+              <HeroPortrait />
+            </div>
+          </section>
+
+          {/* Featured projects, one colour chapter each */}
+          {featured.map((p, i) => (
+            <section
+              key={p.title}
+              data-bg={featuredBg[i % featuredBg.length]}
+              data-card={i + 1}
+              className="flex min-h-screen flex-col justify-center py-24 text-white"
+            >
+              <FadeIn>
+                <p className="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-white/60">
+                  {String(i + 1).padStart(2, "0")} / {p.category}
                 </p>
               </FadeIn>
-
-              <TextReveal
-                delay={0.1}
-                lines={["I build AI products", "that run in production."]}
-                className="font-serif text-5xl md:text-6xl xl:text-7xl font-bold text-foreground leading-[1.08] mb-6"
-              />
-
-              <FadeIn delay={0.2}>
-                <p className="text-xl text-foreground leading-snug mb-5">
-                  Voice agents, predictive models, full-stack apps.
-                </p>
-                <p className="text-lg text-muted leading-relaxed mb-10 max-w-[480px]">
-                  AI / software engineer with an MSc in Software Engineering
-                  (Distinction) from the University of West London, and a year
-                  of commercial React and Django work for a US healthcare
-                  client. Lately: a real-time AI phone receptionist and a
-                  deep-learning predictive-maintenance system for UAV fleets.
-                </p>
-              </FadeIn>
-
-              <FadeIn delay={0.3}>
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href="/work"
-                    className="group inline-flex items-center gap-2 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/85 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none"
-                  >
-                    View my work
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:border-foreground/40 hover:bg-surface hover:-translate-y-0.5 active:translate-y-0"
-                  >
-                    Get in touch
-                  </Link>
-                  {CV_PATH && (
-                    <a
-                      href={CV_PATH}
-                      download={CV_DOWNLOAD_NAME}
-                      className="inline-flex items-center gap-2 border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:border-foreground/40 hover:bg-surface hover:-translate-y-0.5 active:translate-y-0"
-                    >
-                      Download CV
-                      <span aria-hidden>↓</span>
+              <Reveal lines={[p.title]} className="mb-6 font-display text-4xl uppercase leading-[0.95] md:text-5xl" />
+              <FadeIn delay={0.1}>
+                <p className="mb-5 leading-relaxed text-white/70">{p.desc}</p>
+                {p.result && (
+                  <p className="mb-6 leading-relaxed">
+                    <span className="font-semibold text-accent">Result:</span> {p.result}
+                  </p>
+                )}
+                <div className="mb-8 flex flex-wrap gap-1.5">
+                  {p.tech.map((t) => (
+                    <span key={t} className="rounded-full border border-white/25 px-3 py-1 text-xs text-white/80">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {p.demo && (
+                    <DemoLink href={p.demo} className={btnAccent}>
+                      Try it {arrow}
+                    </DemoLink>
+                  )}
+                  {p.link && (
+                    <a href={p.link} target="_blank" rel="noopener noreferrer" className={btnOutlineLight}>
+                      View on GitHub ↗
                     </a>
                   )}
                 </div>
               </FadeIn>
-            </div>
 
-            {/* Right: photo */}
-            <FadeIn delay={0.2} direction="left">
-              <HeroPortrait />
-            </FadeIn>
+              <div className="mt-12 overflow-hidden rounded-2xl border border-white/10 lg:hidden">
+                <div className="relative aspect-[16/10]">
+                  <Image src={p.screen!.src} alt={p.screen!.alt} fill sizes="100vw" className="object-cover object-top" />
+                </div>
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="sticky top-20 h-[calc(100vh-80px)]">
+            <TravelCard screens={featured.map((p) => p.screen!)} />
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* ── Expertise ────────────────────────────────────── */}
-      <section className="py-24 border-t border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-16">
-              Expertise
-            </h2>
-          </FadeIn>
+      {/* ── What I do (sideways rail) ─────────────────────── */}
+      <ExpertiseRail items={expertise} bg={CHARCOAL} />
 
-          <StaggerContainer className="divide-y divide-divider border-t border-divider">
-            {expertise.map((item) => (
-              <StaggerItem key={item.num}>
-                <div className="group grid md:grid-cols-[64px_1fr_2fr] items-start gap-6 py-8 hover:bg-surface/60 transition-colors duration-300 px-2 -mx-2 rounded-lg">
-                  <span className="text-xs font-mono text-subtle pt-0.5 transition-colors duration-300 group-hover:text-primary">{item.num}</span>
-                  <h3 className="font-medium text-foreground transition-transform duration-300 ease-out group-hover:translate-x-1">{item.title}</h3>
-                  <p className="text-sm text-muted leading-relaxed">{item.desc}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-          <div className="border-t border-divider" />
-        </div>
-      </section>
+      {/* ── More work ─────────────────────────────────────── */}
+      <section data-bg={CREAM} className="py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-14 flex flex-wrap items-end justify-between gap-4">
+            <Reveal lines={["More work"]} className="font-display text-5xl uppercase leading-[0.95] text-charcoal md:text-7xl" />
+            <Link href="/work" className="group inline-flex items-center gap-1 text-sm font-semibold text-charcoal">
+              All projects {arrow}
+            </Link>
+          </div>
 
-      {/* ── Selected Work ────────────────────────────────── */}
-      <section className="py-24 border-t border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <div className="flex items-end justify-between mb-16">
-              <h2 className="font-serif text-4xl font-bold text-foreground">
-                Selected Work
-              </h2>
-              <Link
-                href="/work"
-                className="group inline-flex items-center gap-1 text-sm text-primary hover:underline underline-offset-4"
-              >
-                All projects
-                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </Link>
-            </div>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-3 gap-6">
-            {projects.map((project) => (
+          <StaggerContainer className="grid gap-6 md:grid-cols-3">
+            {moreWork.map((project) => (
               <StaggerItem key={project.title}>
-                <div className="flex flex-col bg-surface rounded-2xl p-6 border border-divider transition-all duration-300 ease-out hover:border-foreground/20 hover:shadow-[0_14px_32px_-12px_rgba(28,22,18,0.18)] hover:-translate-y-1 h-full">
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">
-                    {project.category}
-                  </span>
-                  <h3 className="font-medium text-foreground leading-snug mb-3">
-                    {project.title}
-                  </h3>
-                  <p className={`text-sm text-muted leading-relaxed flex-1 ${project.result ? "mb-4" : "mb-6"}`}>
-                    {project.desc}
-                  </p>
+                <div className="flex h-full flex-col rounded-[2rem] border border-charcoal/10 bg-white p-7 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_-24px_rgba(30,30,30,0.35)]">
+                  <span className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-primary">{project.category}</span>
+                  <h3 className="mb-3 font-display text-xl uppercase leading-tight text-charcoal">{project.title}</h3>
+                  <p className={`flex-1 text-sm leading-relaxed text-muted ${project.result ? "mb-4" : "mb-6"}`}>{project.desc}</p>
                   {project.result && (
-                    <p className="text-sm text-foreground leading-relaxed mb-6">
-                      <span className="font-medium text-primary">Result:</span> {project.result}
+                    <p className="mb-6 text-sm leading-relaxed text-charcoal">
+                      <span className="font-semibold text-primary">Result:</span> {project.result}
                     </p>
                   )}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
+                  <div className="mb-6 flex flex-wrap gap-1.5">
                     {project.tech.map((t) => (
-                      <span
-                        key={t}
-                        className="text-xs bg-background text-subtle border border-divider px-2.5 py-1 rounded-full"
-                      >
+                      <span key={t} className="rounded-full bg-background px-2.5 py-1 text-xs text-subtle">
                         {t}
                       </span>
                     ))}
                   </div>
                   <div className="flex flex-wrap items-center gap-4">
-                    {project.demo &&
-                      (/^https?:\/\//.test(project.demo) ? (
-                        <a
-                          href={project.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group/btn inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-4 py-2 rounded-full hover:bg-foreground/85 transition-colors"
-                        >
-                          Try me
-                          <span className="transition-transform duration-300 group-hover/btn:translate-x-1">→</span>
-                        </a>
-                      ) : (
-                        <Link
-                          href={project.demo}
-                          className="group/btn inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-4 py-2 rounded-full hover:bg-foreground/85 transition-colors"
-                        >
-                          Try me
-                          <span className="transition-transform duration-300 group-hover/btn:translate-x-1">→</span>
-                        </Link>
-                      ))}
+                    {project.demo && (
+                      <DemoLink
+                        href={project.demo}
+                        className="group inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-charcoal transition-transform duration-300 hover:-translate-y-0.5"
+                      >
+                        Try me {arrow}
+                      </DemoLink>
+                    )}
                     {project.link && (
                       <a
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group/gh inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                        className="text-sm font-semibold text-charcoal transition-colors hover:text-primary"
                       >
-                        View on GitHub{" "}
-                        <span className="text-xs transition-transform duration-300 group-hover/gh:-translate-y-0.5 group-hover/gh:translate-x-0.5">↗</span>
+                        View on GitHub ↗
                       </a>
                     )}
                   </div>
@@ -282,27 +305,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────── */}
-      <section className="py-24 border-t border-divider bg-surface">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-16">
-              What people say
-            </h2>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-2 gap-16">
+      {/* ── Testimonials ──────────────────────────────────── */}
+      <section data-bg={LIME} className="py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <Reveal lines={["Kind words"]} className="mb-14 font-display text-5xl uppercase leading-[0.95] text-charcoal md:text-7xl" />
+          <StaggerContainer className="grid gap-12 md:grid-cols-2 md:gap-16">
             {testimonials.map((t) => (
               <StaggerItem key={t.name}>
                 <blockquote>
-                  <p className="text-foreground text-lg leading-relaxed mb-6 italic">
-                    &ldquo;{t.content}&rdquo;
-                  </p>
+                  <p className="mb-6 text-xl leading-relaxed text-charcoal">&ldquo;{t.content}&rdquo;</p>
                   <footer>
-                    <span className="block font-medium text-foreground text-sm">
-                      {t.name}
-                    </span>
-                    <span className="text-sm text-muted">{t.role}</span>
+                    <span className="block text-sm font-semibold text-charcoal">{t.name}</span>
+                    <span className="text-sm text-charcoal/60">{t.role}</span>
                   </footer>
                 </blockquote>
               </StaggerItem>
@@ -311,36 +325,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────── */}
-      <section className="py-28 border-t border-divider">
-        <div className="max-w-6xl mx-auto px-6">
+      {/* ── CTA ───────────────────────────────────────────── */}
+      <section data-bg={CHARCOAL} className="py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <Reveal
+            lines={["Have a project", "in mind?"]}
+            className="mb-8 font-display text-5xl uppercase leading-[0.95] text-white md:text-8xl"
+          />
           <FadeIn>
-            <div className="max-w-2xl">
-              <h2 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">
-                Have a project<br />in mind?
-              </h2>
-              <p className="text-muted text-lg mb-10">
-                Open to junior and graduate software, backend and AI engineering roles — and to businesses that want an AI receptionist.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <a
-                  href={`mailto:${CONTACT_EMAIL}`}
-                  className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/85 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none"
-                >
-                  {CONTACT_EMAIL}
-                </a>
-                <Link
-                  href="/about"
-                  className="inline-flex items-center border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full hover:border-foreground/40 transition-colors"
-                >
-                  About me
-                </Link>
-              </div>
+            <p className="mb-10 max-w-xl text-lg text-white/60">
+              Open to junior and graduate software, backend and AI engineering roles — and to businesses that want an AI
+              receptionist.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href={`mailto:${CONTACT_EMAIL}`} className={btnAccent}>
+                {CONTACT_EMAIL} {arrow}
+              </a>
+              <Link href="/about" className={btnOutlineLight}>
+                About me
+              </Link>
             </div>
           </FadeIn>
         </div>
       </section>
-
-    </div>
+    </Chapters>
   );
 }
