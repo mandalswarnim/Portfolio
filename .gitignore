@@ -50,3 +50,6 @@ next-env.d.ts
 # obsidian vault config (content/blog is edited as a vault; config is per-machine)
 .obsidian/
 content/blog/.obsidian/
+
+# personal reference photos (Higgsfield inputs)
+/reference photos/
