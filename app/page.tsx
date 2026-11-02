@@ -13,6 +13,17 @@ import Reveal from "@/components/home/Reveal";
 import TravelCard from "@/components/home/TravelCard";
 import SmartLink from "@/components/SmartLink";
 import { homeProjects } from "@/lib/projects";
+import {
+  arrow,
+  BLUE,
+  btnAccent,
+  btnDark,
+  btnOutlineDark,
+  btnOutlineLight,
+  CHARCOAL,
+  CREAM,
+  LIME,
+} from "@/components/PageSections";
 import { CONTACT_EMAIL, CV_DOWNLOAD_NAME, CV_PATH } from "@/lib/site";
 
 const expertise = [
@@ -53,24 +64,9 @@ const testimonials = [
   },
 ];
 
-const CREAM = "#FAF8F4";
-const CHARCOAL = "#1E1E1E";
-const BLUE = "#2D5FA3";
-const LIME = "#C9F27A";
-
 const featured = homeProjects.filter((p) => p.screen);
 const moreWork = homeProjects.filter((p) => !p.screen);
 const featuredBg = [CHARCOAL, BLUE];
-
-const btnAccent =
-  "group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-8px_rgba(201,242,122,0.8)] active:translate-y-0";
-const btnDark =
-  "group inline-flex items-center gap-2 rounded-full bg-charcoal px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-charcoal/85 active:translate-y-0";
-const btnOutlineDark =
-  "inline-flex items-center gap-2 rounded-full border border-charcoal/25 px-6 py-3 text-sm font-semibold text-charcoal transition-all duration-300 hover:-translate-y-0.5 hover:border-charcoal active:translate-y-0";
-const btnOutlineLight =
-  "inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white active:translate-y-0";
-const arrow = <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>;
 
 export default function Home() {
   return (

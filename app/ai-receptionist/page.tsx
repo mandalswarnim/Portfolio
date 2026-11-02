@@ -2,6 +2,22 @@ import type { Metadata } from "next";
 import BookingButton from "@/components/BookingButton";
 import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
+import Chapters from "@/components/home/Chapters";
+import Reveal from "@/components/home/Reveal";
+import {
+  arrow,
+  BLUE,
+  btnAccent,
+  btnDark,
+  btnOutlineLight,
+  CARD_TONES,
+  CHARCOAL,
+  CREAM,
+  display,
+  Eyebrow,
+  LIME,
+  SectionHead,
+} from "@/components/PageSections";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
 import EnquiryForm from "@/components/aireception/EnquiryForm";
@@ -218,24 +234,30 @@ const jsonLd = [
   },
 ];
 
+// Icon tile per CARD_TONES colourway.
+const ICON_TONES = ["bg-primary/10 text-primary", "bg-charcoal/10", "bg-white/15", "bg-white/10 text-accent"];
+
+const PHONE_ICON =
+  "M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.36 11.36 0 003.57.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z";
+
 export default function AiReceptionistPage() {
   return (
-    <div className="min-h-screen">
+    <Chapters initial={CHARCOAL}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative isolate overflow-hidden bg-foreground">
+      <section data-bg={CHARCOAL} className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
           <LoopVideo name="hero" priority />
-          <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/65 to-foreground/20" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-foreground/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal/95 via-charcoal/70 to-charcoal/20" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-charcoal to-transparent" />
         </div>
-        <div className="max-w-6xl mx-auto px-6 min-h-[calc(100svh-5rem)] max-h-[860px] flex flex-col justify-center py-24">
+        <div className="mx-auto flex min-h-[calc(100svh-5rem)] max-h-[900px] max-w-6xl flex-col justify-center px-6 py-24">
           <div className="max-w-3xl">
             <FadeIn>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-background/10 border border-background/20 backdrop-blur text-background text-sm font-medium mb-8">
+              <span className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-white backdrop-blur">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-nominal opacity-70" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-status-nominal" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-70" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
                 </span>
                 AI Receptionist · for small businesses
               </span>
@@ -244,11 +266,11 @@ export default function AiReceptionistPage() {
             <TextReveal
               delay={0.1}
               lines={["Never miss a call.", "Never lose a booking."]}
-              className="font-serif text-5xl md:text-6xl xl:text-7xl font-bold text-background leading-[1.08] mb-6"
+              className={`mb-8 ${display} text-5xl text-white md:text-6xl xl:text-7xl`}
             />
 
             <FadeIn delay={0.2}>
-              <p className="text-lg text-background/80 leading-relaxed mb-10 max-w-xl">
+              <p className="mb-10 max-w-xl text-lg leading-relaxed text-white/75">
                 When you can&apos;t pick up, an AI receptionist answers your calls day or night. It takes each
                 caller&apos;s details through natural conversation and emails you a clean summary the moment they hang
                 up.
@@ -257,24 +279,18 @@ export default function AiReceptionistPage() {
 
             <FadeIn delay={0.3}>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href="#try"
-                  className="inline-flex items-center gap-2 bg-background text-foreground text-sm font-medium px-6 py-3 rounded-full hover:bg-background/85 transition-colors"
-                >
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-status-nominal text-white">
+                <a href="#try" className={btnAccent}>
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-charcoal text-accent">
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.36 11.36 0 003.57.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
+                      <path d={PHONE_ICON} />
                     </svg>
                   </span>
                   Try me — call it now
                 </a>
-                <a
-                  href="#plans"
-                  className="inline-flex items-center border border-background/30 text-background text-sm font-medium px-6 py-3 rounded-full hover:border-background/70 transition-colors"
-                >
+                <a href="#plans" className={btnOutlineLight}>
                   See plans
                 </a>
-                <BookingButton source="ai-receptionist-hero" label="Book a demo call" />
+                <BookingButton source="ai-receptionist-hero" label="Book a demo call" className={btnOutlineLight} />
               </div>
             </FadeIn>
           </div>
@@ -282,11 +298,14 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Fact strip ───────────────────────────────────── */}
-      <section className="border-b border-divider bg-surface">
-        <ul className="max-w-6xl mx-auto px-6 py-5 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
+      <section className="border-y border-charcoal/10 bg-accent">
+        <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-3 px-6 py-6 md:grid-cols-4">
           {facts.map((fact) => (
-            <li key={fact} className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <span className="text-status-nominal" aria-hidden>
+            <li key={fact} className="flex items-center gap-2 text-sm font-semibold text-charcoal">
+              <span
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal text-[10px] text-accent"
+                aria-hidden
+              >
                 ✓
               </span>
               {fact}
@@ -296,35 +315,30 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Scenes ───────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-status-critical uppercase tracking-widest mb-3">The problem</p>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 max-w-2xl">
-              Answer every call, even when you can&apos;t
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-14">
-              The phone rings at the worst moments. Every unanswered call is a customer deciding whether to try you
-              again or ring the next business on the list.
-            </p>
-          </FadeIn>
+      <section data-bg={CREAM} className="py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <SectionHead
+            eyebrow="01 / The problem"
+            lines={["Answer every call,", "even when you can’t"]}
+            lead="The phone rings at the worst moments. Every unanswered call is a customer deciding whether to try you again or ring the next business on the list."
+          />
 
-          <StaggerContainer className="grid sm:grid-cols-2 gap-6">
+          <StaggerContainer className="grid gap-6 sm:grid-cols-2">
             {scenes.map((scene) => (
-              <StaggerItem key={scene.video}>
-                <article className="group h-full overflow-hidden rounded-2xl border border-divider bg-surface">
-                  <div className="relative aspect-[16/9] overflow-hidden bg-foreground">
+              <StaggerItem key={scene.video} className="h-full">
+                <article className="group h-full overflow-hidden rounded-[2rem] border border-charcoal/10 bg-white transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_-24px_rgba(30,30,30,0.35)]">
+                  <div className="relative aspect-[16/9] overflow-hidden bg-charcoal">
                     <LoopVideo
                       name={scene.video}
                       className="transition-transform duration-700 group-hover:scale-[1.03]"
                     />
-                    <span className="absolute left-4 top-4 rounded-full bg-foreground/60 backdrop-blur px-3 py-1 text-xs font-medium text-background">
+                    <span className="absolute left-4 top-4 rounded-full bg-charcoal/60 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.15em] text-white backdrop-blur">
                       {scene.label}
                     </span>
                   </div>
-                  <div className="p-7">
-                    <h3 className="font-serif text-xl font-bold text-foreground mb-2">{scene.title}</h3>
-                    <p className="text-sm text-muted leading-relaxed">{scene.description}</p>
+                  <div className="p-8">
+                    <h3 className={`mb-3 ${display} text-xl text-charcoal md:text-2xl`}>{scene.title}</h3>
+                    <p className="text-sm leading-relaxed text-muted">{scene.description}</p>
                   </div>
                 </article>
               </StaggerItem>
@@ -334,26 +348,19 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Try me ───────────────────────────────────────── */}
-      <section id="try" className="py-24 border-b border-divider bg-surface scroll-mt-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <div className="max-w-2xl mb-14">
-              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Try me</p>
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Don&apos;t take our word for it. Call it.
-              </h2>
-              <p className="text-muted text-lg">
-                Pick a business, or type in your own name, then press call. You play the customer. Watch the details
-                fill in on the right, and see the email the business gets when you hang up.
-              </p>
-            </div>
-          </FadeIn>
+      <section id="try" data-bg={CREAM} className="scroll-mt-20 border-t border-charcoal/10 py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <SectionHead
+            eyebrow="02 / Try me"
+            lines={["Don’t take our word", "for it. Call it."]}
+            lead="Pick a business, or type in your own name, then press call. You play the customer. Watch the details fill in on the right, and see the email the business gets when you hang up."
+          />
           <FadeIn delay={0.1}>
             <TryMe />
           </FadeIn>
           {SAMPLE_CALL_AUDIO && (
-            <div className="mt-14 max-w-xl rounded-2xl border border-divider bg-background p-5">
-              <p className="text-sm font-medium text-foreground mb-3">Listen to a recorded test call</p>
+            <div className="mt-14 max-w-xl rounded-[2rem] border border-charcoal/10 bg-white p-6">
+              <p className="mb-3 text-sm font-semibold text-charcoal">Listen to a recorded test call</p>
               <audio controls preload="none" src={SAMPLE_CALL_AUDIO} className="w-full" />
             </div>
           )}
@@ -361,37 +368,32 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── How It Works ─────────────────────────────────── */}
-      <section className="py-24 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center">
+      <section data-bg={CHARCOAL} className="py-28 text-white">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 lg:grid-cols-2">
           <div>
-            <FadeIn>
-              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">How it works</p>
-              <h2 className="font-serif text-4xl font-bold text-foreground mb-12">
-                Three steps. Nothing for you to do.
-              </h2>
-            </FadeIn>
-            <StaggerContainer className="space-y-9">
+            <SectionHead light eyebrow="03 / How it works" lines={["Three steps.", "Nothing for", "you to do."]} />
+            <StaggerContainer className="space-y-8">
               {steps.map((step) => (
                 <StaggerItem key={step.step}>
                   <div className="flex gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary font-serif text-lg font-bold text-white">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent font-mono text-sm font-bold text-charcoal">
                       {step.step}
                     </div>
                     <div>
-                      <h3 className="font-medium text-foreground mb-1">{step.title}</h3>
-                      <p className="text-sm text-muted leading-relaxed">{step.description}</p>
+                      <h3 className={`mb-1 ${display} text-lg`}>{step.title}</h3>
+                      <p className="text-sm leading-relaxed text-white/65">{step.description}</p>
                     </div>
                   </div>
                 </StaggerItem>
               ))}
             </StaggerContainer>
           </div>
-          <FadeIn delay={0.15}>
-            <figure className="overflow-hidden rounded-2xl border border-divider bg-surface">
-              <div className="aspect-[4/3] bg-foreground">
+          <FadeIn delay={0.15} direction="left">
+            <figure className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5">
+              <div className="aspect-[4/3] bg-charcoal">
                 <LoopVideo name="followup" />
               </div>
-              <figcaption className="px-6 py-4 text-sm text-muted">
+              <figcaption className="px-6 py-4 text-sm text-white/60">
                 The summary is waiting whenever you&apos;re ready, with who called, what they need and how urgent it is.
               </figcaption>
             </figure>
@@ -400,27 +402,27 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Features ─────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider bg-surface">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Features</p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-              Everything you need, nothing you don&apos;t
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-16">
-              Built for businesses that want to capture every opportunity without adding complexity.
-            </p>
-          </FadeIn>
+      <section data-bg={CREAM} className="py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <SectionHead
+            eyebrow="04 / Features"
+            lines={["Everything you need,", "nothing you don’t"]}
+            lead="Built for businesses that want to capture every opportunity without adding complexity."
+          />
 
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <StaggerItem key={feature.title}>
-                <div className="h-full rounded-2xl border border-divider bg-background p-7">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+          <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature, i) => (
+              <StaggerItem key={feature.title} className="h-full">
+                <div
+                  className={`flex h-full flex-col rounded-[2rem] p-8 transition-transform duration-500 ease-out hover:-translate-y-2 ${CARD_TONES[i % CARD_TONES.length]}`}
+                >
+                  <div
+                    className={`mb-10 flex h-12 w-12 items-center justify-center rounded-2xl ${ICON_TONES[i % ICON_TONES.length]}`}
+                  >
                     <Icon path={feature.icon} />
                   </div>
-                  <h3 className="font-medium text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted leading-relaxed">{feature.description}</p>
+                  <h3 className={`mb-3 ${display} text-xl`}>{feature.title}</h3>
+                  <p className="text-sm leading-relaxed opacity-75">{feature.description}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -429,25 +431,22 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Your callers' data ───────────────────────────── */}
-      <section className="py-24 border-b border-divider bg-surface">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Trust &amp; Data</p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
-              Your callers&apos; data, handled properly
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-16">
-              Calls are handled by Twilio and OpenAI; caller details are stored in a database dedicated to your
-              business.
-            </p>
-          </FadeIn>
+      <section data-bg={BLUE} className="py-28 text-white">
+        <div className="mx-auto max-w-6xl px-6">
+          <SectionHead
+            light
+            eyebrow="05 / Trust & Data"
+            lines={["Your callers’ data,", "handled properly"]}
+            lead="Calls are handled by Twilio and OpenAI; caller details are stored in a database dedicated to your business."
+          />
 
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {dataPoints.map((point) => (
-              <StaggerItem key={point.title}>
-                <div className="h-full rounded-2xl border border-divider bg-background p-7">
-                  <h3 className="font-medium text-foreground mb-2">{point.title}</h3>
-                  <p className="text-sm text-muted leading-relaxed">{point.description}</p>
+          <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {dataPoints.map((point, i) => (
+              <StaggerItem key={point.title} className="h-full">
+                <div className="flex h-full flex-col rounded-[2rem] border border-white/25 p-8">
+                  <span className="mb-8 font-mono text-sm text-white/50">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className={`mb-3 ${display} text-lg`}>{point.title}</h3>
+                  <p className="text-sm leading-relaxed text-white/70">{point.description}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -456,78 +455,74 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Pricing ──────────────────────────────────────── */}
-      <section id="plans" className="py-24 border-b border-divider scroll-mt-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Pricing</p>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Pay for the calls you take. Nothing else.
-            </h2>
-            <p className="text-muted text-lg max-w-2xl mb-10">
-              A one-off setup fee, then a per-minute rate for the calls your receptionist answers. Quiet month, smaller
-              bill. Choose a tier by how the agent sounds and how much it can talk about.
-            </p>
-          </FadeIn>
+      <section id="plans" data-bg={CREAM} className="scroll-mt-20 py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <SectionHead
+            eyebrow="06 / Pricing"
+            lines={["Pay for the calls", "you take. Nothing else."]}
+            lead="A one-off setup fee, then a per-minute rate for the calls your receptionist answers. Quiet month, smaller bill. Choose a tier by how the agent sounds and how much it can talk about."
+            className="mb-10"
+          />
 
           <FadeIn delay={0.05}>
-            <div className="mb-12 grid gap-4 rounded-2xl border border-divider bg-surface p-6 md:grid-cols-[auto_1fr] md:items-center md:gap-10 md:p-8">
+            <div className="mb-12 grid gap-6 rounded-[2rem] bg-accent p-8 text-charcoal md:grid-cols-[auto_1fr] md:items-center md:gap-12 md:p-10">
               <div>
-                <p className="text-xs uppercase tracking-widest text-subtle mb-1">Setup · one-off</p>
-                <p className="font-serif text-5xl font-bold text-foreground">£{RECEPTIONIST_SETUP_FEE}</p>
+                <p className="mb-1 font-mono text-xs uppercase tracking-[0.2em] text-charcoal/60">Setup · one-off</p>
+                <p className={`${display} text-6xl`}>£{RECEPTIONIST_SETUP_FEE}</p>
               </div>
-              <div className="grid gap-4 sm:grid-cols-3 text-sm">
+              <div className="grid gap-5 text-sm sm:grid-cols-3">
                 {[
                   ["Voice", "From a clear standard voice up to a custom voice of your own."],
                   ["Conversation", "From guided questions up to free-flowing, tailored conversation."],
                   ["Human touch", "How natural the agent sounds: tone, pacing and warmth."],
                 ].map(([title, body]) => (
                   <div key={title}>
-                    <p className="font-medium text-foreground mb-1">{title}</p>
-                    <p className="text-muted leading-relaxed">{body}</p>
+                    <p className="mb-1 font-semibold">{title}</p>
+                    <p className="leading-relaxed text-charcoal/70">{body}</p>
                   </div>
                 ))}
               </div>
             </div>
           </FadeIn>
 
-          <StaggerContainer className="grid md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
+          <StaggerContainer className="grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-4">
             {RECEPTIONIST_TIERS.map((tier, i) => (
-              <StaggerItem key={tier.name}>
+              <StaggerItem key={tier.name} className="h-full">
                 <div
-                  className={`relative flex h-full flex-col rounded-2xl border p-7 ${
+                  className={`relative flex h-full flex-col rounded-[2rem] p-8 transition-transform duration-500 ease-out hover:-translate-y-2 ${
                     tier.featured
-                      ? "border-foreground bg-foreground text-background shadow-xl"
-                      : "border-divider bg-surface"
+                      ? "bg-charcoal text-white shadow-[0_30px_60px_-30px_rgba(30,30,30,0.6)]"
+                      : "border border-charcoal/10 bg-white text-charcoal"
                   }`}
                 >
                   {tier.featured && (
-                    <span className="absolute -top-3 left-7 rounded-full bg-primary px-3 py-1 text-xs font-medium text-white">
+                    <span className="absolute -top-3 left-8 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-charcoal">
                       Recommended
                     </span>
                   )}
                   <p
-                    className={`text-xs uppercase tracking-widest mb-3 ${tier.featured ? "text-background/60" : "text-subtle"}`}
+                    className={`mb-3 font-mono text-xs uppercase tracking-[0.2em] ${tier.featured ? "text-white/50" : "text-subtle"}`}
                   >
                     Tier {["I", "II", "III", "IV"][i]}
                   </p>
-                  <h3 className="font-serif text-3xl font-bold leading-none">{tier.name}</h3>
-                  <p className={`text-sm italic mt-1 mb-4 ${tier.featured ? "text-background/60" : "text-subtle"}`}>
+                  <h3 className={`${display} text-3xl`}>{tier.name}</h3>
+                  <p className={`mb-4 mt-1 text-sm italic ${tier.featured ? "text-white/55" : "text-subtle"}`}>
                     {tier.meaning}
                   </p>
                   <p
-                    className={`text-sm leading-relaxed mb-6 min-h-[2.5rem] ${tier.featured ? "text-background/80" : "text-muted"}`}
+                    className={`mb-6 min-h-[2.5rem] text-sm leading-relaxed ${tier.featured ? "text-white/75" : "text-muted"}`}
                   >
                     {tier.tagline}
                   </p>
 
-                  <p className="font-serif text-3xl font-bold mb-6">
+                  <p className={`mb-6 ${display} text-3xl`}>
                     {tier.perMinute === null ? (
-                      <span className="text-2xl">Rate on request</span>
+                      <span className="text-xl">Rate on request</span>
                     ) : (
                       <>
                         £{tier.perMinute.toFixed(2)}
                         <span
-                          className={`text-base font-sans font-normal ${tier.featured ? "text-background/70" : "text-muted"}`}
+                          className={`font-sans text-base normal-case ${tier.featured ? "text-white/60" : "text-muted"}`}
                         >
                           {" "}
                           / min
@@ -536,7 +531,7 @@ export default function AiReceptionistPage() {
                     )}
                   </p>
 
-                  <dl className="space-y-4 mb-6">
+                  <dl className="mb-6 space-y-4">
                     {(
                       [
                         ["Voice", tier.voice],
@@ -545,9 +540,9 @@ export default function AiReceptionistPage() {
                       ] as const
                     ).map(([label, rating]) => (
                       <div key={label}>
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="mb-1.5 flex items-center justify-between">
                           <dt
-                            className={`text-xs uppercase tracking-wider ${tier.featured ? "text-background/60" : "text-subtle"}`}
+                            className={`font-mono text-[11px] uppercase tracking-[0.15em] ${tier.featured ? "text-white/50" : "text-subtle"}`}
                           >
                             {label}
                           </dt>
@@ -558,17 +553,17 @@ export default function AiReceptionistPage() {
                                 className={`h-1.5 w-5 rounded-full ${
                                   n <= rating.level
                                     ? tier.featured
-                                      ? "bg-background"
+                                      ? "bg-accent"
                                       : "bg-primary"
                                     : tier.featured
-                                      ? "bg-background/20"
-                                      : "bg-divider"
+                                      ? "bg-white/15"
+                                      : "bg-charcoal/10"
                                 }`}
                               />
                             ))}
                           </span>
                         </div>
-                        <dd className={`text-sm ${tier.featured ? "text-background/85" : "text-foreground"}`}>
+                        <dd className={`text-sm ${tier.featured ? "text-white/85" : "text-charcoal"}`}>
                           {rating.label}
                         </dd>
                       </div>
@@ -577,14 +572,14 @@ export default function AiReceptionistPage() {
 
                   {tier.features.length > 0 && (
                     <ul
-                      className={`space-y-2.5 mb-6 pt-5 border-t ${tier.featured ? "border-background/15" : "border-divider"}`}
+                      className={`mb-6 space-y-2.5 border-t pt-5 ${tier.featured ? "border-white/15" : "border-charcoal/10"}`}
                     >
                       {tier.features.map((line) => (
                         <li
                           key={line}
-                          className={`flex gap-3 text-sm leading-relaxed ${tier.featured ? "text-background/85" : "text-muted"}`}
+                          className={`flex gap-3 text-sm leading-relaxed ${tier.featured ? "text-white/85" : "text-muted"}`}
                         >
-                          <span className={tier.featured ? "text-status-nominal" : "text-primary"}>✓</span>
+                          <span className={tier.featured ? "text-accent" : "text-primary"}>✓</span>
                           {line}
                         </li>
                       ))}
@@ -594,17 +589,13 @@ export default function AiReceptionistPage() {
                   <div className="mt-auto space-y-3">
                     <PlanButton
                       plan={tier.name}
-                      className={`w-full rounded-full px-6 py-3 text-sm font-medium transition-colors ${
-                        tier.featured
-                          ? "bg-background text-foreground hover:bg-background/85"
-                          : "bg-foreground text-background hover:bg-foreground/80"
-                      }`}
+                      className={`w-full justify-center ${tier.featured ? btnAccent : btnDark}`}
                     >
                       {tier.perMinute === null ? `Get ${tier.name} pricing` : `Choose ${tier.name}`}
                     </PlanButton>
                     <a
                       href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`${tier.name} AI Receptionist — per-minute rate`)}`}
-                      className={`block text-center text-xs underline-offset-4 hover:underline ${tier.featured ? "text-background/60" : "text-subtle"}`}
+                      className={`block text-center text-xs underline-offset-4 hover:underline ${tier.featured ? "text-white/55" : "text-subtle"}`}
                     >
                       or email me about {tier.name}
                     </a>
@@ -614,7 +605,7 @@ export default function AiReceptionistPage() {
             ))}
           </StaggerContainer>
 
-          <p className="mt-8 text-sm text-subtle max-w-3xl">
+          <p className="mt-8 max-w-3xl text-sm text-subtle">
             Billed per minute of answered calls, plus the one-off £{RECEPTIONIST_SETUP_FEE} setup. No long-term
             contract. You can change tier or cancel any time.
           </p>
@@ -622,21 +613,22 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider bg-surface">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">FAQ</p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-12">Common questions</h2>
-          </FadeIn>
+      <section data-bg={LIME} className="py-28">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <SectionHead eyebrow="07 / FAQ" lines={["Common", "questions"]} className="" />
+          </div>
           <FadeIn delay={0.1}>
-            <div className="max-w-3xl divide-y divide-divider border-t border-b border-divider">
+            <div className="border-t border-charcoal/20">
               {faqs.map((faq) => (
-                <details key={faq.q} className="group py-5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-medium text-foreground">
+                <details key={faq.q} className="group border-b border-charcoal/20 py-6">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-semibold text-charcoal">
                     {faq.q}
-                    <span className="text-subtle transition-transform group-open:rotate-45">+</span>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-charcoal text-accent transition-transform group-open:rotate-45">
+                      +
+                    </span>
                   </summary>
-                  <p className="mt-3 text-sm text-muted leading-relaxed">{faq.a}</p>
+                  <p className="mt-4 max-w-2xl leading-relaxed text-charcoal/75">{faq.a}</p>
                 </details>
               ))}
             </div>
@@ -645,38 +637,35 @@ export default function AiReceptionistPage() {
       </section>
 
       {/* ── Enquiry ──────────────────────────────────────── */}
-      <section id="enquire" className="py-28 scroll-mt-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid lg:grid-cols-[1fr_1.4fr] gap-16">
-            <FadeIn>
-              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-4">
-                Built on Twilio · OpenAI · Node.js
-              </p>
-              <h2 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">
-                Want this on
-                <br />
-                your business?
-              </h2>
-              <p className="text-muted text-lg mb-10">
-                I build, deploy, and integrate the AI receptionist into your existing phone line and workflow. Tell me a
-                little about your business and I&apos;ll come back with a quote.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <BookingButton source="ai-receptionist-footer" label="Book a demo call" />
-                <a
-                  href={EMAIL_HREF}
-                  className="inline-flex items-center border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full hover:border-foreground/40 transition-colors"
-                >
-                  {CONTACT_EMAIL}
-                </a>
-              </div>
-            </FadeIn>
+      <section id="enquire" data-bg={CHARCOAL} className="scroll-mt-20 py-28 text-white">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-16 lg:grid-cols-[1fr_1.3fr]">
+            <div>
+              <FadeIn>
+                <Eyebrow light>Built on Twilio · OpenAI · Node.js</Eyebrow>
+              </FadeIn>
+              <Reveal lines={["Want this on", "your business?"]} className={`mb-8 ${display} text-4xl md:text-5xl`} />
+              <FadeIn>
+                <p className="mb-10 text-lg text-white/65">
+                  I build, deploy, and integrate the AI receptionist into your existing phone line and workflow. Tell me
+                  a little about your business and I&apos;ll come back with a quote.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <BookingButton source="ai-receptionist-footer" label="Book a demo call" className={btnOutlineLight} />
+                  <a href={EMAIL_HREF} className={btnAccent}>
+                    {CONTACT_EMAIL} {arrow}
+                  </a>
+                </div>
+              </FadeIn>
+            </div>
             <FadeIn delay={0.1}>
-              <EnquiryForm />
+              <div className="rounded-[2rem] bg-white p-8 text-charcoal md:p-10">
+                <EnquiryForm />
+              </div>
             </FadeIn>
           </div>
         </div>
       </section>
-    </div>
+    </Chapters>
   );
 }

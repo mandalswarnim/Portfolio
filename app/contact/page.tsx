@@ -1,11 +1,25 @@
 "use client";
 
+import Link from "next/link";
 import BookingButton from "@/components/BookingButton";
 import Honeypot from "@/components/Honeypot";
 import FadeIn from "@/components/animations/FadeIn";
+import Chapters from "@/components/home/Chapters";
+import Reveal from "@/components/home/Reveal";
+import {
+  arrow,
+  btnAccent,
+  btnDark,
+  btnOutlineDark,
+  btnOutlineLight,
+  CHARCOAL,
+  CREAM,
+  display,
+  Eyebrow,
+  PageHero,
+} from "@/components/PageSections";
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 import { inputClass, labelClass, useEnquiryForm } from "@/lib/contact-client";
-import { PageHero } from "@/components/PageSections";
 
 const contactLinks = [
   {
@@ -43,11 +57,10 @@ export default function Contact() {
   );
 
   return (
-    <div className="min-h-screen">
+    <Chapters initial={CREAM}>
       <PageHero
-        eyebrow="Contact"
+        eyebrow="Contact · Replies within 24 hours"
         lines={["Let’s work", "together"]}
-        leadWidth="max-w-xl"
         lead={
           <>
             Open to full-time roles, freelance projects, and research collaborations. I typically respond within 24
@@ -55,34 +68,33 @@ export default function Contact() {
           </>
         }
       >
-        <BookingButton
-          source="contact"
-          label="Book a 20-minute call"
-          className="mt-8 inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
-        />
+        <a href={`mailto:${CONTACT_EMAIL}`} className={btnDark}>
+          {CONTACT_EMAIL} {arrow}
+        </a>
+        <BookingButton source="contact" label="Book a 20-minute call" className={btnOutlineDark} />
       </PageHero>
 
       {/* ── Body ─────────────────────────────────────────── */}
-      <section className="py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid lg:grid-cols-[1fr_2fr] gap-16">
+      <section data-bg={CREAM} className="pb-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
             {/* Left: contact details */}
             <FadeIn>
-              <div className="space-y-0 divide-y divide-divider border-t border-b border-divider">
+              <div className="border-t border-charcoal/15">
                 {contactLinks.map((item) => (
-                  <div key={item.label} className="py-5 flex flex-col gap-1">
-                    <span className="text-xs text-subtle uppercase tracking-wider">{item.label}</span>
+                  <div key={item.label} className="flex flex-col gap-1.5 border-b border-charcoal/15 py-6">
+                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-subtle">{item.label}</span>
                     {item.href ? (
                       <a
                         href={item.href}
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel="noopener noreferrer"
-                        className="text-sm text-foreground hover:text-primary transition-colors"
+                        className="break-words text-lg font-semibold text-charcoal transition-colors hover:text-primary"
                       >
                         {item.value}
                       </a>
                     ) : (
-                      <span className="text-sm text-foreground">{item.value}</span>
+                      <span className="text-lg font-semibold text-charcoal">{item.value}</span>
                     )}
                   </div>
                 ))}
@@ -91,7 +103,11 @@ export default function Contact() {
 
             {/* Right: form */}
             <FadeIn delay={0.1}>
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form
+                onSubmit={handleSubmit}
+                className="relative space-y-5 rounded-[2rem] border border-charcoal/10 bg-white p-8 shadow-[0_24px_48px_-32px_rgba(30,30,30,0.35)] md:p-10"
+              >
+                <h2 className={`${display} mb-2 text-3xl text-charcoal`}>Send a message</h2>
                 <Honeypot id="website" value={form.website} onChange={handleChange} />
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
@@ -161,12 +177,8 @@ export default function Contact() {
                   />
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <button
-                    type="submit"
-                    disabled={status === "sending"}
-                    className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 disabled:opacity-50 transition-colors"
-                  >
+                <div className="flex flex-wrap items-center gap-4">
+                  <button type="submit" disabled={status === "sending"} className={`${btnDark} disabled:opacity-50`}>
                     {status === "sending" ? "Sending…" : "Send message"}
                   </button>
 
@@ -182,6 +194,26 @@ export default function Contact() {
           </div>
         </div>
       </section>
-    </div>
+
+      {/* ── Closing ──────────────────────────────────────── */}
+      <section data-bg={CHARCOAL} className="py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <FadeIn>
+            <Eyebrow light>Prefer to look around first?</Eyebrow>
+          </FadeIn>
+          <Reveal lines={["See what", "I’ve built"]} className={`mb-10 ${display} text-5xl text-white md:text-7xl`} />
+          <FadeIn>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/work" className={btnAccent}>
+                View my work {arrow}
+              </Link>
+              <Link href="/ai-receptionist" className={btnOutlineLight}>
+                Try the AI Receptionist
+              </Link>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </Chapters>
   );
 }
