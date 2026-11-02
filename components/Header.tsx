@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AthenaMark from "@/components/AthenaMark";
 import ScrollProgress from "@/components/ScrollProgress";
+import { isDark, useChapterBg } from "@/components/home/chapterStore";
 
 const navItems = [
   { name: "About", href: "/about" },
@@ -18,6 +19,9 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  // On the homepage the header takes on the active colour chapter.
+  const chapterBg = useChapterBg();
+  const dark = chapterBg !== null && isDark(chapterBg);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -28,9 +32,15 @@ export default function Header() {
   return (
     <motion.header
       initial={{ y: -56, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed top-0 w-full z-50 border-b border-divider bg-white/90 backdrop-blur-md transition-shadow duration-300 ${
+      animate={{ y: 0, opacity: 1, backgroundColor: chapterBg ?? "rgba(255,255,255,0.9)" }}
+      transition={{
+        duration: 0.5,
+        ease: "easeOut",
+        backgroundColor: { duration: 0.7, ease: [0.4, 0, 0.2, 1] },
+      }}
+      className={`fixed top-0 w-full z-50 border-b backdrop-blur-md transition-[box-shadow,border-color] duration-700 ${
+        chapterBg ? (dark ? "border-white/10" : "border-foreground/10") : "border-divider"
+      } ${
         scrolled ? "shadow-[0_1px_12px_rgba(28,22,18,0.06)]" : "shadow-none"
       }`}
     >
@@ -52,8 +62,10 @@ export default function Header() {
               <li key={item.name} className="relative">
                 <Link
                   href={item.href}
-                  className={`relative block py-1 text-sm tracking-wide transition-colors after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 ${
-                    active ? "text-foreground" : "text-muted hover:text-foreground"
+                  className={`relative block py-1 text-sm tracking-wide transition-colors after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:transition-[transform,background-color] after:duration-300 after:ease-out hover:after:scale-x-100 ${
+                    dark
+                      ? `after:bg-white ${active ? "text-white" : "text-white/65 hover:text-white"}`
+                      : `after:bg-foreground ${active ? "text-foreground" : "text-muted hover:text-foreground"}`
                   }`}
                 >
                   {item.name}
@@ -61,7 +73,7 @@ export default function Header() {
                 {active && (
                   <motion.span
                     layoutId="nav-active"
-                    className="absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary"
+                    className={`absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full ${dark ? "bg-white" : "bg-primary"}`}
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -72,14 +84,16 @@ export default function Header() {
 
         <Link
           href="/contact"
-          className="hidden md:inline-flex items-center bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-foreground/85 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none"
+          className={`hidden md:inline-flex items-center text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-300 ${
+            dark ? "bg-background text-foreground hover:bg-background/85" : "bg-foreground text-background hover:bg-foreground/85"
+          } hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none`}
         >
           Hire me
         </Link>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden text-foreground p-1"
+          className={`md:hidden p-1 transition-colors duration-700 ${dark ? "text-white" : "text-foreground"}`}
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="Toggle menu"
         >

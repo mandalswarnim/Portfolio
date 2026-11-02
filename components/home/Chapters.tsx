@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { setChapterBg } from "@/components/home/chapterStore";
 
 /**
  * Homepage colour chapters. Any descendant with `data-bg="#hex"` becomes a
@@ -37,6 +38,10 @@ export default function Chapters({ children, initial }: { children: ReactNode; i
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
+
+  // Let the fixed header follow the chapter colour.
+  useEffect(() => setChapterBg(chapter.bg), [chapter.bg]);
+  useEffect(() => () => setChapterBg(null), []);
 
   return (
     <ChapterContext.Provider value={chapter}>
