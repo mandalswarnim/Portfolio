@@ -115,9 +115,11 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden bg-background/98 backdrop-blur-md border-b border-divider px-6 pb-6"
+            className={`md:hidden border-t px-6 pb-6 transition-colors duration-700 ${
+              chapterBg ? (dark ? "border-white/10" : "border-foreground/10") : "border-divider"
+            }`}
           >
-            <ul className="space-y-4 pt-2">
+            <ul className="space-y-4 pt-5">
               {navItems.map((item, i) => (
                 <motion.li
                   key={item.name}
@@ -125,7 +127,11 @@ export default function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + i * 0.05, duration: 0.25 }}
                 >
-                  <Link href={item.href} className="block text-foreground text-base" onClick={() => setMenuOpen(false)}>
+                  <Link
+                    href={item.href}
+                    className={`block text-base ${dark ? "text-white" : "text-foreground"}`}
+                    onClick={() => setMenuOpen(false)}
+                  >
                     {item.name}
                   </Link>
                 </motion.li>
@@ -137,7 +143,9 @@ export default function Header() {
               >
                 <Link
                   href="/contact"
-                  className="inline-flex bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full"
+                  className={`inline-flex text-sm font-medium px-5 py-2.5 rounded-full ${
+                    dark ? "bg-background text-foreground" : "bg-foreground text-background"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   Hire me
