@@ -6,15 +6,7 @@
 
 import type { Clip } from "./voice";
 
-export type Step =
-  | "name"
-  | "company"
-  | "phone"
-  | "email"
-  | "message"
-  | "urgency"
-  | "confirm"
-  | "closing";
+export type Step = "name" | "company" | "phone" | "email" | "message" | "urgency" | "confirm" | "closing";
 
 export type Urgency = "low" | "medium" | "high" | "urgent";
 
@@ -39,37 +31,25 @@ export const BUSINESSES: Business[] = [
     id: "dental",
     label: "Dental practice",
     defaultName: "Riverside Dental",
-    messages: [
-      "I've chipped a tooth and it's quite painful",
-      "I'd like to book a check-up and clean",
-    ],
+    messages: ["I've chipped a tooth and it's quite painful", "I'd like to book a check-up and clean"],
   },
   {
     id: "trades",
     label: "Plumbing & heating",
     defaultName: "Hartley Plumbing",
-    messages: [
-      "My boiler's stopped — no heating or hot water",
-      "I'd like a quote for a new bathroom",
-    ],
+    messages: ["My boiler's stopped — no heating or hot water", "I'd like a quote for a new bathroom"],
   },
   {
     id: "salon",
     label: "Hair salon",
     defaultName: "Studio Nine Hair",
-    messages: [
-      "Can I book a cut and colour for Saturday?",
-      "I need to move my appointment on Thursday",
-    ],
+    messages: ["Can I book a cut and colour for Saturday?", "I need to move my appointment on Thursday"],
   },
   {
     id: "legal",
     label: "Law firm",
     defaultName: "Ashworth & Reid Solicitors",
-    messages: [
-      "I need advice on a tenancy dispute",
-      "I'm calling about the lease you're reviewing for me",
-    ],
+    messages: ["I need advice on a tenancy dispute", "I'm calling about the lease you're reviewing for me"],
   },
 ];
 
@@ -147,7 +127,11 @@ export function suggestions(step: Step, biz: Business, captured: Captured): stri
     case "phone":
       return ["07700 900123", "020 7946 0018"];
     case "email": {
-      const local = (captured.name ?? "sarah johnson").toLowerCase().replace(/[^a-z ]/g, "").trim().replace(/\s+/g, ".");
+      const local = (captured.name ?? "sarah johnson")
+        .toLowerCase()
+        .replace(/[^a-z ]/g, "")
+        .trim()
+        .replace(/\s+/g, ".");
       return [`${local}@example.com`, "I'd rather not"];
     }
     case "message":
@@ -161,26 +145,31 @@ export function suggestions(step: Step, biz: Business, captured: Captured): stri
   }
 }
 
-const HUMAN_RE = /\b(are|r) (you|u) (a )?(real|human|person|robot|bot|ai|machine)\b|\breal person\b|\bspeak to (a )?(human|person|someone)\b/i;
+const HUMAN_RE =
+  /\b(are|r) (you|u) (a )?(real|human|person|robot|bot|ai|machine)\b|\breal person\b|\bspeak to (a )?(human|person|someone)\b/i;
 const NO_RE = /^(no|nope|nah|none|n\/a|personal|just me|myself|i'?d rather not|rather not|skip|not really)\b/i;
 const YES_RE = /^(y|yes|yeah|yep|yup|correct|that'?s (right|correct)|right|perfect|spot on|all good)\b/i;
 
-const titleCase = (s: string) =>
-  s.toLowerCase().replace(/(^|[\s'-])([a-z])/g, (_, p, c) => p + c.toUpperCase());
+const titleCase = (s: string) => s.toLowerCase().replace(/(^|[\s'-])([a-z])/g, (_, p, c) => p + c.toUpperCase());
 
 const digitsOf = (s: string) => s.replace(/\D/g, "");
 
 /** "07700 900123" → "0 7 7 0 0, 9 0 0, 1 2 3" — read back digit by digit, in the caller's grouping. */
 export function readBack(phone: string) {
   const d = digitsOf(phone);
-  const typed = phone.trim().split(/[\s-]+/).map(digitsOf).filter(Boolean);
+  const typed = phone
+    .trim()
+    .split(/[\s-]+/)
+    .map(digitsOf)
+    .filter(Boolean);
   const groups = typed.length > 1 ? typed : [d.slice(0, 5), d.slice(5, 8), d.slice(8)].filter(Boolean);
   return groups.map((g) => g.split("").join(" ")).join(", ");
 }
 
 export function inferUrgency(text: string): Urgency {
   const t = text.toLowerCase();
-  if (/\b(urgent|emergency|asap|immediately|right away|painful|pain|leak|flood|no heating|no hot water)\b/.test(t)) return "urgent";
+  if (/\b(urgent|emergency|asap|immediately|right away|painful|pain|leak|flood|no heating|no hot water)\b/.test(t))
+    return "urgent";
   if (/\b(today|soon|this week|quickly|tomorrow)\b/.test(t)) return "high";
   if (/\b(no rush|whenever|not urgent|can wait|no hurry|next week|sometime)\b/.test(t)) return "low";
   return "medium";
@@ -197,13 +186,7 @@ export type Turn = {
  * Advance the conversation by one caller turn. Pure: returns what the
  * assistant says next and which fields were captured.
  */
-export function respond(
-  step: Step,
-  input: string,
-  captured: Captured,
-  company: string,
-  bizVoice: string | null,
-): Turn {
+export function respond(step: Step, input: string, captured: Captured, company: string, bizVoice: string | null): Turn {
   const text = input.trim();
 
   if (HUMAN_RE.test(text) && step !== "closing") {
@@ -241,7 +224,10 @@ export function respond(
           update: { company: null },
         };
       }
-      const company = text.replace(/^(yes|yeah|yep)[\s,—-]*/i, "").replace(/^(it'?s|i'?m (from|with)|from|with)\s+/i, "").trim();
+      const company = text
+        .replace(/^(yes|yeah|yep)[\s,—-]*/i, "")
+        .replace(/^(it'?s|i'?m (from|with)|from|with)\s+/i, "")
+        .trim();
       return {
         reply: `Lovely. ${QUESTION.phone}`,
         voice: ["lovely", "q-phone"],
@@ -265,7 +251,10 @@ export function respond(
       const after = next === "confirm" ? confirmLine({ ...captured, phone }) : QUESTION.email;
       return {
         reply: `Let me read that back: ${readBack(phone)}. ${after}`,
-        voice: [READBACK_BY_DIGITS[d] ?? "readback-generic", ...(next === "confirm" ? CONFIRM_VOICE : ["q-email" as Clip])],
+        voice: [
+          READBACK_BY_DIGITS[d] ?? "readback-generic",
+          ...(next === "confirm" ? CONFIRM_VOICE : ["q-email" as Clip]),
+        ],
         next,
         update: { phone },
       };

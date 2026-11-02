@@ -5,9 +5,7 @@ export default function NotFound() {
     <section className="py-32">
       <div className="max-w-6xl mx-auto px-6">
         <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">404</p>
-        <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">
-          Page not found
-        </h1>
+        <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">Page not found</h1>
         <p className="text-lg text-muted max-w-xl leading-relaxed mb-10">
           The page you&apos;re looking for doesn&apos;t exist or has moved.
         </p>

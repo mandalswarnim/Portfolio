@@ -41,10 +41,9 @@ export default function UavHome() {
           UAV Predictive Maintenance
         </h1>
         <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted">
-          An AI-driven Condition-Based Maintenance Plus (CBM+) digital twin. LSTM, Transformer,
-          and 1D-CNN models ingest vibration, thermal, and power telemetry to forecast Remaining
-          Useful Life across a tactical fleet — trained on the NASA C-MAPSS turbofan benchmark
-          and a synthesized multirotor UAV fleet.
+          An AI-driven Condition-Based Maintenance Plus (CBM+) digital twin. LSTM, Transformer, and 1D-CNN models ingest
+          vibration, thermal, and power telemetry to forecast Remaining Useful Life across a tactical fleet — trained on
+          the NASA C-MAPSS turbofan benchmark and a synthesized multirotor UAV fleet.
         </p>
       </FadeIn>
 
@@ -53,9 +52,7 @@ export default function UavHome() {
           <StaggerItem key={t.href}>
             <Link href={t.href} className="group block h-full">
               <div className="flex h-full flex-col rounded-2xl border border-divider bg-surface p-6 transition-all hover:-translate-y-1 hover:border-foreground/20 hover:shadow-md">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">
-                  {t.sub}
-                </span>
+                <span className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">{t.sub}</span>
                 <h2 className="font-serif text-2xl font-bold text-foreground mb-3">{t.title}</h2>
                 <p className="text-sm leading-relaxed text-muted flex-1">{t.desc}</p>
                 <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors group-hover:text-primary">

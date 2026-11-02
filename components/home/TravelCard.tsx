@@ -21,9 +21,18 @@ const PLATES: [string, string][] = [
 ];
 // [x, y, rotate] for the two plates, per chapter.
 const POSES: [number, number, number][][] = [
-  [[-70, -50, -10], [80, 70, 8]],
-  [[90, -80, 12], [-90, 60, -6]],
-  [[-80, 80, 6], [70, -70, -12]],
+  [
+    [-70, -50, -10],
+    [80, 70, 8],
+  ],
+  [
+    [90, -80, 12],
+    [-90, 60, -6],
+  ],
+  [
+    [-80, 80, 6],
+    [70, -70, -12],
+  ],
 ];
 
 const spring = { type: "spring", stiffness: 70, damping: 18, mass: 1 } as const;

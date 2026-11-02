@@ -1,11 +1,11 @@
-'use client';
-import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-import type { Asset } from '@/lib/uav/assets';
-import { palette } from '@/lib/uav/palette';
+"use client";
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+import type { Asset } from "@/lib/uav/assets";
+import { palette } from "@/lib/uav/palette";
 
-const STATUS_COLOR: Record<Asset['status'], string> = palette.status;
+const STATUS_COLOR: Record<Asset["status"], string> = palette.status;
 const HIGHLIGHT = palette.status.CRITICAL;
 
 interface Props {
@@ -45,20 +45,34 @@ export default function UAVModel({
     metalness: 0.25,
   };
 
-  const isMissile = asset.class.startsWith('MISSILE');
+  const isMissile = asset.class.startsWith("MISSILE");
 
   return (
     <group ref={ref} scale={scale}>
-      {isMissile ? <MissileBody color={color} matProps={matProps} highlight={highlightComponent} />
-                 : <DroneBody color={color} matProps={matProps} highlight={highlightComponent} />}
+      {isMissile ? (
+        <MissileBody color={color} matProps={matProps} highlight={highlightComponent} />
+      ) : (
+        <DroneBody color={color} matProps={matProps} highlight={highlightComponent} />
+      )}
     </group>
   );
 }
 
 function DroneBody({
-  color, matProps, highlight,
-}: { color: string; matProps: THREE.MeshStandardMaterialParameters; highlight: string | null }) {
-  const rotorRefs = [useRef<THREE.Mesh>(null), useRef<THREE.Mesh>(null), useRef<THREE.Mesh>(null), useRef<THREE.Mesh>(null)];
+  color,
+  matProps,
+  highlight,
+}: {
+  color: string;
+  matProps: THREE.MeshStandardMaterialParameters;
+  highlight: string | null;
+}) {
+  const rotorRefs = [
+    useRef<THREE.Mesh>(null),
+    useRef<THREE.Mesh>(null),
+    useRef<THREE.Mesh>(null),
+    useRef<THREE.Mesh>(null),
+  ];
   useFrame((_, dt) => rotorRefs.forEach((r) => r.current && (r.current.rotation.y += dt * 12)));
 
   const isHL = (name: string) => highlight && highlight.toLowerCase().includes(name);
@@ -86,10 +100,10 @@ function DroneBody({
       </mesh>
       {/* Rotor pylons + spinning rotors (highlighted one flagged in critical red) */}
       {[
-        { pos: [-1.6, 0.05, 0.6] as const, name: 'rotor 1' },
-        { pos: [ 1.6, 0.05, 0.6] as const, name: 'rotor 2' },
-        { pos: [-1.6, 0.05,-0.6] as const, name: 'rotor 3' },
-        { pos: [ 1.6, 0.05,-0.6] as const, name: 'rotor 4' },
+        { pos: [-1.6, 0.05, 0.6] as const, name: "rotor 1" },
+        { pos: [1.6, 0.05, 0.6] as const, name: "rotor 2" },
+        { pos: [-1.6, 0.05, -0.6] as const, name: "rotor 3" },
+        { pos: [1.6, 0.05, -0.6] as const, name: "rotor 4" },
       ].map((r, i) => {
         const hl = isHL(r.name);
         return (
@@ -109,12 +123,11 @@ function DroneBody({
                 color={hl ? HIGHLIGHT : color}
                 emissive={hl ? HIGHLIGHT : color}
                 emissiveIntensity={hl ? 0.8 : 0.2}
-                transparent opacity={0.85}
+                transparent
+                opacity={0.85}
               />
             </mesh>
-            {hl && (
-              <pointLight color={HIGHLIGHT} intensity={1.5} distance={3} />
-            )}
+            {hl && <pointLight color={HIGHLIGHT} intensity={1.5} distance={3} />}
           </group>
         );
       })}
@@ -128,10 +141,16 @@ function DroneBody({
 }
 
 function MissileBody({
-  color, matProps, highlight,
-}: { color: string; matProps: THREE.MeshStandardMaterialParameters; highlight: string | null }) {
+  color,
+  matProps,
+  highlight,
+}: {
+  color: string;
+  matProps: THREE.MeshStandardMaterialParameters;
+  highlight: string | null;
+}) {
   const isHL = (name: string) => highlight && highlight.toLowerCase().includes(name);
-  const gyroHL = isHL('gyro') || isHL('imu');
+  const gyroHL = isHL("gyro") || isHL("imu");
   return (
     <group rotation={[0, 0, Math.PI / 2]}>
       {/* Body */}

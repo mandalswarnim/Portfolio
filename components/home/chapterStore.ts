@@ -19,7 +19,11 @@ function subscribe(l: () => void) {
 }
 
 export function useChapterBg() {
-  return useSyncExternalStore(subscribe, () => current, () => null);
+  return useSyncExternalStore(
+    subscribe,
+    () => current,
+    () => null,
+  );
 }
 
 /** True when a #rrggbb colour needs light text on top of it. */

@@ -3,17 +3,17 @@
 // tailwind.config.js theme tokens.
 
 export const palette = {
-  background: '#FAF8F4',
-  foreground: '#1C1612',
-  surface: '#F0EBE3',
-  divider: '#E2D9CE',
-  primary: '#2D5FA3',
-  muted: '#6B6259',
-  subtle: '#9B9088',
+  background: "#FAF8F4",
+  foreground: "#1C1612",
+  surface: "#F0EBE3",
+  divider: "#E2D9CE",
+  primary: "#2D5FA3",
+  muted: "#6B6259",
+  subtle: "#9B9088",
   status: {
-    NOMINAL: '#4A7C59',
-    WARNING: '#A8741A',
-    CRITICAL: '#A63D2F',
+    NOMINAL: "#4A7C59",
+    WARNING: "#A8741A",
+    CRITICAL: "#A63D2F",
   },
 } as const;
 

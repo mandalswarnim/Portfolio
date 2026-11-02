@@ -53,8 +53,7 @@ export const VOICE_LINES = {
   "bye-salon": "Thank you for calling Studio Nine Hair.",
   "bye-legal": "Thank you for calling Ashworth and Reid Solicitors.",
   "bye-generic": "Thank you for calling.",
-  "bye-outro":
-    "I've noted everything down and someone will be in touch with you shortly. Have a great day. Goodbye.",
+  "bye-outro": "I've noted everything down and someone will be in touch with you shortly. Have a great day. Goodbye.",
 } as const;
 
 export type Clip = keyof typeof VOICE_LINES;

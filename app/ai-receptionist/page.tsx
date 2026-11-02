@@ -8,13 +8,7 @@ import EnquiryForm from "@/components/aireception/EnquiryForm";
 import LoopVideo from "@/components/aireception/LoopVideo";
 import TryMe from "@/components/aireception/TryMe";
 import PlanButton from "@/components/aireception/PlanButton";
-import {
-  CONTACT_EMAIL,
-  RECEPTIONIST_SETUP_FEE,
-  RECEPTIONIST_TIERS,
-  SAMPLE_CALL_AUDIO,
-  SITE_URL,
-} from "@/lib/site";
+import { CONTACT_EMAIL, RECEPTIONIST_SETUP_FEE, RECEPTIONIST_TIERS, SAMPLE_CALL_AUDIO, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "AI Receptionist — 24/7 Call Answering & Booking Capture",
@@ -29,8 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-const EMAIL_HREF =
-  `mailto:${CONTACT_EMAIL}?subject=AI%20Receptionist%20enquiry&body=Hi%20Swarnim%2C%20I%27d%20like%20to%20add%20the%20AI%20Receptionist%20to%20my%20business.`;
+const EMAIL_HREF = `mailto:${CONTACT_EMAIL}?subject=AI%20Receptionist%20enquiry&body=Hi%20Swarnim%2C%20I%27d%20like%20to%20add%20the%20AI%20Receptionist%20to%20my%20business.`;
 
 const scenes = [
   {
@@ -94,14 +87,12 @@ const steps = [
 const features = [
   {
     title: "24/7 availability",
-    description:
-      "Never sleeps, takes breaks, or calls in sick. Every call answered, day or night.",
+    description: "Never sleeps, takes breaks, or calls in sick. Every call answered, day or night.",
     icon: "M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z",
   },
   {
     title: "Smart conversations",
-    description:
-      "Natural-language AI that understands context, handles follow-ups, and adapts to your business.",
+    description: "Natural-language AI that understands context, handles follow-ups, and adapts to your business.",
     icon: "M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z",
   },
   {
@@ -112,8 +103,7 @@ const features = [
   },
   {
     title: "Easy integration",
-    description:
-      "Keep your existing number. Set it to forward unanswered calls and the AI picks up — no new hardware.",
+    description: "Keep your existing number. Set it to forward unanswered calls and the AI picks up — no new hardware.",
     icon: "M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244",
   },
   {
@@ -133,8 +123,7 @@ const features = [
 const dataPoints = [
   {
     title: "Callers know it's an AI",
-    description:
-      "The receptionist introduces itself as a virtual assistant at the start of every call.",
+    description: "The receptionist introduces itself as a virtual assistant at the start of every call.",
   },
   {
     title: "Only what you need",
@@ -194,13 +183,7 @@ const faqs = [
 
 function Icon({ path }: { path: string }) {
   return (
-    <svg
-      className="w-6 h-6"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d={path} />
     </svg>
   );
@@ -238,10 +221,7 @@ const jsonLd = [
 export default function AiReceptionistPage() {
   return (
     <div className="min-h-screen">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden bg-foreground">
         <div className="absolute inset-0 -z-10">
@@ -270,8 +250,8 @@ export default function AiReceptionistPage() {
             <FadeIn delay={0.2}>
               <p className="text-lg text-background/80 leading-relaxed mb-10 max-w-xl">
                 When you can&apos;t pick up, an AI receptionist answers your calls day or night. It takes each
-                caller&apos;s details through natural conversation and emails you a clean summary the moment
-                they hang up.
+                caller&apos;s details through natural conversation and emails you a clean summary the moment they hang
+                up.
               </p>
             </FadeIn>
 
@@ -306,7 +286,9 @@ export default function AiReceptionistPage() {
         <ul className="max-w-6xl mx-auto px-6 py-5 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
           {facts.map((fact) => (
             <li key={fact} className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <span className="text-status-nominal" aria-hidden>✓</span>
+              <span className="text-status-nominal" aria-hidden>
+                ✓
+              </span>
               {fact}
             </li>
           ))}
@@ -317,9 +299,7 @@ export default function AiReceptionistPage() {
       <section className="py-24 border-b border-divider">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-status-critical uppercase tracking-widest mb-3">
-              The problem
-            </p>
+            <p className="text-sm font-medium text-status-critical uppercase tracking-widest mb-3">The problem</p>
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 max-w-2xl">
               Answer every call, even when you can&apos;t
             </h2>
@@ -385,9 +365,7 @@ export default function AiReceptionistPage() {
         <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <FadeIn>
-              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-                How it works
-              </p>
+              <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">How it works</p>
               <h2 className="font-serif text-4xl font-bold text-foreground mb-12">
                 Three steps. Nothing for you to do.
               </h2>
@@ -425,15 +403,12 @@ export default function AiReceptionistPage() {
       <section className="py-24 border-b border-divider bg-surface">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              Features
-            </p>
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Features</p>
             <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
               Everything you need, nothing you don&apos;t
             </h2>
             <p className="text-muted text-lg max-w-2xl mb-16">
-              Built for businesses that want to capture every opportunity
-              without adding complexity.
+              Built for businesses that want to capture every opportunity without adding complexity.
             </p>
           </FadeIn>
 
@@ -444,12 +419,8 @@ export default function AiReceptionistPage() {
                   <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                     <Icon path={feature.icon} />
                   </div>
-                  <h3 className="font-medium text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-muted leading-relaxed">
-                    {feature.description}
-                  </p>
+                  <h3 className="font-medium text-foreground mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted leading-relaxed">{feature.description}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -461,15 +432,13 @@ export default function AiReceptionistPage() {
       <section className="py-24 border-b border-divider bg-surface">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              Trust &amp; Data
-            </p>
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Trust &amp; Data</p>
             <h2 className="font-serif text-4xl font-bold text-foreground mb-4">
               Your callers&apos; data, handled properly
             </h2>
             <p className="text-muted text-lg max-w-2xl mb-16">
-              Calls are handled by Twilio and OpenAI; caller details are stored
-              in a database dedicated to your business.
+              Calls are handled by Twilio and OpenAI; caller details are stored in a database dedicated to your
+              business.
             </p>
           </FadeIn>
 
@@ -490,15 +459,13 @@ export default function AiReceptionistPage() {
       <section id="plans" className="py-24 border-b border-divider scroll-mt-20">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              Pricing
-            </p>
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">Pricing</p>
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
               Pay for the calls you take. Nothing else.
             </h2>
             <p className="text-muted text-lg max-w-2xl mb-10">
-              A one-off setup fee, then a per-minute rate for the calls your receptionist answers. Quiet month,
-              smaller bill. Choose a tier by how the agent sounds and how much it can talk about.
+              A one-off setup fee, then a per-minute rate for the calls your receptionist answers. Quiet month, smaller
+              bill. Choose a tier by how the agent sounds and how much it can talk about.
             </p>
           </FadeIn>
 
@@ -538,14 +505,18 @@ export default function AiReceptionistPage() {
                       Recommended
                     </span>
                   )}
-                  <p className={`text-xs uppercase tracking-widest mb-3 ${tier.featured ? "text-background/60" : "text-subtle"}`}>
+                  <p
+                    className={`text-xs uppercase tracking-widest mb-3 ${tier.featured ? "text-background/60" : "text-subtle"}`}
+                  >
                     Tier {["I", "II", "III", "IV"][i]}
                   </p>
                   <h3 className="font-serif text-3xl font-bold leading-none">{tier.name}</h3>
                   <p className={`text-sm italic mt-1 mb-4 ${tier.featured ? "text-background/60" : "text-subtle"}`}>
                     {tier.meaning}
                   </p>
-                  <p className={`text-sm leading-relaxed mb-6 min-h-[2.5rem] ${tier.featured ? "text-background/80" : "text-muted"}`}>
+                  <p
+                    className={`text-sm leading-relaxed mb-6 min-h-[2.5rem] ${tier.featured ? "text-background/80" : "text-muted"}`}
+                  >
                     {tier.tagline}
                   </p>
 
@@ -555,22 +526,29 @@ export default function AiReceptionistPage() {
                     ) : (
                       <>
                         £{tier.perMinute.toFixed(2)}
-                        <span className={`text-base font-sans font-normal ${tier.featured ? "text-background/70" : "text-muted"}`}>
-                          {" "}/ min
+                        <span
+                          className={`text-base font-sans font-normal ${tier.featured ? "text-background/70" : "text-muted"}`}
+                        >
+                          {" "}
+                          / min
                         </span>
                       </>
                     )}
                   </p>
 
                   <dl className="space-y-4 mb-6">
-                    {([
-                      ["Voice", tier.voice],
-                      ["Conversation", tier.conversation],
-                      ["Human touch", tier.human],
-                    ] as const).map(([label, rating]) => (
+                    {(
+                      [
+                        ["Voice", tier.voice],
+                        ["Conversation", tier.conversation],
+                        ["Human touch", tier.human],
+                      ] as const
+                    ).map(([label, rating]) => (
                       <div key={label}>
                         <div className="flex items-center justify-between mb-1.5">
-                          <dt className={`text-xs uppercase tracking-wider ${tier.featured ? "text-background/60" : "text-subtle"}`}>
+                          <dt
+                            className={`text-xs uppercase tracking-wider ${tier.featured ? "text-background/60" : "text-subtle"}`}
+                          >
                             {label}
                           </dt>
                           <span className="flex gap-1" aria-label={`${rating.level} of 4`}>
@@ -579,8 +557,12 @@ export default function AiReceptionistPage() {
                                 key={n}
                                 className={`h-1.5 w-5 rounded-full ${
                                   n <= rating.level
-                                    ? tier.featured ? "bg-background" : "bg-primary"
-                                    : tier.featured ? "bg-background/20" : "bg-divider"
+                                    ? tier.featured
+                                      ? "bg-background"
+                                      : "bg-primary"
+                                    : tier.featured
+                                      ? "bg-background/20"
+                                      : "bg-divider"
                                 }`}
                               />
                             ))}
@@ -594,7 +576,9 @@ export default function AiReceptionistPage() {
                   </dl>
 
                   {tier.features.length > 0 && (
-                    <ul className={`space-y-2.5 mb-6 pt-5 border-t ${tier.featured ? "border-background/15" : "border-divider"}`}>
+                    <ul
+                      className={`space-y-2.5 mb-6 pt-5 border-t ${tier.featured ? "border-background/15" : "border-divider"}`}
+                    >
                       {tier.features.map((line) => (
                         <li
                           key={line}
@@ -641,12 +625,8 @@ export default function AiReceptionistPage() {
       <section className="py-24 border-b border-divider bg-surface">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">
-              FAQ
-            </p>
-            <h2 className="font-serif text-4xl font-bold text-foreground mb-12">
-              Common questions
-            </h2>
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-3">FAQ</p>
+            <h2 className="font-serif text-4xl font-bold text-foreground mb-12">Common questions</h2>
           </FadeIn>
           <FadeIn delay={0.1}>
             <div className="max-w-3xl divide-y divide-divider border-t border-b border-divider">
@@ -678,9 +658,8 @@ export default function AiReceptionistPage() {
                 your business?
               </h2>
               <p className="text-muted text-lg mb-10">
-                I build, deploy, and integrate the AI receptionist into your
-                existing phone line and workflow. Tell me a little about your
-                business and I&apos;ll come back with a quote.
+                I build, deploy, and integrate the AI receptionist into your existing phone line and workflow. Tell me a
+                little about your business and I&apos;ll come back with a quote.
               </p>
               <div className="flex flex-wrap gap-4">
                 <BookingButton source="ai-receptionist-footer" label="Book a demo call" />

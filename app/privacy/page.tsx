@@ -13,9 +13,8 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "Who I am",
     body: [
       <>
-        This site is run by Swarnim Mandal, an individual based in London, United Kingdom. I am the
-        controller of the personal data described here. You can reach me at{" "}
-        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        This site is run by Swarnim Mandal, an individual based in London, United Kingdom. I am the controller of the
+        personal data described here. You can reach me at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </>,
     ],
   },
@@ -23,19 +22,18 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "What I collect",
     body: [
       <>
-        <strong>Contact and enquiry forms.</strong> When you send a message, I receive your name,
-        email address and what you write. The AI Receptionist enquiry form also asks for your
-        business name, industry, an estimate of missed calls and, optionally, a phone number.
+        <strong>Contact and enquiry forms.</strong> When you send a message, I receive your name, email address and what
+        you write. The AI Receptionist enquiry form also asks for your business name, industry, an estimate of missed
+        calls and, optionally, a phone number.
       </>,
       <>
-        <strong>Analytics.</strong> I use Vercel Web Analytics and Speed Insights to count page views
-        and measure performance. They do not use cookies and do not identify individual visitors;
-        they record aggregate data such as the page visited, referrer, country, browser and device
-        type.
+        <strong>Analytics.</strong> I use Vercel Web Analytics and Speed Insights to count page views and measure
+        performance. They do not use cookies and do not identify individual visitors; they record aggregate data such as
+        the page visited, referrer, country, browser and device type.
       </>,
       <>
-        <strong>Server logs.</strong> My hosting provider keeps short-lived technical logs (for
-        example IP address and request time) to operate and secure the site.
+        <strong>Server logs.</strong> My hosting provider keeps short-lived technical logs (for example IP address and
+        request time) to operate and secure the site.
       </>,
     ],
   },
@@ -43,14 +41,13 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "Why, and on what basis",
     body: [
       <>
-        I use form submissions only to reply to you and, if we work together, to deliver what we
-        agreed. The lawful basis is my legitimate interest in responding to enquiries, or taking
-        steps at your request before entering into a contract.
+        I use form submissions only to reply to you and, if we work together, to deliver what we agreed. The lawful
+        basis is my legitimate interest in responding to enquiries, or taking steps at your request before entering into
+        a contract.
       </>,
       <>
-        Analytics and logs are used to understand which pages are useful and to keep the site
-        running securely — also a legitimate interest. I do not sell your data or use it for
-        advertising.
+        Analytics and logs are used to understand which pages are useful and to keep the site running securely — also a
+        legitimate interest. I do not sell your data or use it for advertising.
       </>,
     ],
   },
@@ -58,10 +55,9 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "Who processes it",
     body: [
       <>
-        <strong>Vercel</strong> hosts the site and provides analytics. <strong>Resend</strong>{" "}
-        delivers form submissions to my inbox, which is hosted by <strong>Google</strong>. These
-        providers may process data outside the UK under appropriate safeguards such as the UK
-        International Data Transfer Addendum.
+        <strong>Vercel</strong> hosts the site and provides analytics. <strong>Resend</strong> delivers form submissions
+        to my inbox, which is hosted by <strong>Google</strong>. These providers may process data outside the UK under
+        appropriate safeguards such as the UK International Data Transfer Addendum.
       </>,
     ],
   },
@@ -69,9 +65,9 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "How long I keep it",
     body: [
       <>
-        Enquiries are kept for up to two years after our last contact, unless we go on to work
-        together, in which case they are kept for as long as needed for that work and any legal
-        obligations. You can ask me to delete them sooner.
+        Enquiries are kept for up to two years after our last contact, unless we go on to work together, in which case
+        they are kept for as long as needed for that work and any legal obligations. You can ask me to delete them
+        sooner.
       </>,
     ],
   },
@@ -79,9 +75,9 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "AI Receptionist callers",
     body: [
       <>
-        When I run the AI Receptionist for a business, the details its callers give are processed on
-        behalf of that business, which is the controller of that data. If you called a business
-        using it, please contact that business about your data; I will help them respond.
+        When I run the AI Receptionist for a business, the details its callers give are processed on behalf of that
+        business, which is the controller of that data. If you called a business using it, please contact that business
+        about your data; I will help them respond.
       </>,
     ],
   },
@@ -89,13 +85,13 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
     heading: "Your rights",
     body: [
       <>
-        Under UK data protection law you can ask to access, correct or delete your personal data, to
-        restrict or object to how I use it, and to receive a copy of it. Email{" "}
-        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and I will respond within one month.
+        Under UK data protection law you can ask to access, correct or delete your personal data, to restrict or object
+        to how I use it, and to receive a copy of it. Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and
+        I will respond within one month.
       </>,
       <>
-        If you are unhappy with how I have handled your data, you can complain to the Information
-        Commissioner&apos;s Office at <a href="https://ico.org.uk">ico.org.uk</a>.
+        If you are unhappy with how I have handled your data, you can complain to the Information Commissioner&apos;s
+        Office at <a href="https://ico.org.uk">ico.org.uk</a>.
       </>,
     ],
   },

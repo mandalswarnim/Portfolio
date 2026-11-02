@@ -1,17 +1,17 @@
-'use client';
-import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
-import { useDash } from '@/lib/uav/store';
-import StatusBadge from '@/components/uav/StatusBadge';
-import MaintenanceReadout from '@/components/uav/diagnostics/MaintenanceReadout';
-import AttentionHeatmap from '@/components/uav/diagnostics/AttentionHeatmap';
+"use client";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
+import { useDash } from "@/lib/uav/store";
+import StatusBadge from "@/components/uav/StatusBadge";
+import MaintenanceReadout from "@/components/uav/diagnostics/MaintenanceReadout";
+import AttentionHeatmap from "@/components/uav/diagnostics/AttentionHeatmap";
 
-const WireframeView = dynamic(() => import('@/components/uav/diagnostics/WireframeView'), { ssr: false });
+const WireframeView = dynamic(() => import("@/components/uav/diagnostics/WireframeView"), { ssr: false });
 
 export default function DiagnosticsPage() {
   const { assets, selectedId, select, details, loadDetail, fleetLoaded } = useDash();
   const sel = assets.find((a) => a.id === selectedId) ?? assets[0];
-  const detail = sel ? details[sel.id] ?? null : null;
+  const detail = sel ? (details[sel.id] ?? null) : null;
 
   useEffect(() => {
     if (sel) loadDetail(sel.id);
@@ -21,13 +21,13 @@ export default function DiagnosticsPage() {
     return <div className="mx-auto max-w-7xl px-6 py-12 text-sm text-subtle">Loading fleet roster…</div>;
   }
   if (!sel) {
-    return <div className="mx-auto max-w-7xl px-6 py-12 text-sm text-subtle">Fleet empty — no baked artifacts found.</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-12 text-sm text-subtle">Fleet empty — no baked artifacts found.</div>
+    );
   }
 
   // Anomaly is augmented with detail.anomaly when loaded (richer than manifest).
-  const assetForView = detail
-    ? { ...sel, anomaly: detail.anomaly ?? null }
-    : sel;
+  const assetForView = detail ? { ...sel, anomaly: detail.anomaly ?? null } : sel;
 
   return (
     <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-6 py-8 lg:grid-cols-[220px_1fr_360px]">
@@ -42,7 +42,7 @@ export default function DiagnosticsPage() {
               key={a.id}
               onClick={() => select(a.id)}
               className={`block w-full border-b border-divider/60 px-4 py-2.5 text-left text-[11px] transition-colors hover:bg-background/70 ${
-                a.id === selectedId ? 'bg-background text-foreground' : 'text-muted'
+                a.id === selectedId ? "bg-background text-foreground" : "text-muted"
               }`}
             >
               <div className="flex justify-between">
@@ -76,7 +76,9 @@ export default function DiagnosticsPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
               Self-Attention (Transformer) · Time × Time
             </span>
-            <span className="text-xs text-subtle">{detail?.attention_2d ? `T = ${detail.attention_2d.length}` : ''}</span>
+            <span className="text-xs text-subtle">
+              {detail?.attention_2d ? `T = ${detail.attention_2d.length}` : ""}
+            </span>
           </div>
           <AttentionHeatmap matrix={detail?.attention_2d ?? null} height={180} />
         </div>

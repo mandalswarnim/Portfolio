@@ -1,7 +1,7 @@
-'use client';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import type { ResultRow } from '@/lib/uav/api';
-import { palette, chart } from '@/lib/uav/palette';
+"use client";
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import type { ResultRow } from "@/lib/uav/api";
+import { palette, chart } from "@/lib/uav/palette";
 
 const ARCH_COLORS: Record<string, string> = {
   lstm: palette.primary,
@@ -9,7 +9,9 @@ const ARCH_COLORS: Record<string, string> = {
   cnn: palette.status.NOMINAL,
 };
 
-interface Props { rows: ResultRow[] }
+interface Props {
+  rows: ResultRow[];
+}
 
 export default function TrainingCurves({ rows }: Props) {
   const datasets = Array.from(new Set(rows.map((r) => r.dataset)));

@@ -9,11 +9,7 @@ interface StaggerContainerProps {
   staggerDelay?: number;
 }
 
-export default function StaggerContainer({
-  children,
-  className = "",
-  staggerDelay = 0.1
-}: StaggerContainerProps) {
+export default function StaggerContainer({ children, className = "", staggerDelay = 0.1 }: StaggerContainerProps) {
   return (
     <motion.div
       initial="hidden"

@@ -44,7 +44,12 @@ export default function HeroPortrait() {
     still.src = `${SRC}-start.jpg`;
 
     const canHover = window.matchMedia("(hover: hover)").matches;
-    let W = 0, H = 0, cols = 0, rows = 0, cellW = 0, cellH = 0;
+    let W = 0,
+      H = 0,
+      cols = 0,
+      rows = 0,
+      cellW = 0,
+      cellH = 0;
     let reveal = new Float32Array(0);
     let rowShift = new Int8Array(0);
 
@@ -93,7 +98,8 @@ export default function HeroPortrait() {
       const sw = src instanceof HTMLVideoElement ? src.videoWidth : still.naturalWidth;
       const sh = src instanceof HTMLVideoElement ? src.videoHeight : still.naturalHeight;
       const scale = Math.max(W / sw, H / sh);
-      const cw = W / scale, ch = H / scale;
+      const cw = W / scale,
+        ch = H / scale;
       sctx.drawImage(src, (sw - cw) / 2, (sh - ch) / 2, cw, ch, 0, 0, cols, rows);
       const px = sctx.getImageData(0, 0, cols, rows).data;
 
@@ -114,7 +120,9 @@ export default function HeroPortrait() {
             continue;
           }
 
-          const r = px[k * 4], g = px[k * 4 + 1], b = px[k * 4 + 2];
+          const r = px[k * 4],
+            g = px[k * 4 + 1],
+            b = px[k * 4 + 2];
           // Gamma lift so the shadowed side of the face still reads as glyphs.
           const raw = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
           const lum = Math.min(1, Math.pow(Math.max(0, raw - 0.015) * 1.6, 0.55));
@@ -319,7 +327,14 @@ export default function HeroPortrait() {
           style={{ ["--lx" as string]: "50%", ["--ly" as string]: "40%", ["--lr" as string]: "0px" }}
         >
           {reduced ? (
-            <Image src={`${SRC}.jpg`} alt="Swarnim Mandal" fill preload sizes="(min-width: 640px) 448px, 100vw" className="object-cover" />
+            <Image
+              src={`${SRC}.jpg`}
+              alt="Swarnim Mandal"
+              fill
+              preload
+              sizes="(min-width: 640px) 448px, 100vw"
+              className="object-cover"
+            />
           ) : (
             /* Real footage (revealed through the lens) */
             <video
@@ -374,7 +389,10 @@ export default function HeroPortrait() {
           )}
 
           {/* HUD */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 font-mono text-[10px] tracking-widest text-[#8EC1FF]/80">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 font-mono text-[10px] tracking-widest text-[#8EC1FF]/80"
+          >
             {/* Corner brackets */}
             <span className="absolute left-3 top-3 h-4 w-4 border-l border-t border-[#8EC1FF]/60" />
             <span className="absolute right-3 top-3 h-4 w-4 border-r border-t border-[#8EC1FF]/60" />

@@ -10,11 +10,7 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = BLOG_ENABLED ? getPostBySlug(slug) : undefined;
   if (!post) return { title: "Post Not Found" };
@@ -24,11 +20,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPost({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = BLOG_ENABLED ? getPostBySlug(slug) : undefined;
   if (!post) notFound();
@@ -37,7 +29,6 @@ export default async function BlogPost({
     <div className="min-h-screen">
       <article className="py-20">
         <div className="max-w-3xl mx-auto px-6">
-
           {/* Back link */}
           <FadeIn>
             <Link
@@ -54,9 +45,7 @@ export default async function BlogPost({
           {/* Meta */}
           <FadeIn delay={0.05}>
             <div className="flex flex-wrap items-center gap-3 mb-6">
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                {post.category}
-              </span>
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">{post.category}</span>
               <span className="text-subtle text-xs">·</span>
               <span className="text-xs text-subtle">{post.readTime}</span>
               <span className="text-subtle text-xs">·</span>
@@ -93,9 +82,7 @@ export default async function BlogPost({
           <FadeIn>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>
-                <h2 className="font-serif text-2xl font-bold text-foreground mb-1">
-                  Enjoyed this?
-                </h2>
+                <h2 className="font-serif text-2xl font-bold text-foreground mb-1">Enjoyed this?</h2>
                 <p className="text-muted text-sm">Reach out if you have questions or want to discuss further.</p>
               </div>
               <Link

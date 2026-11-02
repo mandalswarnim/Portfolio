@@ -1,24 +1,26 @@
-'use client';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useEffect } from 'react';
-import { useDash } from '@/lib/uav/store';
-import StatusBadge from '@/components/uav/StatusBadge';
-import { palette } from '@/lib/uav/palette';
+"use client";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useDash } from "@/lib/uav/store";
+import StatusBadge from "@/components/uav/StatusBadge";
+import { palette } from "@/lib/uav/palette";
 
-const AssetCarousel = dynamic(() => import('@/components/uav/armory/AssetCarousel'), { ssr: false });
+const AssetCarousel = dynamic(() => import("@/components/uav/armory/AssetCarousel"), { ssr: false });
 
 export default function ArmoryPage() {
   const { assets, selectedId, select, details, loadDetail, fleetLoaded, fleetError } = useDash();
   const sel = assets.find((a) => a.id === selectedId) ?? null;
-  const detail = sel ? details[sel.id] ?? null : null;
+  const detail = sel ? (details[sel.id] ?? null) : null;
 
   useEffect(() => {
     if (sel) loadDetail(sel.id);
   }, [sel, loadDetail]);
 
   if (fleetError) {
-    return <div className="mx-auto max-w-7xl px-6 py-12 text-sm text-status-critical">Fleet load failed: {fleetError}</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-12 text-sm text-status-critical">Fleet load failed: {fleetError}</div>
+    );
   }
   if (!fleetLoaded || assets.length === 0) {
     return <div className="mx-auto max-w-7xl px-6 py-12 text-sm text-subtle">Loading fleet roster…</div>;
@@ -37,7 +39,7 @@ export default function ArmoryPage() {
               key={a.id}
               onClick={() => select(a.id)}
               className={`block w-full border-b border-divider/60 px-4 py-3 text-left transition-colors hover:bg-background/70 ${
-                a.id === selectedId ? 'bg-background' : ''
+                a.id === selectedId ? "bg-background" : ""
               }`}
             >
               <div className="flex items-center justify-between gap-2">
@@ -94,10 +96,12 @@ export default function ArmoryPage() {
             <div className="text-[11px] text-subtle">
               {sel.id} · {sel.class} · <span className="text-primary">{sel.data_source}</span>
             </div>
-            <div className="mt-3"><StatusBadge status={sel.status} /></div>
+            <div className="mt-3">
+              <StatusBadge status={sel.status} />
+            </div>
 
             <div className="mt-4 space-y-2 text-[11px]">
-              <Row k="RUL (predicted)"  v={`${sel.rul.toFixed(1)} %`} />
+              <Row k="RUL (predicted)" v={`${sel.rul.toFixed(1)} %`} />
               {detail?.rul_truth != null && <Row k="RUL (truth)" v={`${detail.rul_truth.toFixed(1)} %`} />}
               {detail?.best_arch && <Row k="Best model" v={detail.best_arch.toUpperCase()} />}
               {detail?.subset && <Row k="C-MAPSS subset" v={`${detail.subset} · unit ${detail.unit}`} />}
@@ -138,8 +142,10 @@ function CtaLink({ href, children }: { href: string; children: React.ReactNode }
 
 function Row({ k, v, alert }: { k: string; v: string; alert?: boolean }) {
   return (
-    <div className={`flex justify-between gap-2 border-b border-divider/60 pb-1.5 ${alert ? 'text-status-critical' : 'text-foreground'}`}>
-      <span className={alert ? 'text-status-critical/80' : 'text-subtle'}>{k}</span>
+    <div
+      className={`flex justify-between gap-2 border-b border-divider/60 pb-1.5 ${alert ? "text-status-critical" : "text-foreground"}`}
+    >
+      <span className={alert ? "text-status-critical/80" : "text-subtle"}>{k}</span>
       <span className="text-right font-medium">{v}</span>
     </div>
   );

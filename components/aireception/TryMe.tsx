@@ -37,8 +37,7 @@ const FIELDS: { key: keyof Captured; label: string }[] = [
   { key: "urgency", label: "Urgency" },
 ];
 
-const formatTime = (s: number) =>
-  `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
 /**
  * Start (and immediately pause) a muted clip inside the click gesture, which
@@ -121,47 +120,47 @@ export default function TryMe() {
   };
 
   /** Play a reply's clips back to back; `done(spoken)` runs once they finish. */
-  const speak = useCallback(
-    (clips: Clip[], done?: (spoken: boolean) => void) => {
-      const audio = audioRef.current;
-      playback.current = null;
-      if (!voiceOnRef.current || !audio || clips.length === 0) {
-        done?.(false);
+  const speak = useCallback((clips: Clip[], done?: (spoken: boolean) => void) => {
+    const audio = audioRef.current;
+    playback.current = null;
+    if (!voiceOnRef.current || !audio || clips.length === 0) {
+      done?.(false);
+      return;
+    }
+    const token = { done };
+    playback.current = token;
+    let i = 0;
+    const next = () => {
+      if (playback.current !== token) return;
+      if (i >= clips.length) {
+        playback.current = null;
+        done?.(true);
         return;
       }
-      const token = { done };
-      playback.current = token;
-      let i = 0;
-      const next = () => {
+      audio.src = clipUrl(clips[i++]);
+      audio.onended = () => timers.current.push(window.setTimeout(next, CLIP_GAP_MS));
+      audio.onerror = next;
+      audio.play().catch(() => {
+        // Autoplay refused — carry on silently with the transcript.
         if (playback.current !== token) return;
-        if (i >= clips.length) {
-          playback.current = null;
-          done?.(true);
-          return;
-        }
-        audio.src = clipUrl(clips[i++]);
-        audio.onended = () => timers.current.push(window.setTimeout(next, CLIP_GAP_MS));
-        audio.onerror = next;
-        audio.play().catch(() => {
-          // Autoplay refused — carry on silently with the transcript.
-          if (playback.current !== token) return;
-          playback.current = null;
-          done?.(false);
-        });
-      };
-      next();
-    },
-    [],
-  );
+        playback.current = null;
+        done?.(false);
+      });
+    };
+    next();
+  }, []);
 
   const aiSay = useCallback(
     (text: string, clips: Clip[], then?: (spoken: boolean) => void) => {
       setTyping(true);
-      later(() => {
-        setTyping(false);
-        setMessages((m) => [...m, { role: "ai", text }]);
-        speak(clips, then);
-      }, 700 + Math.min(text.length * 6, 900));
+      later(
+        () => {
+          setTyping(false);
+          setMessages((m) => [...m, { role: "ai", text }]);
+          speak(clips, then);
+        },
+        700 + Math.min(text.length * 6, 900),
+      );
     },
     [speak],
   );
@@ -340,7 +339,9 @@ export default function TryMe() {
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${phase === "live" ? "bg-status-nominal animate-pulse" : "bg-subtle"}`}
                         />
-                        {phase === "live" ? `AI receptionist · ${formatTime(seconds)}` : `Call ended · ${formatTime(seconds)}`}
+                        {phase === "live"
+                          ? `AI receptionist · ${formatTime(seconds)}`
+                          : `Call ended · ${formatTime(seconds)}`}
                       </p>
                     </div>
                     <button
@@ -490,7 +491,9 @@ export default function TryMe() {
                           className={`break-words ${value ? "text-foreground font-medium" : "text-subtle italic"}`}
                         >
                           {key === "urgency" && value ? (
-                            <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${URGENCY_STYLE[value as Urgency]}`}>
+                            <span
+                              className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${URGENCY_STYLE[value as Urgency]}`}
+                            >
                               {URGENCY_LABEL[value as Urgency]}
                             </span>
                           ) : (
@@ -501,7 +504,11 @@ export default function TryMe() {
                         <span className="h-4 w-24 rounded bg-surface" aria-hidden />
                       )}
                     </AnimatePresence>
-                    {asked && <span className="text-status-nominal" aria-hidden>✓</span>}
+                    {asked && (
+                      <span className="text-status-nominal" aria-hidden>
+                        ✓
+                      </span>
+                    )}
                   </dd>
                 </div>
               );
@@ -563,7 +570,11 @@ function PhoneIcon({ className }: { className?: string }) {
 function SpeakerIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"
+      />
     </svg>
   );
 }

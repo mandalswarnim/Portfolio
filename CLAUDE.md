@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev        # Start dev server (auto-picks available port if 3000 is in use)
 npm run build      # Production build — must pass before pushing
 npm run lint       # ESLint (flat config in eslint.config.mjs)
+npm run format     # Prettier (printWidth 120, .prettierrc.json); format:check verifies
 ```
 
 No test suite is configured. `npm audit` should report 0 vulnerabilities.
@@ -27,7 +28,7 @@ No test suite is configured. `npm audit` should report 0 vulnerabilities.
 
 **App Router layout** — `app/layout.tsx` wraps every page with `<Header>` and `<Footer>`, adds 80px top padding via `pt-20` to clear the fixed header. `app/template.tsx` wraps each route in `PageTransition`. Header nav: About, Work, Services, Contact (+ "Hire me" → /contact); the footer "Email" link goes to `/contact`, not `mailto:`.
 
-**Positioning & copy** — the site presents Swarnim as an **AI / Software Engineer** (not a researcher). Experience, skills and project facts must match the CV at `public/Swarnim CV.pdf`; never invent numbers or details. Each project card has an optional one-line `result` (measured outcome); UAV figures come from the site's own `public/uav/data/results.json` (Transformer: 14.12 RMSE on C-MAPSS, 97.4% UAV fault accuracy). Projects are listed twice — a selection in `app/page.tsx` and the full set in `app/work/page.tsx` — so keep shared entries in sync.
+**Positioning & copy** — the site presents Swarnim as an **AI / Software Engineer** (not a researcher). Experience, skills and project facts must match the CV at `public/Swarnim CV.pdf`; never invent numbers or details. Each project card has an optional one-line `result` (measured outcome); UAV figures come from the site's own `public/uav/data/results.json` (Transformer: 14.12 RMSE on C-MAPSS, 97.4% UAV fault accuracy). Projects live in one list, `lib/projects.ts`: `/work` shows all of them, and the homepage shows `homeProjects` (skips `homeHidden`, uses `homeDesc` when set and the first three `tech` tags).
 
 **Pages:** `app/page.tsx` (home), `app/about/`, `app/work/` (all projects; nav "Work"), `app/services/` (services on offer — currently only the AI Receptionist; nav "Services"), `app/contact/`, `app/blog/`, `app/blog/[slug]/`, `app/uav/` (UAV predictive-maintenance dashboard, see below), `app/ai-receptionist/` (sales landing page for the AI Receptionist product — content ported from the gitignored `Reception App/` Twilio+OpenAI app; "Try me" call simulator in `components/aireception/TryMe.tsx`, driven by the pure dialogue engine in `components/aireception/script.ts`, which mirrors the production prompt in `Reception App/src/services/ai.service.ts`; it runs client-side only (the Permissions-Policy blocks the microphone) and speaks with pre-recorded sentence clips — `components/aireception/voice.ts` maps clip ids to their text, files live in `public/aireception/voice/<id>.mp3` (Higgsfield TTS, ElevenLabs engine, "Daisy" preset; trimmed + loudness-normalised with ffmpeg). Each `respond()` turn returns the clips to play; caller-typed details get generic clips, so changing a reply means updating its clip text and regenerating that file. Background clips are Higgsfield-generated (Kling 3.0), graded and looped into `public/aireception/video/<name>.mp4` + `.jpg` poster, and rendered with `components/aireception/LoopVideo.tsx`)
 
@@ -43,7 +44,7 @@ The directory is designed to be opened as an Obsidian vault: `convertWikilinks()
 
 Rendered markdown is styled with `@tailwindcss/typography` (`prose prose-stone`); the `typography` block in `tailwind.config.js` maps prose variables onto the design tokens below. Because `lib/blog.ts` uses `fs`, it must only be imported from server components.
 
-**Animation components** in `components/animations/` (`FadeIn`, `StaggerContainer`, `StaggerItem`, `TextReveal` for line-by-line headings, `PageTransition`, `MotionProvider`) are thin framer-motion wrappers used across all pages. `HeroPortrait` (home hero: Higgsfield-generated turn-to-camera clip `public/hero/portrait.mp4`, played once and held on its last frame (`portrait-start.jpg` = first-frame poster, `portrait.jpg` = last frame / reduced-motion still), drawn live as ASCII on a canvas, with a cursor "decode lens" revealing the video; the intro starts when the card is ≥50% on screen; touch screens get a one-off lens reveal after the turn and tap-to-replay; autoplay-blocked falls back to the last frame; plain still under reduced motion; source reference photos live in the gitignored `reference photos/`) and `ScrollProgress` (bar under the header) live in `components/`. All are `"use client"` components and can be imported into server component pages.
+**Animation components** in `components/animations/` (`FadeIn`, `StaggerContainer`, `StaggerItem`, `TextReveal` for line-by-line headings, `PageTransition`, `MotionProvider`) are thin framer-motion wrappers used across all pages. Inner pages share `PageHero` (eyebrow + masked headline + lead) and `CtaBand` (closing "Get in touch" strip) from `components/PageSections.tsx`; `components/SmartLink.tsx` renders `next/link` for site paths and a new-tab `<a>` for absolute URLs. `HeroPortrait` (home hero: Higgsfield-generated turn-to-camera clip `public/hero/portrait.mp4`, played once and held on its last frame (`portrait-start.jpg` = first-frame poster, `portrait.jpg` = last frame / reduced-motion still), drawn live as ASCII on a canvas, with a cursor "decode lens" revealing the video; the intro starts when the card is ≥50% on screen; touch screens get a one-off lens reveal after the turn and tap-to-replay; autoplay-blocked falls back to the last frame; plain still under reduced motion; source reference photos live in the gitignored `reference photos/`) and `ScrollProgress` (bar under the header) live in `components/`. All are `"use client"` components and can be imported into server component pages.
 
 **Homepage colour chapters** — `app/page.tsx` is wrapped in `components/home/Chapters.tsx`: any element with `data-bg="#hex"` is a chapter, and when it crosses the middle of the viewport the page background eases to that colour (sections themselves stay transparent). Hero and featured projects (those with a `screen` field: AI Receptionist, UAV) share a two-column block whose right column holds the sticky `components/home/TravelCard.tsx` on `lg+` — the ASCII `HeroPortrait` for the hero (`data-card={0}`), then each project's real screenshot (`public/home/*.jpg`, captured from the site's own pages) in a browser frame, with two coloured plates rearranging per chapter; below `lg` each chapter shows its media inline. `components/home/ExpertiseRail.tsx` pins on `lg+` and scrolls its cards sideways (native swipe row on smaller screens); `components/home/Reveal.tsx` is the in-view masked heading reveal (observe the heading, not the clipped lines). Headlines use `font-display` (Archivo Black, uppercase).
 
@@ -55,22 +56,23 @@ Rendered markdown is styled with `@tailwindcss/typography` (`prose prose-stone`)
 
 Colours are defined as direct hex values in `tailwind.config.js` (not CSS variables):
 
-| Token | Hex | Usage |
-|---|---|---|
-| `background` | `#FAF8F4` | Page background |
-| `foreground` | `#1C1612` | Body text |
-| `surface` | `#F0EBE3` | Cards, alternate sections |
-| `divider` | `#E2D9CE` | Borders, `<hr>`-style lines |
-| `primary` | `#2D5FA3` | Steel blue — SM monogram, links, category labels |
-| `charcoal` | `#1E1E1E` | Homepage dark chapters, dark buttons |
-| `accent` | `#C9F27A` | Lime — homepage primary buttons, testimonials chapter |
-| `muted` | `#6B6259` | Secondary text |
-| `subtle` | `#9B9088` | Tertiary text, labels |
-| `status.nominal` | `#4A7C59` | UAV dashboard — healthy |
-| `status.warning` | `#A8741A` | UAV dashboard — degrading |
-| `status.critical` | `#A63D2F` | UAV dashboard — critical |
+| Token             | Hex       | Usage                                                 |
+| ----------------- | --------- | ----------------------------------------------------- |
+| `background`      | `#FAF8F4` | Page background                                       |
+| `foreground`      | `#1C1612` | Body text                                             |
+| `surface`         | `#F0EBE3` | Cards, alternate sections                             |
+| `divider`         | `#E2D9CE` | Borders, `<hr>`-style lines                           |
+| `primary`         | `#2D5FA3` | Steel blue — SM monogram, links, category labels      |
+| `charcoal`        | `#1E1E1E` | Homepage dark chapters, dark buttons                  |
+| `accent`          | `#C9F27A` | Lime — homepage primary buttons, testimonials chapter |
+| `muted`           | `#6B6259` | Secondary text                                        |
+| `subtle`          | `#9B9088` | Tertiary text, labels                                 |
+| `status.nominal`  | `#4A7C59` | UAV dashboard — healthy                               |
+| `status.warning`  | `#A8741A` | UAV dashboard — degrading                             |
+| `status.critical` | `#A63D2F` | UAV dashboard — critical                              |
 
 Fonts loaded via `next/font/google` in `app/layout.tsx`:
+
 - `--font-playfair` → `font-serif` (headings)
 - `--font-inter` → `font-sans` (body, default)
 - `--font-archivo` → `font-display` (Archivo Black; homepage headlines, uppercase)

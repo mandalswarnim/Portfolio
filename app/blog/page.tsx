@@ -17,17 +17,12 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen">
-
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="py-24 border-b border-divider">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">
-              Blog
-            </p>
-            <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">
-              Writing
-            </h1>
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">Blog</p>
+            <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">Writing</h1>
             <p className="text-lg text-muted max-w-xl leading-relaxed">
               Thoughts on software engineering, machine learning, and building things that matter.
             </p>
@@ -84,9 +79,7 @@ export default function Blog() {
                           <h2 className="font-serif text-2xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug mb-3">
                             {post.title}
                           </h2>
-                          <p className="text-sm text-muted leading-relaxed line-clamp-2 max-w-2xl">
-                            {post.excerpt}
-                          </p>
+                          <p className="text-sm text-muted leading-relaxed line-clamp-2 max-w-2xl">{post.excerpt}</p>
                         </div>
                         <div className="shrink-0 text-right">
                           <time className="text-xs text-subtle font-mono">
@@ -96,9 +89,7 @@ export default function Blog() {
                               day: "numeric",
                             })}
                           </time>
-                          <p className="text-sm text-primary mt-2 group-hover:underline underline-offset-4">
-                            Read →
-                          </p>
+                          <p className="text-sm text-primary mt-2 group-hover:underline underline-offset-4">Read →</p>
                         </div>
                       </div>
                     </Link>
@@ -110,7 +101,6 @@ export default function Blog() {
           {posts.length > 0 && <div className="border-t border-divider" />}
         </div>
       </section>
-
     </div>
   );
 }

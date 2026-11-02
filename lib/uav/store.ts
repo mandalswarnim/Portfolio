@@ -1,16 +1,16 @@
-'use client';
-import { create } from 'zustand';
-import type { Asset } from './assets';
-import { fetchManifest, fetchAsset, type AssetDetail } from './api';
+"use client";
+import { create } from "zustand";
+import type { Asset } from "./assets";
+import { fetchManifest, fetchAsset, type AssetDetail } from "./api";
 
 export interface TelemetryFrame {
   t: number;
-  speed: number;       // knots
-  altitude: number;    // ft
-  thermal: number;     // °C
-  power: number;       // amps
-  vibration: number;   // g
-  rul: number;         // 0..100
+  speed: number; // knots
+  altitude: number; // ft
+  thermal: number; // °C
+  power: number; // amps
+  vibration: number; // g
+  rul: number; // 0..100
 }
 
 interface DashState {
@@ -40,7 +40,13 @@ interface DashState {
 }
 
 const initialFrame: TelemetryFrame = {
-  t: 0, speed: 0, altitude: 0, thermal: 18, power: 4, vibration: 0.1, rul: 100,
+  t: 0,
+  speed: 0,
+  altitude: 0,
+  thermal: 18,
+  power: 4,
+  vibration: 0.1,
+  rul: 100,
 };
 
 export const useDash = create<DashState>((set, get) => ({

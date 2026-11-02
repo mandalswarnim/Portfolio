@@ -29,9 +29,7 @@ type Payload = {
 };
 
 const escapeHtml = (s: string) =>
-  s.replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
-  );
+  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
 // Best-effort limiter: state lives per function instance, so it caps bursts
 // rather than giving a global guarantee. Pair with a Vercel Firewall rule for that.
@@ -55,9 +53,7 @@ function rateLimited(ip: string) {
 }
 
 const clientIp = (req: Request) =>
-  req.headers.get("x-real-ip") ??
-  req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
-  "unknown";
+  req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
 
 // Browsers always send Origin on POST; reject cross-site form posts.
 function sameOrigin(req: Request) {
@@ -128,7 +124,15 @@ export async function POST(req: Request) {
 
   const details = Object.entries(data.details ?? {})
     .slice(0, MAX_DETAILS)
-    .map(([k, v]) => [k.slice(0, 50), String(v ?? "").trim().slice(0, MAX_DETAIL_LEN)] as const)
+    .map(
+      ([k, v]) =>
+        [
+          k.slice(0, 50),
+          String(v ?? "")
+            .trim()
+            .slice(0, MAX_DETAIL_LEN),
+        ] as const,
+    )
     .filter(([, v]) => v);
 
   if (!process.env.RESEND_API_KEY) {
@@ -140,9 +144,7 @@ export async function POST(req: Request) {
   }
 
   const from = process.env.CONTACT_FROM;
-  const safe = Object.fromEntries(
-    Object.entries(fields).map(([k, v]) => [k, escapeHtml(v)]),
-  ) as typeof fields;
+  const safe = Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, escapeHtml(v)])) as typeof fields;
 
   try {
     await sendEmail({

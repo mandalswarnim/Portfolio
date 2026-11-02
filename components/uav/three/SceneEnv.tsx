@@ -1,8 +1,8 @@
-'use client';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { ReactNode } from 'react';
-import { palette } from '@/lib/uav/palette';
+"use client";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { ReactNode } from "react";
+import { palette } from "@/lib/uav/palette";
 
 interface Props {
   children: ReactNode;
@@ -11,12 +11,7 @@ interface Props {
   autoRotate?: boolean;
 }
 
-export default function SceneEnv({
-  children,
-  cameraPos = [4, 2.5, 6],
-  controls = true,
-  autoRotate = false,
-}: Props) {
+export default function SceneEnv({ children, cameraPos = [4, 2.5, 6], controls = true, autoRotate = false }: Props) {
   return (
     <Canvas camera={{ position: cameraPos, fov: 45 }} dpr={[1, 2]}>
       <color attach="background" args={[palette.surface]} />

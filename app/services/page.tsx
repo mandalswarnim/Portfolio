@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BookingButton from "@/components/BookingButton";
 import FadeIn from "@/components/animations/FadeIn";
-import TextReveal from "@/components/animations/TextReveal";
 import StaggerContainer from "@/components/animations/StaggerContainer";
 import StaggerItem from "@/components/animations/StaggerItem";
 import { RECEPTIONIST_SETUP_FEE } from "@/lib/site";
+import { PageHero, CtaBand } from "@/components/PageSections";
 
 export const metadata: Metadata = {
   title: "Services — Swarnim Mandal",
@@ -30,25 +30,16 @@ const process = [
 export default function Services() {
   return (
     <div className="min-h-screen">
-
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">
-              Services
-            </p>
-            <TextReveal
-              lines={["What I offer"]}
-              className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6"
-            />
-            <p className="text-lg text-muted max-w-2xl leading-relaxed">
-              Right now I offer one service: an AI receptionist that answers your business
-              calls so you don&apos;t lose bookings while you&apos;re busy or closed.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Services"
+        lines={["What I offer"]}
+        lead={
+          <>
+            Right now I offer one service: an AI receptionist that answers your business calls so you don&apos;t lose
+            bookings while you&apos;re busy or closed.
+          </>
+        }
+      />
 
       {/* ── AI Receptionist ──────────────────────────────── */}
       <section className="py-24 border-b border-divider bg-surface">
@@ -62,9 +53,9 @@ export default function Services() {
                 </span>
                 <h2 className="font-serif text-3xl font-bold text-foreground mb-4">AI Receptionist</h2>
                 <p className="text-sm text-muted leading-relaxed mb-8">
-                  A real-time voice agent built on Twilio, OpenAI and Deepgram. It picks up when
-                  you can&apos;t, has a natural conversation with the caller, and sends you
-                  everything you need to call them back or confirm the booking.
+                  A real-time voice agent built on Twilio, OpenAI and Deepgram. It picks up when you can&apos;t, has a
+                  natural conversation with the caller, and sends you everything you need to call them back or confirm
+                  the booking.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Link
@@ -93,9 +84,7 @@ export default function Services() {
       <section className="py-24 border-b border-divider">
         <div className="max-w-6xl mx-auto px-6">
           <FadeIn>
-            <h2 className="font-serif text-3xl font-bold text-foreground mb-14">
-              How I work
-            </h2>
+            <h2 className="font-serif text-3xl font-bold text-foreground mb-14">How I work</h2>
           </FadeIn>
 
           <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -112,31 +101,9 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────── */}
-      <section className="py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-              <div>
-                <h2 className="font-serif text-3xl font-bold text-foreground mb-2">
-                  Ready to start?
-                </h2>
-                <p className="text-muted">Let&apos;s discuss your project.</p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors whitespace-nowrap"
-                >
-                  Get in touch
-                </Link>
-                <BookingButton source="services" />
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
+      <CtaBand title="Ready to start?" text="Let's discuss your project.">
+        <BookingButton source="services" />
+      </CtaBand>
     </div>
   );
 }

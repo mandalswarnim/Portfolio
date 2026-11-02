@@ -40,9 +40,7 @@ export default function Header() {
       }}
       className={`fixed top-0 w-full z-50 border-b backdrop-blur-md transition-[box-shadow,border-color] duration-700 ${
         chapterBg ? (dark ? "border-white/10" : "border-foreground/10") : "border-divider"
-      } ${
-        scrolled ? "shadow-[0_1px_12px_rgba(28,22,18,0.06)]" : "shadow-none"
-      }`}
+      } ${scrolled ? "shadow-[0_1px_12px_rgba(28,22,18,0.06)]" : "shadow-none"}`}
     >
       <ScrollProgress />
       <nav className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -85,7 +83,9 @@ export default function Header() {
         <Link
           href="/contact"
           className={`hidden md:inline-flex items-center text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-300 ${
-            dark ? "bg-background text-foreground hover:bg-background/85" : "bg-foreground text-background hover:bg-foreground/85"
+            dark
+              ? "bg-background text-foreground hover:bg-background/85"
+              : "bg-foreground text-background hover:bg-foreground/85"
           } hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(28,22,18,0.18)] active:translate-y-0 active:shadow-none`}
         >
           Hire me
@@ -125,11 +125,7 @@ export default function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + i * 0.05, duration: 0.25 }}
                 >
-                  <Link
-                    href={item.href}
-                    className="block text-foreground text-base"
-                    onClick={() => setMenuOpen(false)}
-                  >
+                  <Link href={item.href} className="block text-foreground text-base" onClick={() => setMenuOpen(false)}>
                     {item.name}
                   </Link>
                 </motion.li>

@@ -70,10 +70,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} ${archivo.variable}`}
     >
       <body className="antialiased bg-background text-foreground font-sans">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
         <MotionProvider>
           <Header />
           <main className="pt-20">{children}</main>

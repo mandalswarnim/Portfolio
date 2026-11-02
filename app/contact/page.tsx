@@ -3,9 +3,9 @@
 import BookingButton from "@/components/BookingButton";
 import Honeypot from "@/components/Honeypot";
 import FadeIn from "@/components/animations/FadeIn";
-import TextReveal from "@/components/animations/TextReveal";
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 import { inputClass, labelClass, useEnquiryForm } from "@/lib/contact-client";
+import { PageHero } from "@/components/PageSections";
 
 const contactLinks = [
   {
@@ -44,36 +44,28 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen">
-
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="py-24 border-b border-divider">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn>
-            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">
-              Contact
-            </p>
-            <TextReveal
-              lines={["Let’s work", "together"]}
-              className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6"
-            />
-            <p className="text-lg text-muted max-w-xl leading-relaxed">
-              Open to full-time roles, freelance projects, and research collaborations.
-              I typically respond within 24 hours.
-            </p>
-            <BookingButton
-              source="contact"
-              label="Book a 20-minute call"
-              className="mt-8 inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
-            />
-          </FadeIn>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Contact"
+        lines={["Let’s work", "together"]}
+        leadWidth="max-w-xl"
+        lead={
+          <>
+            Open to full-time roles, freelance projects, and research collaborations. I typically respond within 24
+            hours.
+          </>
+        }
+      >
+        <BookingButton
+          source="contact"
+          label="Book a 20-minute call"
+          className="mt-8 inline-flex items-center gap-1.5 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
+        />
+      </PageHero>
 
       {/* ── Body ─────────────────────────────────────────── */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-[1fr_2fr] gap-16">
-
             {/* Left: contact details */}
             <FadeIn>
               <div className="space-y-0 divide-y divide-divider border-t border-b border-divider">
@@ -190,7 +182,6 @@ export default function Contact() {
           </div>
         </div>
       </section>
-
     </div>
   );
 }

@@ -10,7 +10,9 @@ import HeroPortrait from "@/components/HeroPortrait";
 import Chapters from "@/components/home/Chapters";
 import ExpertiseRail from "@/components/home/ExpertiseRail";
 import Reveal from "@/components/home/Reveal";
-import TravelCard, { type Screen } from "@/components/home/TravelCard";
+import TravelCard from "@/components/home/TravelCard";
+import SmartLink from "@/components/SmartLink";
+import { homeProjects } from "@/lib/projects";
 import { CONTACT_EMAIL, CV_DOWNLOAD_NAME, CV_PATH } from "@/lib/site";
 
 const expertise = [
@@ -36,62 +38,6 @@ const expertise = [
   },
 ];
 
-type Project = {
-  category: string;
-  title: string;
-  desc: string;
-  result?: string; // one-line measured outcome
-  tech: string[];
-  link?: string;
-  demo?: string;
-  screen?: Screen; // featured as a full colour chapter with this screenshot
-};
-
-const projects: Project[] = [
-  {
-    category: "Conversational AI",
-    title: "AI Receptionist",
-    desc: "A production-ready AI receptionist that answers business calls 24/7, captures booking details through natural conversation, and emails structured leads to the owner. Built on Twilio voice + OpenAI — available to integrate into your business.",
-    result: "Live demo on this site, 100+ automated tests, now being demonstrated to prospective UK pub customers.",
-    tech: ["TypeScript", "OpenAI", "Twilio"],
-    link: "https://github.com/mandalswarnim/ai-receptionist",
-    demo: "/ai-receptionist",
-    screen: { src: "/home/receptionist.jpg", url: "swarnimmandal.me/ai-receptionist", alt: "AI Receptionist landing page" },
-  },
-  {
-    category: "Aerospace Engineering",
-    title: "Airfoil Selector for Wind Turbines",
-    desc: "A tool that ranks airfoil designs for small vertical-axis wind turbines by annual energy production at a specific site — pairing real wind statistics with NeuralFoil surrogate aerodynamics and generating explainable reports on why one design outperforms another.",
-    tech: ["Python", "NeuralFoil", "Gradio"],
-    link: "https://github.com/mandalswarnim/Airfoil-Selector-for-Wind-Turbines",
-    demo: "https://huggingface.co/spaces/mswanrim1/VAWT-Airfoil-Selector",
-  },
-  {
-    category: "Deep Learning",
-    title: "UAV Predictive Maintenance Digital Twin",
-    desc: "LSTM, Transformer, and 1D-CNN models forecasting Remaining Useful Life on NASA C-MAPSS turbofans and a synthetic UAV fleet — with an interactive 3D dashboard and explainable-AI diagnostics.",
-    result: "Transformer reached 14.12 RMSE on held-out NASA C-MAPSS engines and 97.4% fault-classification accuracy on the UAV fleet.",
-    tech: ["PyTorch", "Next.js", "Three.js"],
-    link: "https://github.com/mandalswarnim/uav-pdm-dashboard",
-    demo: "/uav",
-    screen: { src: "/home/uav.jpg", url: "swarnimmandal.me/uav/mission", alt: "UAV mission dashboard with radar and live telemetry" },
-  },
-  {
-    category: "Deep Learning",
-    title: "Guitar Tablature Generation",
-    desc: "LSTM and feed-forward neural network that predicts optimal guitar tablatures for any input melody, modelling musical intention and fretting difficulty.",
-    tech: ["Python", "TensorFlow", "Keras"],
-    link: "https://github.com/mandalswarnim/Guitar-Tablature-Generation",
-  },
-  {
-    category: "Deep Learning",
-    title: "Music Genre Classification",
-    desc: "CNN model classifying audio into 10 genres using MFCC features from the GTZAN dataset, with custom preprocessing.",
-    result: "79% accuracy across 10 genres on GTZAN.",
-    tech: ["Python", "PyTorch", "Librosa"],
-  },
-];
-
 const testimonials = [
   {
     content:
@@ -112,8 +58,8 @@ const CHARCOAL = "#1E1E1E";
 const BLUE = "#2D5FA3";
 const LIME = "#C9F27A";
 
-const featured = projects.filter((p) => p.screen);
-const moreWork = projects.filter((p) => !p.screen);
+const featured = homeProjects.filter((p) => p.screen);
+const moreWork = homeProjects.filter((p) => !p.screen);
 const featuredBg = [CHARCOAL, BLUE];
 
 const btnAccent =
@@ -126,18 +72,6 @@ const btnOutlineLight =
   "inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white active:translate-y-0";
 const arrow = <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>;
 
-function DemoLink({ href, className, children }: { href: string; className: string; children: React.ReactNode }) {
-  return /^https?:\/\//.test(href) ? (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-      {children}
-    </a>
-  ) : (
-    <Link href={href} className={className}>
-      {children}
-    </Link>
-  );
-}
-
 export default function Home() {
   return (
     <Chapters initial={CREAM}>
@@ -145,7 +79,11 @@ export default function Home() {
       <div className="mx-auto grid max-w-6xl px-6 lg:grid-cols-2 lg:gap-16">
         <div>
           {/* Hero */}
-          <section data-bg={CREAM} data-card={0} className="flex min-h-[calc(100vh-80px)] flex-col justify-center py-20">
+          <section
+            data-bg={CREAM}
+            data-card={0}
+            className="flex min-h-[calc(100vh-80px)] flex-col justify-center py-20"
+          >
             <FadeIn delay={0}>
               <p className="mb-8 font-mono text-xs uppercase tracking-[0.25em] text-primary">
                 Available for opportunities · London, UK
@@ -159,7 +97,9 @@ export default function Home() {
             />
 
             <FadeIn delay={0.2}>
-              <p className="mb-4 text-xl leading-snug text-charcoal">Voice agents, predictive models, full-stack apps.</p>
+              <p className="mb-4 text-xl leading-snug text-charcoal">
+                Voice agents, predictive models, full-stack apps.
+              </p>
               <p className="mb-10 max-w-[480px] text-lg leading-relaxed text-muted">
                 AI / software engineer with an MSc in Software Engineering (Distinction) from the University of West
                 London, and a year of commercial React and Django work for a US healthcare client. Lately: a real-time
@@ -218,21 +158,27 @@ export default function Home() {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {p.demo && (
-                    <DemoLink href={p.demo} className={btnAccent}>
+                    <SmartLink href={p.demo} className={btnAccent}>
                       Try it {arrow}
-                    </DemoLink>
+                    </SmartLink>
                   )}
                   {p.link && (
-                    <a href={p.link} target="_blank" rel="noopener noreferrer" className={btnOutlineLight}>
+                    <SmartLink href={p.link} className={btnOutlineLight}>
                       View on GitHub ↗
-                    </a>
+                    </SmartLink>
                   )}
                 </div>
               </FadeIn>
 
               <div className="mt-12 overflow-hidden rounded-2xl border border-white/10 lg:hidden">
                 <div className="relative aspect-[16/10]">
-                  <Image src={p.screen!.src} alt={p.screen!.alt} fill sizes="100vw" className="object-cover object-top" />
+                  <Image
+                    src={p.screen!.src}
+                    alt={p.screen!.alt}
+                    fill
+                    sizes="100vw"
+                    className="object-cover object-top"
+                  />
                 </div>
               </div>
             </section>
@@ -253,7 +199,10 @@ export default function Home() {
       <section data-bg={CREAM} className="py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 flex flex-wrap items-end justify-between gap-4">
-            <Reveal lines={["More work"]} className="font-display text-5xl uppercase leading-[0.95] text-charcoal md:text-7xl" />
+            <Reveal
+              lines={["More work"]}
+              className="font-display text-5xl uppercase leading-[0.95] text-charcoal md:text-7xl"
+            />
             <Link href="/work" className="group inline-flex items-center gap-1 text-sm font-semibold text-charcoal">
               All projects {arrow}
             </Link>
@@ -263,9 +212,13 @@ export default function Home() {
             {moreWork.map((project) => (
               <StaggerItem key={project.title}>
                 <div className="flex h-full flex-col rounded-[2rem] border border-charcoal/10 bg-white p-7 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_-24px_rgba(30,30,30,0.35)]">
-                  <span className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-primary">{project.category}</span>
+                  <span className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-primary">
+                    {project.category}
+                  </span>
                   <h3 className="mb-3 font-display text-xl uppercase leading-tight text-charcoal">{project.title}</h3>
-                  <p className={`flex-1 text-sm leading-relaxed text-muted ${project.result ? "mb-4" : "mb-6"}`}>{project.desc}</p>
+                  <p className={`flex-1 text-sm leading-relaxed text-muted ${project.result ? "mb-4" : "mb-6"}`}>
+                    {project.desc}
+                  </p>
                   {project.result && (
                     <p className="mb-6 text-sm leading-relaxed text-charcoal">
                       <span className="font-semibold text-primary">Result:</span> {project.result}
@@ -280,22 +233,20 @@ export default function Home() {
                   </div>
                   <div className="flex flex-wrap items-center gap-4">
                     {project.demo && (
-                      <DemoLink
+                      <SmartLink
                         href={project.demo}
                         className="group inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-charcoal transition-transform duration-300 hover:-translate-y-0.5"
                       >
                         Try me {arrow}
-                      </DemoLink>
+                      </SmartLink>
                     )}
                     {project.link && (
-                      <a
+                      <SmartLink
                         href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="text-sm font-semibold text-charcoal transition-colors hover:text-primary"
                       >
                         View on GitHub ↗
-                      </a>
+                      </SmartLink>
                     )}
                   </div>
                 </div>
@@ -308,7 +259,10 @@ export default function Home() {
       {/* ── Testimonials ──────────────────────────────────── */}
       <section data-bg={LIME} className="py-28">
         <div className="mx-auto max-w-6xl px-6">
-          <Reveal lines={["Kind words"]} className="mb-14 font-display text-5xl uppercase leading-[0.95] text-charcoal md:text-7xl" />
+          <Reveal
+            lines={["Kind words"]}
+            className="mb-14 font-display text-5xl uppercase leading-[0.95] text-charcoal md:text-7xl"
+          />
           <StaggerContainer className="grid gap-12 md:grid-cols-2 md:gap-16">
             {testimonials.map((t) => (
               <StaggerItem key={t.name}>

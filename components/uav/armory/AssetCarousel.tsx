@@ -1,11 +1,11 @@
-'use client';
-import { Suspense, useState } from 'react';
-import SceneEnv from '@/components/uav/three/SceneEnv';
-import UAVModel from '@/components/uav/three/UAVModel';
-import { useDash } from '@/lib/uav/store';
-import type { Asset } from '@/lib/uav/assets';
-import { palette } from '@/lib/uav/palette';
-import { Html } from '@react-three/drei';
+"use client";
+import { Suspense, useState } from "react";
+import SceneEnv from "@/components/uav/three/SceneEnv";
+import UAVModel from "@/components/uav/three/UAVModel";
+import { useDash } from "@/lib/uav/store";
+import type { Asset } from "@/lib/uav/assets";
+import { palette } from "@/lib/uav/palette";
+import { Html } from "@react-three/drei";
 
 export default function AssetCarousel() {
   const { assets, selectedId, select } = useDash();
@@ -33,21 +33,31 @@ export default function AssetCarousel() {
           return (
             <group key={a.id} position={[x, 0, z]}>
               <group
-                onClick={(e) => { e.stopPropagation(); select(a.id); }}
-                onPointerOver={(e) => { e.stopPropagation(); setHoverId(a.id); document.body.style.cursor = 'pointer'; }}
-                onPointerOut={() => { setHoverId(null); document.body.style.cursor = 'auto'; }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  select(a.id);
+                }}
+                onPointerOver={(e) => {
+                  e.stopPropagation();
+                  setHoverId(a.id);
+                  document.body.style.cursor = "pointer";
+                }}
+                onPointerOut={() => {
+                  setHoverId(null);
+                  document.body.style.cursor = "auto";
+                }}
               >
                 <UAVModel asset={a} spin scale={isSel ? 0.95 : 0.7} />
               </group>
               {/* Ground ring flags critical assets */}
-              {a.status === 'CRITICAL' && (
+              {a.status === "CRITICAL" && (
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.15, 0]}>
                   <ringGeometry args={[1.2, 1.5, 32]} />
                   <meshBasicMaterial color={palette.status.CRITICAL} transparent opacity={0.45} />
                 </mesh>
               )}
               {(hoverId === a.id || isSel) && (
-                <Html position={[0, 1.6, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
+                <Html position={[0, 1.6, 0]} center distanceFactor={8} style={{ pointerEvents: "none" }}>
                   <Tooltip a={a} selected={isSel} />
                 </Html>
               )}
@@ -64,9 +74,14 @@ function Tooltip({ a, selected }: { a: Asset; selected: boolean }) {
   return (
     <div className="min-w-[160px] rounded-lg border border-divider bg-background px-3 py-2 text-[11px] shadow-md">
       <div className="font-semibold text-foreground">{a.name}</div>
-      <div className="text-[10px] text-subtle">{a.id} · {a.class}</div>
+      <div className="text-[10px] text-subtle">
+        {a.id} · {a.class}
+      </div>
       <div className="mt-1 text-muted">
-        Health: <span className="font-semibold" style={{ color }}>{a.rul.toFixed(0)}%</span>
+        Health:{" "}
+        <span className="font-semibold" style={{ color }}>
+          {a.rul.toFixed(0)}%
+        </span>
       </div>
       <div className="text-[10px] text-subtle">{a.data_source}</div>
       {selected && <div className="mt-1 text-[10px] font-medium text-primary">Selected</div>}

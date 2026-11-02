@@ -47,7 +47,10 @@ export default function ExpertiseRail({ items, bg }: { items: Item[]; bg: string
     <section ref={sectionRef} data-bg={bg} className="relative lg:h-[260vh]">
       <div className="flex flex-col justify-center py-24 lg:sticky lg:top-20 lg:h-[calc(100vh-80px)] lg:overflow-hidden lg:py-0">
         <div className="mx-auto mb-12 w-full max-w-6xl px-6">
-          <Reveal lines={["What I do"]} className="font-display text-5xl uppercase leading-[0.95] text-white md:text-7xl" />
+          <Reveal
+            lines={["What I do"]}
+            className="font-display text-5xl uppercase leading-[0.95] text-white md:text-7xl"
+          />
         </div>
 
         <motion.div

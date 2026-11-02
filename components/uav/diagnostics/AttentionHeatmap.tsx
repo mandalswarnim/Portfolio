@@ -1,5 +1,5 @@
-'use client';
-import { useEffect, useMemo, useRef } from 'react';
+"use client";
+import { useEffect, useMemo, useRef } from "react";
 
 interface Props {
   /** (T, T) attention weights from the Transformer's last encoder layer */
@@ -17,10 +17,13 @@ export default function AttentionHeatmap({ matrix, height = 220 }: Props) {
 
   const stats = useMemo(() => {
     if (!matrix || !matrix.length) return null;
-    let lo = Infinity, hi = -Infinity;
-    for (const row of matrix) for (const v of row) {
-      if (v < lo) lo = v; if (v > hi) hi = v;
-    }
+    let lo = Infinity,
+      hi = -Infinity;
+    for (const row of matrix)
+      for (const v of row) {
+        if (v < lo) lo = v;
+        if (v > hi) hi = v;
+      }
     return { lo, hi };
   }, [matrix]);
 
@@ -32,7 +35,7 @@ export default function AttentionHeatmap({ matrix, height = 220 }: Props) {
     const rect = cvs.getBoundingClientRect();
     cvs.width = rect.width * dpr;
     cvs.height = rect.height * dpr;
-    const ctx = cvs.getContext('2d')!;
+    const ctx = cvs.getContext("2d")!;
     const cellW = cvs.width / T;
     const cellH = cvs.height / T;
     const range = Math.max(1e-6, stats.hi - stats.lo);
@@ -77,7 +80,7 @@ function ramp(v: number): string {
   const stops: [number, number, number][] = [
     [250, 248, 244], // #FAF8F4 background
     [125, 163, 207], // mid blue
-    [29, 63, 110],   // deep navy
+    [29, 63, 110], // deep navy
   ];
   const seg = x < 0.5 ? 0 : 1;
   const t = (x - seg * 0.5) / 0.5;

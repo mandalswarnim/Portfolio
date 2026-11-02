@@ -20,15 +20,11 @@ export default function Footer() {
             <div className="mb-4">
               <AthenaMark height={44} />
             </div>
-            <p className="text-sm text-muted leading-relaxed max-w-[200px]">
-              AI / software engineer based in London.
-            </p>
+            <p className="text-sm text-muted leading-relaxed max-w-[200px]">AI / software engineer based in London.</p>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-subtle mb-5">
-              Navigate
-            </h4>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-subtle mb-5">Navigate</h4>
             <ul className="space-y-3">
               {[
                 { name: "Home", href: "/" },
@@ -37,10 +33,7 @@ export default function Footer() {
                 { name: "Services", href: "/services" },
               ].map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-muted hover:text-foreground transition-colors"
-                  >
+                  <Link href={item.href} className="text-sm text-muted hover:text-foreground transition-colors">
                     {item.name}
                   </Link>
                 </li>
@@ -49,9 +42,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-subtle mb-5">
-              Expertise
-            </h4>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-subtle mb-5">Expertise</h4>
             <ul className="space-y-3 text-sm text-muted">
               <li>AI Applications</li>
               <li>Backend & APIs</li>
@@ -61,9 +52,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-subtle mb-5">
-              Connect
-            </h4>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-subtle mb-5">Connect</h4>
             <ul className="space-y-3">
               {connectLinks.map((item) => (
                 <li key={item.name}>

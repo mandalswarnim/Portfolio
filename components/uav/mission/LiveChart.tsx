@@ -1,9 +1,14 @@
-'use client';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
-import { useDash } from '@/lib/uav/store';
-import { palette, chart } from '@/lib/uav/palette';
+"use client";
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from "recharts";
+import { useDash } from "@/lib/uav/store";
+import { palette, chart } from "@/lib/uav/palette";
 
-interface Props { metric: 'thermal' | 'vibration' | 'power'; color: string; label: string; threshold?: number }
+interface Props {
+  metric: "thermal" | "vibration" | "power";
+  color: string;
+  label: string;
+  threshold?: number;
+}
 
 export default function LiveChart({ metric, color, label, threshold }: Props) {
   const { history } = useDash();
@@ -13,7 +18,9 @@ export default function LiveChart({ metric, color, label, threshold }: Props) {
     <div className="h-full rounded-2xl border border-divider bg-surface p-3">
       <div className="mb-1 flex items-baseline justify-between text-[10px] uppercase tracking-wider text-subtle">
         <span>{label}</span>
-        <span className="font-semibold" style={{ color }}>{data[data.length - 1]?.v.toFixed(2) ?? '—'}</span>
+        <span className="font-semibold" style={{ color }}>
+          {data[data.length - 1]?.v.toFixed(2) ?? "—"}
+        </span>
       </div>
       <ResponsiveContainer width="100%" height="85%">
         <LineChart data={data} margin={{ top: 4, right: 4, left: -28, bottom: -8 }}>

@@ -1,6 +1,6 @@
-'use client';
-import { useEffect, useRef } from 'react';
-import { useDash, initialFrame, type TelemetryFrame } from './store';
+"use client";
+import { useEffect, useRef } from "react";
+import { useDash, initialFrame, type TelemetryFrame } from "./store";
 
 /**
  * Mock telemetry generator — simulates a flight envelope with random
@@ -21,7 +21,7 @@ export function useTelemetryStream(intervalMs = 250) {
       const t = prev.t + intervalMs / 1000;
 
       // Flight phases driven by t
-      const phase = t < 12 ? 'climb' : t < 60 ? 'cruise' : t < 80 ? 'maneuver' : 'descent';
+      const phase = t < 12 ? "climb" : t < 60 ? "cruise" : t < 80 ? "maneuver" : "descent";
 
       let speed = prev.speed;
       let altitude = prev.altitude;
@@ -31,19 +31,19 @@ export function useTelemetryStream(intervalMs = 250) {
 
       const jitter = (s: number) => (Math.random() - 0.5) * s;
 
-      if (phase === 'climb') {
+      if (phase === "climb") {
         speed += 6 + jitter(2);
         altitude += 220 + jitter(40);
         thermal += 0.6 + jitter(0.2);
         power = 18 + jitter(2);
         vibration = 0.4 + jitter(0.1);
-      } else if (phase === 'cruise') {
+      } else if (phase === "cruise") {
         speed = 280 + jitter(8);
         altitude += jitter(30);
         thermal += 0.05 + jitter(0.15);
         power = 9 + jitter(1.2);
         vibration = 0.5 + jitter(0.1);
-      } else if (phase === 'maneuver') {
+      } else if (phase === "maneuver") {
         speed = 320 + jitter(20);
         altitude += jitter(120);
         thermal += 0.8 + jitter(0.4);
@@ -58,7 +58,7 @@ export function useTelemetryStream(intervalMs = 250) {
       }
 
       // Random anomaly spike (~3% per tick during maneuver)
-      if (phase === 'maneuver' && Math.random() < 0.03) {
+      if (phase === "maneuver" && Math.random() < 0.03) {
         thermal += 8;
         vibration += 1.6;
       }

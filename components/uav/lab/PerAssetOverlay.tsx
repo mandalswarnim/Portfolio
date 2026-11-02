@@ -1,10 +1,10 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine, Cell, Legend } from 'recharts';
-import { fetchAsset, type AssetDetail } from '@/lib/uav/api';
-import { useDash } from '@/lib/uav/store';
-import type { Asset } from '@/lib/uav/assets';
-import { palette, chart } from '@/lib/uav/palette';
+"use client";
+import { useEffect, useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine, Cell, Legend } from "recharts";
+import { fetchAsset, type AssetDetail } from "@/lib/uav/api";
+import { useDash } from "@/lib/uav/store";
+import type { Asset } from "@/lib/uav/assets";
+import { palette, chart } from "@/lib/uav/palette";
 
 const ARCH_COLORS: Record<string, string> = {
   lstm: palette.primary,
@@ -18,11 +18,13 @@ export default function PerAssetOverlay() {
 
   useEffect(() => {
     if (!selectedId) return;
-    fetchAsset(selectedId).then(setDetail).catch(() => setDetail(null));
+    fetchAsset(selectedId)
+      .then(setDetail)
+      .catch(() => setDetail(null));
   }, [selectedId]);
 
-  const cmapssAssets = assets.filter((a) => a.data_source === 'C-MAPSS');
-  const uavAssets    = assets.filter((a) => a.data_source === 'UAV-Synth');
+  const cmapssAssets = assets.filter((a) => a.data_source === "C-MAPSS");
+  const uavAssets = assets.filter((a) => a.data_source === "UAV-Synth");
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-[260px_1fr]">
@@ -34,8 +36,10 @@ export default function PerAssetOverlay() {
 
       <div className="rounded-2xl border border-divider bg-surface p-4">
         <div className="mb-2 flex items-baseline justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Per-Architecture Prediction</span>
-          <span className="text-xs text-subtle">{detail ? `${detail.name} (${detail.id})` : '—'}</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Per-Architecture Prediction
+          </span>
+          <span className="text-xs text-subtle">{detail ? `${detail.name} (${detail.id})` : "—"}</span>
         </div>
         <div className="h-[260px]">
           {detail?.predictions_per_arch ? (
@@ -64,7 +68,12 @@ export default function PerAssetOverlay() {
                     y={detail.rul_truth}
                     stroke={palette.muted}
                     strokeDasharray="4 3"
-                    label={{ value: `truth=${detail.rul_truth.toFixed(1)}`, fill: palette.muted, fontSize: 10, position: 'right' }}
+                    label={{
+                      value: `truth=${detail.rul_truth.toFixed(1)}`,
+                      fill: palette.muted,
+                      fontSize: 10,
+                      position: "right",
+                    }}
                   />
                 )}
                 <Bar dataKey="value" name="Predicted RUL">
@@ -79,9 +88,7 @@ export default function PerAssetOverlay() {
               UAV asset · per-arch predictions captured at inference time only
             </div>
           ) : (
-            <div className="flex h-full items-center justify-center text-xs text-subtle">
-              Loading…
-            </div>
+            <div className="flex h-full items-center justify-center text-xs text-subtle">Loading…</div>
           )}
         </div>
         {detail && detail.rmse_per_arch && (
@@ -89,7 +96,9 @@ export default function PerAssetOverlay() {
             {Object.entries(detail.rmse_per_arch).map(([arch, rmse]) => (
               <div key={arch} className="rounded-lg border border-divider bg-background px-2.5 py-1.5">
                 <div className="uppercase tracking-wider text-subtle">{arch} test RMSE</div>
-                <div className="text-xs font-semibold" style={{ color: ARCH_COLORS[arch] }}>{rmse.toFixed(2)}</div>
+                <div className="text-xs font-semibold" style={{ color: ARCH_COLORS[arch] }}>
+                  {rmse.toFixed(2)}
+                </div>
               </div>
             ))}
           </div>
@@ -100,8 +109,16 @@ export default function PerAssetOverlay() {
 }
 
 function Section({
-  title, items, selectedId, onPick,
-}: { title: string; items: Asset[]; selectedId: string | null; onPick: (id: string) => void }) {
+  title,
+  items,
+  selectedId,
+  onPick,
+}: {
+  title: string;
+  items: Asset[];
+  selectedId: string | null;
+  onPick: (id: string) => void;
+}) {
   if (items.length === 0) return null;
   return (
     <div className="mb-3">
@@ -112,10 +129,11 @@ function Section({
             key={a.id}
             onClick={() => onPick(a.id)}
             className={`flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-[11px] transition-colors hover:bg-background ${
-              a.id === selectedId ? 'bg-background font-medium text-foreground' : 'text-muted'
+              a.id === selectedId ? "bg-background font-medium text-foreground" : "text-muted"
             }`}
           >
-            <span>{a.name}</span><span className="tabular-nums">{a.rul.toFixed(0)}%</span>
+            <span>{a.name}</span>
+            <span className="tabular-nums">{a.rul.toFixed(0)}%</span>
           </button>
         ))}
       </div>
