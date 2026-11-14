@@ -29,7 +29,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Swarnim Mandal — AI / Software Engineer",
+  title: { default: "Swarnim Mandal — AI / Software Engineer", template: "%s — Swarnim Mandal" },
+  // Resolved against each route's own path.
+  alternates: { canonical: "./" },
   description:
     "AI / software engineer in London building AI products that run in production: voice agents, predictive models and full-stack apps. MSc Software Engineering (Distinction), University of West London.",
   keywords:
@@ -71,9 +73,17 @@ export default function RootLayout({
     >
       <body className="antialiased bg-background text-foreground font-sans">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-charcoal focus:px-5 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Skip to content
+        </a>
         <MotionProvider>
           <Header />
-          <main className="pt-20">{children}</main>
+          <main id="main" className="pt-20">
+            {children}
+          </main>
           <Footer />
         </MotionProvider>
         <Analytics />

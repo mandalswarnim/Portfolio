@@ -24,7 +24,7 @@ import {
 import { RECEPTIONIST_SETUP_FEE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Services — Swarnim Mandal",
+  title: "Services",
   description:
     "AI Receptionist: an AI phone agent that answers your business calls 24/7, captures booking details and emails you the lead.",
 };

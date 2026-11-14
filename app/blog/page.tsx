@@ -5,7 +5,7 @@ import { BLOG_ENABLED, getAllPosts, getCategories } from "@/lib/blog";
 import FadeIn from "@/components/animations/FadeIn";
 
 export const metadata: Metadata = {
-  title: "Blog — Swarnim Mandal",
+  title: "Blog",
   description: "Articles on web development, machine learning, and software engineering.",
 };
 

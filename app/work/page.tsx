@@ -25,7 +25,7 @@ import { projects } from "@/lib/projects";
 import { GITHUB_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Work — Swarnim Mandal",
+  title: "Work",
   description: "Projects and open-source work by Swarnim Mandal: voice agents, predictive models and full-stack apps.",
 };
 

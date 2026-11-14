@@ -41,6 +41,17 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // One canonical host: www serves nothing of its own.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.swarnimmandal.me" }],
+        destination: "https://swarnimmandal.me/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

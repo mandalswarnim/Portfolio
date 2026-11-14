@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { display, Eyebrow } from "@/components/PageSections";
 import { CONTACT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy — Swarnim Mandal",
+  title: "Privacy",
   description: "How swarnimmandal.me collects and uses personal data.",
 };
 
@@ -100,12 +101,10 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen">
-      <section className="py-24 border-b border-divider">
+      <section className="border-b border-charcoal/10 py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">Privacy</p>
-          <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">
-            Privacy policy
-          </h1>
+          <Eyebrow>Privacy</Eyebrow>
+          <h1 className={`mb-8 ${display} text-4xl text-charcoal sm:text-6xl md:text-7xl`}>Privacy policy</h1>
           <p className="text-muted">Last updated {LAST_UPDATED}</p>
         </div>
       </section>

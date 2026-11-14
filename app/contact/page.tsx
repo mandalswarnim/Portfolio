@@ -63,8 +63,8 @@ export default function Contact() {
         lines={["Let’s work", "together"]}
         lead={
           <>
-            Open to full-time roles, freelance projects, and research collaborations. I typically respond within 24
-            hours.
+            Open to junior and graduate software, backend and AI engineering roles, freelance projects, and AI
+            Receptionist enquiries. I typically respond within 24 hours.
           </>
         }
       >

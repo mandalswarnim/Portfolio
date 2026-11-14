@@ -56,7 +56,7 @@ export default function ExpertiseRail({ items, bg }: { items: Item[]; bg: string
         <motion.div
           ref={rowRef}
           style={{ x }}
-          className="flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 lg:snap-none lg:overflow-visible lg:pl-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]"
+          className="flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:none] lg:snap-none [&::-webkit-scrollbar]:hidden lg:overflow-visible lg:pl-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]"
         >
           {items.map((item, i) => (
             <div

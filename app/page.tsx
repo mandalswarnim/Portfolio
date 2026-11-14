@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/components/animations/FadeIn";
@@ -78,7 +76,7 @@ export default function Home() {
           <section
             data-bg={CREAM}
             data-card={0}
-            className="flex min-h-[calc(100vh-80px)] flex-col justify-center py-20"
+            className="flex min-h-[calc(100vh-80px)] flex-col justify-center py-12 sm:py-20"
           >
             <FadeIn delay={0}>
               <p className="mb-8 font-mono text-xs uppercase tracking-[0.25em] text-primary">

@@ -27,7 +27,7 @@ import PlanButton from "@/components/aireception/PlanButton";
 import { CONTACT_EMAIL, RECEPTIONIST_SETUP_FEE, RECEPTIONIST_TIERS, SAMPLE_CALL_AUDIO, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "AI Receptionist — 24/7 Call Answering & Booking Capture",
+  title: { absolute: "AI Receptionist — 24/7 Call Answering & Booking Capture" },
   description:
     "An AI receptionist that answers every call 24/7, captures customer details through natural conversation, and emails you structured booking requests. Built on Twilio + OpenAI. Get in touch to add it to your business.",
   openGraph: {

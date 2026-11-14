@@ -29,6 +29,14 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Escape closes the mobile menu.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   return (
     <motion.header
       initial={{ y: -56, opacity: 0 }}
@@ -60,6 +68,7 @@ export default function Header() {
               <li key={item.name} className="relative">
                 <Link
                   href={item.href}
+                  aria-current={active ? "page" : undefined}
                   className={`relative block py-1 text-sm tracking-wide transition-colors after:absolute after:left-0 after:bottom-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:transition-[transform,background-color] after:duration-300 after:ease-out hover:after:scale-x-100 ${
                     dark
                       ? `after:bg-white ${active ? "text-white" : "text-white/65 hover:text-white"}`
@@ -95,7 +104,9 @@ export default function Header() {
         <button
           className={`md:hidden p-1 transition-colors duration-700 ${dark ? "text-white" : "text-foreground"}`}
           onClick={() => setMenuOpen((v) => !v)}
-          aria-label="Toggle menu"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen ? (
@@ -111,6 +122,7 @@ export default function Header() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}

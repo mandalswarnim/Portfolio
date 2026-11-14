@@ -1,25 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { btnDark, btnOutlineDark, display, Eyebrow } from "@/components/PageSections";
+
+// No canonical: a missing page must not point search engines at a real URL.
+export const metadata: Metadata = { title: "Page not found", alternates: { canonical: null } };
 
 export default function NotFound() {
   return (
-    <section className="py-32">
-      <div className="max-w-6xl mx-auto px-6">
-        <p className="text-sm font-medium text-primary uppercase tracking-widest mb-6">404</p>
-        <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground leading-[1.1] mb-6">Page not found</h1>
-        <p className="text-lg text-muted max-w-xl leading-relaxed mb-10">
+    <section className="py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <Eyebrow>404</Eyebrow>
+        <h1 className={`mb-8 ${display} text-4xl text-charcoal sm:text-6xl md:text-7xl`}>Page not found</h1>
+        <p className="mb-10 max-w-xl text-lg leading-relaxed text-muted">
           The page you&apos;re looking for doesn&apos;t exist or has moved.
         </p>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            href="/"
-            className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors"
-          >
+        <div className="flex flex-wrap gap-3">
+          <Link href="/" className={btnDark}>
             Back to home
           </Link>
-          <Link
-            href="/work"
-            className="inline-flex items-center border border-divider text-foreground text-sm font-medium px-6 py-3 rounded-full hover:border-foreground/40 transition-colors"
-          >
+          <Link href="/work" className={btnOutlineDark}>
             See my work
           </Link>
         </div>

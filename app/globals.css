@@ -19,6 +19,27 @@ body {
     sans-serif;
 }
 
+body {
+  /* Slide-in animations start off-canvas; never let them widen the page. */
+  overflow-x: clip;
+}
+
+/* Two-tone focus ring that stays visible on cream, lime, blue and charcoal. */
+:focus-visible {
+  outline: 2px solid #2d5fa3;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #faf8f4;
+}
+
+/* Colour chapters (components/home/Chapters.tsx): a chapter is readable only
+   while the page background is its own colour. */
+[data-chapters-ready] [data-bg] {
+  transition: opacity 0.5s ease;
+}
+[data-chapters-ready] [data-bg]:not([data-on]):not(:focus-within) {
+  opacity: 0;
+}
+
 ::selection {
   background: #2d5fa3;
   color: #faf8f4;

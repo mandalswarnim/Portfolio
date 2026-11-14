@@ -18,7 +18,7 @@ import {
 import { CONTACT_EMAIL, CV_DOWNLOAD_NAME, CV_PATH, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About — Swarnim Mandal",
+  title: "About",
   description:
     "AI / software engineer in London. MSc Software Engineering (Distinction), University of West London. Builds voice agents, predictive models and full-stack apps.",
 };

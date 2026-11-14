@@ -59,7 +59,7 @@ export function PageHero({
   aside?: ReactNode;
 }) {
   return (
-    <section data-bg={CREAM} className="flex min-h-[70vh] flex-col justify-center py-24">
+    <section data-bg={CREAM} className="py-16 md:py-20">
       <div
         className={`mx-auto grid w-full max-w-6xl gap-16 px-6 ${aside ? "lg:grid-cols-[1.2fr_1fr] lg:items-center" : ""}`}
       >
