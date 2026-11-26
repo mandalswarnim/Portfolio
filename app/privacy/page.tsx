@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "How swarnimmandal.me collects and uses personal data.",
 };
 
-const LAST_UPDATED = "23 September 2026";
+const LAST_UPDATED = "26 November 2026";
 
 const sections: { heading: string; body: React.ReactNode[] }[] = [
   {
@@ -31,6 +31,11 @@ const sections: { heading: string; body: React.ReactNode[] }[] = [
         <strong>Analytics.</strong> I use Vercel Web Analytics and Speed Insights to count page views and measure
         performance. They do not use cookies and do not identify individual visitors; they record aggregate data such as
         the page visited, referrer, country, browser and device type.
+      </>,
+      <>
+        <strong>Embedded videos.</strong> Some blog posts include a YouTube video. Nothing loads from YouTube until you
+        press play; it then plays from youtube-nocookie.com, and YouTube (Google) handles that request under its own
+        privacy policy.
       </>,
       <>
         <strong>Server logs.</strong> My hosting provider keeps short-lived technical logs (for example IP address and

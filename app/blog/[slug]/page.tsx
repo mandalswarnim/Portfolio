@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { BLOG_ENABLED, getPostBySlug, getAllPosts, renderMarkdown } from "@/lib/blog";
+import { BLOG_ENABLED, getPostBySlug, getAllPosts, renderPost } from "@/lib/blog";
+import YouTubeEmbed from "@/components/blog/YouTubeEmbed";
 import FadeIn from "@/components/animations/FadeIn";
+import TextReveal from "@/components/animations/TextReveal";
+import Chapters from "@/components/home/Chapters";
+import { CREAM, CtaBand, display, Eyebrow } from "@/components/PageSections";
 
 export async function generateStaticParams() {
   if (!BLOG_ENABLED) return [];
@@ -17,6 +21,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: post.title,
     description: post.excerpt,
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: post.date,
+      ...(post.cover && { images: [{ url: post.cover, alt: post.coverAlt }] }),
+    },
   };
 }
 
@@ -25,76 +36,51 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   const post = BLOG_ENABLED ? getPostBySlug(slug) : undefined;
   if (!post) notFound();
 
+  const date = new Date(post.date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" });
+
   return (
-    <div className="min-h-screen">
-      <article className="py-20">
-        <div className="max-w-3xl mx-auto px-6">
-          {/* Back link */}
+    <Chapters initial={CREAM}>
+      <article data-bg={CREAM} className="pb-28 pt-12 md:pt-16">
+        <div className="mx-auto max-w-3xl px-6">
           <FadeIn>
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors mb-12"
+              className="mb-12 inline-flex items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-charcoal"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Blog
+              ← All posts
             </Link>
+            <Eyebrow>
+              {post.category} · <time dateTime={post.date}>{date}</time> · {post.readTime}
+            </Eyebrow>
           </FadeIn>
 
-          {/* Meta */}
-          <FadeIn delay={0.05}>
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">{post.category}</span>
-              <span className="text-subtle text-xs">·</span>
-              <span className="text-xs text-subtle">{post.readTime}</span>
-              <span className="text-subtle text-xs">·</span>
-              <time className="text-xs text-subtle font-mono">
-                {new Date(post.date).toLocaleDateString("en-GB", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
-            </div>
-          </FadeIn>
-
-          {/* Title */}
-          <FadeIn delay={0.1}>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground leading-[1.1] mb-12">
-              {post.title}
-            </h1>
-          </FadeIn>
-
-          {/* Content */}
+          <TextReveal
+            delay={0.1}
+            lines={[post.title]}
+            className={`mb-8 ${display} text-3xl text-charcoal sm:text-5xl md:text-6xl`}
+          />
           <FadeIn delay={0.15}>
-            <div
-              className="prose prose-stone max-w-none"
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
-            />
+            <p className="mb-14 text-lg leading-relaxed text-muted">{post.excerpt}</p>
+          </FadeIn>
+
+          <FadeIn delay={0.2}>
+            <div className="prose prose-stone max-w-none prose-headings:font-display prose-headings:uppercase prose-headings:tracking-normal prose-h2:mt-14 prose-h2:text-2xl md:prose-h2:text-3xl prose-img:mx-auto prose-img:max-h-[80vh] prose-img:w-auto prose-img:rounded-2xl prose-img:border prose-img:border-charcoal/10 prose-img:shadow-[0_24px_48px_-28px_rgba(30,30,30,0.45)]">
+              {renderPost(post.content).map((block, i) =>
+                block.kind === "html" ? (
+                  <div key={i} dangerouslySetInnerHTML={{ __html: block.html }} />
+                ) : (
+                  <YouTubeEmbed key={i} {...block} />
+                ),
+              )}
+            </div>
           </FadeIn>
         </div>
       </article>
 
-      {/* ── CTA ────────────────────────────────────────── */}
-      <section className="py-20 border-t border-divider bg-surface">
-        <div className="max-w-3xl mx-auto px-6">
-          <FadeIn>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-              <div>
-                <h2 className="font-serif text-2xl font-bold text-foreground mb-1">Enjoyed this?</h2>
-                <p className="text-muted text-sm">Reach out if you have questions or want to discuss further.</p>
-              </div>
-              <Link
-                href="/contact"
-                className="inline-flex items-center bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:bg-foreground/80 transition-colors whitespace-nowrap"
-              >
-                Get in touch
-              </Link>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-    </div>
+      <CtaBand
+        lines={["Enjoyed", "this?"]}
+        text="Questions, ideas or a hack night I should know about? Get in touch."
+      />
+    </Chapters>
   );
 }

@@ -163,6 +163,14 @@ export default function Work() {
                         Try me {arrow}
                       </SmartLink>
                     )}
+                    {project.post && (
+                      <SmartLink
+                        href={project.post}
+                        className="group inline-flex items-center gap-1.5 rounded-full bg-charcoal px-4 py-2 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
+                      >
+                        Read the story {arrow}
+                      </SmartLink>
+                    )}
                     {project.link && (
                       <SmartLink
                         href={project.link}

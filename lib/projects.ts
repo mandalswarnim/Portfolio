@@ -15,6 +15,7 @@ export type Project = {
   tech: string[];
   link?: string;
   demo?: string;
+  post?: string; // blog post telling the story behind it
   screen?: Screen; // homepage: featured as a full colour chapter with this screenshot
 };
 
@@ -85,6 +86,15 @@ export const projects: Project[] = [
       "CNN model classifying audio into 10 genres using MFCC features from the GTZAN dataset, with custom preprocessing.",
     result: "79% accuracy across 10 genres on GTZAN.",
     tech: ["Python", "PyTorch", "Librosa"],
+  },
+  {
+    category: "Signal Processing",
+    title: "MacBook Lie Detector",
+    desc: "A 1970s-style polygraph built in an evening at Side Project: After Hours. It reads the undocumented accelerometer and gyroscope inside an M4 MacBook Pro through the palm rest, adds answer delay and voice pitch from the microphone, and stamps TRUTH or LIE. No extra hardware.",
+    homeHidden: true,
+    tech: ["Python", "TypeScript", "NumPy", "SciPy", "WebSockets", "Web Audio"],
+    link: "https://github.com/mandalswarnim/lie-detector",
+    post: "/blog/side-project-after-hours",
   },
 ];
 

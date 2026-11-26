@@ -5,13 +5,13 @@ import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkHtml from "remark-html";
 
-// Blog is hidden site-wide until real essays are ready — flip to true to
-// restore /blog routes and sitemap entries, then re-add the "Blog" links in
-// components/Header.tsx and components/Footer.tsx.
-export const BLOG_ENABLED = false;
+// Site-wide switch: false makes /blog 404 and drops the sitemap entries (also
+// remove the "Blog" links in components/Header.tsx and components/Footer.tsx).
+export const BLOG_ENABLED = true;
 
 // Posts live as markdown files in content/blog/. The filename is the slug.
-// Frontmatter carries title, date, excerpt and category; readTime is derived
+// Frontmatter carries title, date, excerpt, category and an optional cover
+// image (`cover` path under public/, `coverAlt`) for the index card; readTime is derived
 // from the body. Server-side only — this module touches the filesystem, so it
 // must never be imported into a "use client" component.
 const POSTS_DIR = path.join(process.cwd(), "content", "blog");
@@ -26,6 +26,8 @@ export interface BlogPost {
   content: string;
   category: string;
   readTime: string;
+  cover?: string;
+  coverAlt?: string;
 }
 
 /**
@@ -73,6 +75,7 @@ function readPost(filename: string): BlogPost {
     content,
     category: String(data.category ?? "Uncategorised"),
     readTime: estimateReadTime(content),
+    ...(data.cover && { cover: String(data.cover), coverAlt: String(data.coverAlt ?? "") }),
   };
 }
 
@@ -111,4 +114,59 @@ export function getCategories(): string[] {
  */
 export function renderMarkdown(markdown: string): string {
   return remark().use(remarkGfm).use(remarkHtml, { sanitize: true }).processSync(convertWikilinks(markdown)).toString();
+}
+
+export type PostBlock =
+  | { kind: "html"; html: string }
+  | { kind: "youtube"; id: string; title: string; poster: string; start?: number; end?: number };
+
+const EMBED_LINE = /^::youtube\{([^}]*)\}[ \t]*$/gm;
+
+function parseAttrs(attrs: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const m of attrs.matchAll(/(\w+)=(?:"([^"]*)"|(\S+))/g)) out[m[1]] = m[2] ?? m[3];
+  return out;
+}
+
+/**
+ * Split a post body into markdown HTML and embeds. A line of the form
+ *   ::youtube{id=VIDEO_ID start=6764 end=6972 poster=/blog/slug/poster.jpg title="Caption"}
+ * becomes a click-to-load YouTube clip (components/blog/YouTubeEmbed.tsx).
+ * Fenced code blocks are left untouched.
+ */
+export function renderPost(markdown: string): PostBlock[] {
+  const blocks: PostBlock[] = [];
+  let buffer = "";
+  const flush = () => {
+    if (buffer.trim()) blocks.push({ kind: "html", html: renderMarkdown(buffer) });
+    buffer = "";
+  };
+  markdown.split(/(```[\s\S]*?```)/g).forEach((chunk, i) => {
+    if (i % 2 === 1) {
+      buffer += chunk;
+      return;
+    }
+    let last = 0;
+    for (const m of chunk.matchAll(EMBED_LINE)) {
+      buffer += chunk.slice(last, m.index);
+      last = m.index! + m[0].length;
+      const a = parseAttrs(m[1]);
+      if (!a.id || !a.poster) {
+        buffer += m[0];
+        continue;
+      }
+      flush();
+      blocks.push({
+        kind: "youtube",
+        id: a.id,
+        title: a.title ?? "",
+        poster: a.poster,
+        ...(a.start && { start: Number(a.start) }),
+        ...(a.end && { end: Number(a.end) }),
+      });
+    }
+    buffer += chunk.slice(last);
+  });
+  flush();
+  return blocks;
 }

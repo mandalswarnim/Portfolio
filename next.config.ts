@@ -4,7 +4,7 @@ const isDev = process.env.NODE_ENV === "development";
 // Vercel's preview toolbar injects scripts and frames from vercel.live.
 const toolbar = process.env.VERCEL_ENV === "preview" ? " https://vercel.live" : "";
 
-// Every asset is same-origin (next/font self-hosts fonts, analytics use /_vercel/*).
+// Every asset is same-origin except click-to-load YouTube embeds on blog posts (next/font self-hosts fonts, analytics use /_vercel/*).
 // 'unsafe-inline' scripts are needed for Next's inline bootstrap without nonces,
 // which would force every page to render dynamically.
 const csp = [
@@ -16,7 +16,7 @@ const csp = [
   `connect-src 'self'${toolbar}`,
   "media-src 'self'", // if SAMPLE_CALL_AUDIO (lib/site.ts) is hosted elsewhere, add that origin here
   "worker-src 'self' blob:",
-  `frame-src${toolbar || " 'none'"}`,
+  `frame-src https://www.youtube-nocookie.com${toolbar}`, // click-to-load blog clips (components/blog/YouTubeEmbed.tsx)
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
