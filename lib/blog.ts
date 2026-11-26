@@ -104,11 +104,11 @@ export function getCategories(): string[] {
   return Array.from(new Set(loadPosts().map((post) => post.category)));
 }
 
-/** Markdown body -> HTML string, ready for dangerouslySetInnerHTML. */
+/**
+ * Markdown body -> HTML string, ready for dangerouslySetInnerHTML.
+ * Sanitised (GitHub schema): raw HTML such as <script> or on* handlers is stripped,
+ * since the CSP allows inline scripts.
+ */
 export function renderMarkdown(markdown: string): string {
-  return remark()
-    .use(remarkGfm)
-    .use(remarkHtml, { sanitize: false })
-    .processSync(convertWikilinks(markdown))
-    .toString();
+  return remark().use(remarkGfm).use(remarkHtml, { sanitize: true }).processSync(convertWikilinks(markdown)).toString();
 }

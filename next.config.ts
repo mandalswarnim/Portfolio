@@ -14,7 +14,7 @@ const csp = [
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
   `connect-src 'self'${toolbar}`,
-  "media-src 'self' https:", // SAMPLE_CALL_AUDIO may be hosted elsewhere
+  "media-src 'self'", // if SAMPLE_CALL_AUDIO (lib/site.ts) is hosted elsewhere, add that origin here
   "worker-src 'self' blob:",
   `frame-src${toolbar || " 'none'"}`,
   "frame-ancestors 'none'",
@@ -30,7 +30,7 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
-  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
 const nextConfig: NextConfig = {
